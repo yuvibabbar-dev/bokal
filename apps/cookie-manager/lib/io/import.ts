@@ -11,7 +11,10 @@ function parsePartition(raw: unknown): CookieAttrs['partitionKey'] {
   if (typeof raw !== 'object' || raw === null) return undefined;
   const o = raw as Record<string, unknown>;
   if (typeof o.topLevelSite !== 'string') return undefined;
-  return { topLevelSite: o.topLevelSite, hasCrossSiteAncestor: o.hasCrossSiteAncestor === true ? true : undefined };
+  return {
+    topLevelSite: o.topLevelSite,
+    hasCrossSiteAncestor: typeof o.hasCrossSiteAncestor === 'boolean' ? o.hasCrossSiteAncestor : undefined,
+  };
 }
 
 function coerce(raw: unknown, index: number, errors: string[]): CookieAttrs | null {

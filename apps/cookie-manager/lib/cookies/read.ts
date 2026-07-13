@@ -1,4 +1,5 @@
 import type { CookieAttrs, SameSite } from '../cookie-types';
+import { siteFromUrl } from '../site';
 
 export function fromChrome(c: chrome.cookies.Cookie): CookieAttrs {
   return {
@@ -24,8 +25,9 @@ export async function getCookiesForUrl(url: string): Promise<CookieAttrs[]> {
 }
 
 export async function getPartitionedCookiesForUrl(url: string): Promise<CookieAttrs[]> {
+  const site = siteFromUrl(url);
+  if (!site) return [];
   try {
-    const site = new URL(url).origin;
     const cookies = await chrome.cookies.getAll({ url, partitionKey: { topLevelSite: site } });
     return cookies.map(fromChrome);
   } catch {

@@ -26,7 +26,8 @@ export function IoBar() {
     }
     const res = await cookiesStore.getState().importCookies(parsed.cookies);
     const parseNote = parsed.errors.length ? ` (${parsed.errors.length} skipped)` : '';
-    setStatus(`Imported ${res.imported}, failed ${res.failed}${parseNote}`);
+    const failNote = res.errors.length ? ` — first error: ${res.errors[0]}` : '';
+    setStatus(`Imported ${res.imported}, failed ${res.failed}${parseNote}${failNote}`);
   }
 
   return (

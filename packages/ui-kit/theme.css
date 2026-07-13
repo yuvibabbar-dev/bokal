@@ -5,16 +5,6 @@
   --wafer-border: #e6e6e6;
   --wafer-accent: #2563eb;
   --wafer-danger: #b00020;
-  --wafer-row-hover: #f5f5f5;
-}
-.wafer-dark-tokens {
-  --wafer-bg: #1e1e1e;
-  --wafer-fg: #eaeaea;
-  --wafer-muted: #9a9a9a;
-  --wafer-border: #333333;
-  --wafer-accent: #5b9dff;
-  --wafer-danger: #ff6b6b;
-  --wafer-row-hover: #2a2a2a;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
@@ -24,7 +14,6 @@
     --wafer-border: #333333;
     --wafer-accent: #5b9dff;
     --wafer-danger: #ff6b6b;
-    --wafer-row-hover: #2a2a2a;
   }
 }
 :root[data-theme='dark'] {
@@ -34,7 +23,6 @@
   --wafer-border: #333333;
   --wafer-accent: #5b9dff;
   --wafer-danger: #ff6b6b;
-  --wafer-row-hover: #2a2a2a;
 }
 html, body { background: var(--wafer-bg); color: var(--wafer-fg); margin: 0; }
 button { color: var(--wafer-fg); background: var(--wafer-bg); border: 1px solid var(--wafer-border); border-radius: 4px; padding: 4px 8px; cursor: pointer; }

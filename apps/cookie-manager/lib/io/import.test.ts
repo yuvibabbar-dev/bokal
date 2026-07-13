@@ -33,4 +33,10 @@ describe('parseCookiesJson', () => {
     expect(res.cookies[0]!.path).toBe('/');
     expect(res.cookies[0]!.secure).toBe(false);
   });
+  it('round-trips a partitioned cookie preserving hasCrossSiteAncestor', () => {
+    const original = [base({ partitionKey: { topLevelSite: 'https://top.example', hasCrossSiteAncestor: false } })];
+    const res = parseCookiesJson(toJson(original));
+    expect(res.errors).toEqual([]);
+    expect(res.cookies).toEqual(original);
+  });
 });
