@@ -116,4 +116,25 @@ M7-T6: complete + review clean (getPartitionKey feature-detect no-any, theme sto
 M7 final review (opus): Ready-with-fixes (no Critical; destructive paths safe: apply-as-replace decrypts BEFORE removing so wrong passphrase never wipes; all destructive behind confirm; no value/passphrase leak; no new permissions; getPartitionKey cast sound). Applied: scope-honest delete-all confirm (across ALL sites wording), clear passphrase on encrypted row-switch, clear stale notice, disable inert CHIPS toggle in all-scope, honest replace label + comment. tsc 0, 60 tests, build, E2E both builds green, ProfilesPanel still chunked.
 M7 DEFERRED (v1.1, not regressions): import (JSON+header) bypasses validateCookie — validate imports too; import error-reporting detail regressed (cosmetic).
 M7: COMPLETE — merging to master. Pre-launch parity + all reviewed flaws fixed.
+
+========================================================================
+## v1.1 ROADMAP BUILD (directive 2026-07-13): fix the CHIPS bug + build M8/M9/M10.
+Research: docs/business/2026-07-13-feature-roadmap-research.md (deep-research, 20 confirmed/5 refuted).
+Program spec: docs/superpowers/specs/2026-07-13-wafer-v1.1-roadmap-design.md.
+Founder decisions: export-all = persistent runtime <all_urls> opt-in (install manifest unchanged);
+free/Pro = roadmap split; autonomous, report per milestone.
+========================================================================
+
+## M8 (feat/m8-quickwins) — Quick wins. Plan: docs/superpowers/plans/2026-07-13-wafer-m8-quickwins.md
+M8-T1: complete — fix getAllCookies to include CHIPS partitioned cookies (getAll partitionKey:{} + 114-118 fallback); read.test.ts (commit 2ae1c03)
+M8-T2: complete — validateForImport splits valid/invalid; importCookies pre-validates (commit d664650)
+M8-T3: complete — detailed import error reporting in IoBar (commit 4d9300f)
+M8-T4: complete — lib/io/automation.ts (Playwright storageState/Puppeteer/addCookies) + parseCookiesJson sniffing; 8 tests (commit a6919bb)
+M8-T5: complete — all-sites export labeling + all-scope import confirm (app already holds <all_urls>, so ensureAllUrls was redundant/skipped) (commit 81bf453)
+M8-T6: DROPPED — native per-site access chip (addHostAccessRequest) is inconsistent with the current all-or-nothing <all_urls> grant model (a per-site grant wouldn't satisfy hasAllUrlsPermission). Bundle with a future per-site-permissions milestone.
+M8-T7: complete — lib/review.ts one-time post-task review prompt (3rd action); wired store + App; 3 tests (commit 4e7c635)
+M8-T8: complete — threat-model notes export-all reuses the <all_urls> grant + FLAGS store-copy accuracy gap (commit ea35ce6)
+M8 whole-branch review (general-purpose adversarial): CLEAN — no Critical/Important. All brief suspicions traced and confirmed correct. 2 Minor fixed (commit d012347): clearer "no cookies found" import message; documented CHIPS omission in automation formats (inherent — Playwright/Puppeteer have no partitionKey field).
+M8 FINDING FOR FOUNDER (pre-submission): store copy (permission-justifications.md:36, listing.md:66) says host access "for the specific site you choose", but code requests <all_urls>. Decide: (a) build per-site permission model (spec §3 intent; restores claim + unblocks T6), or (b) correct copy to the runtime all-sites grant.
+M8: COMPLETE — merged to master (cb28a6a). 75 tests, tsc clean, build+zip, E2E both builds green, no host_permissions, Pro code still chunked.
 ```
