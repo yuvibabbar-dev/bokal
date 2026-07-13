@@ -9,7 +9,7 @@ import type { CookieAttrs } from '../lib/cookie-types';
 
 // `cookies` is the list currently SHOWN (search-filtered) — so export/copy/delete-all act on
 // exactly what the user sees, and the "Delete all N shown" confirmation is accurate.
-export function IoBar({ cookies }: { cookies: CookieAttrs[] }) {
+export function IoBar({ cookies, scope }: { cookies: CookieAttrs[]; scope: 'site' | 'all' }) {
   const activeUrl = useCookiesStore((s) => s.activeUrl);
   const fileRef = useRef<HTMLInputElement>(null);
   const [status, setStatus] = useState<string | null>(null);
@@ -43,7 +43,7 @@ export function IoBar({ cookies }: { cookies: CookieAttrs[] }) {
       <button type="button" onClick={() => void copyText(toHeaderString(cookies)).then((ok) => setStatus(ok ? `Copied ${cookies.length} cookies as a header` : 'Copy failed'))}>Copy header</button>
       <button type="button" onClick={() => fileRef.current?.click()}>Import</button>
       <input ref={fileRef} type="file" accept="application/json,.json,.txt,text/plain" onChange={onImportFile} style={{ display: 'none' }} />
-      <button type="button" onClick={() => { if (cookies.length && confirm(`Delete all ${cookies.length} cookies shown?`)) void cookiesStore.getState().deleteAllForSite(cookies).then((r) => setStatus(`Deleted ${r.removed}${r.failed ? `, ${r.failed} failed` : ''}`)); }}>Delete all</button>
+      <button type="button" onClick={() => { if (cookies.length && confirm(scope === 'all' ? `Delete all ${cookies.length} cookies across ALL sites? This cannot be undone.` : `Delete all ${cookies.length} cookies shown?`)) void cookiesStore.getState().deleteAllForSite(cookies).then((r) => setStatus(`Deleted ${r.removed}${r.failed ? `, ${r.failed} failed` : ''}`)); }}>Delete all</button>
       {status && <span style={{ fontSize: 11, color: 'var(--wafer-muted)' }}>{status}</span>}
     </div>
   );

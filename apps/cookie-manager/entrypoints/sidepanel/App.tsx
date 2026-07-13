@@ -80,7 +80,7 @@ export function App() {
 
   return (
     <main style={{ font: '13px system-ui', padding: 12 }}>
-      <IoBar cookies={filtered} />
+      <IoBar cookies={filtered} scope={scope} />
       <button type="button" onClick={() => setEditing({ draft: newDraft(), original: null })} style={{ marginBottom: 8 }}>＋ Add cookie</button>
       <SearchBar />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--wafer-muted)', marginBottom: 8 }}>
@@ -90,7 +90,7 @@ export function App() {
           <option value="all">All cookies</option>
         </select>
         <label style={{ fontSize: 11, color: 'var(--wafer-muted)' }}>
-          <input type="checkbox" checked={showPartitioned} onChange={(e) => cookiesStore.getState().setShowPartitioned(e.target.checked)} /> Show partitioned (CHIPS)
+          <input type="checkbox" checked={showPartitioned} disabled={scope === 'all'} onChange={(e) => cookiesStore.getState().setShowPartitioned(e.target.checked)} /> Show partitioned (CHIPS)
         </label>
         <ThemeToggle />
       </div>

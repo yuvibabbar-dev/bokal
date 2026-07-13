@@ -18,6 +18,7 @@ export function ProfilesPanel() {
   }, []);
 
   async function onSave() {
+    setNotice(null);
     if (!name.trim()) return;
     await profilesStore.getState().save(name.trim(), encrypt ? pass : undefined);
     setName('');
@@ -25,6 +26,7 @@ export function ProfilesPanel() {
   }
 
   async function doApply(id: string, encrypted: boolean) {
+    setNotice(null);
     const res = await profilesStore.getState().apply(id, { passphrase: encrypted ? applyPass : undefined, replace: applyReplace });
     setApplyingId(null);
     setApplyPass('');
@@ -52,7 +54,7 @@ export function ProfilesPanel() {
         </div>
       )}
       <label style={{ fontSize: 11, color: 'var(--wafer-muted)', display: 'block', marginBottom: 6 }}>
-        <input type="checkbox" checked={applyReplace} onChange={(e) => setApplyReplace(e.target.checked)} /> Apply replaces (clears the site's current cookies first)
+        <input type="checkbox" checked={applyReplace} onChange={(e) => setApplyReplace(e.target.checked)} /> Apply replaces (clears the cookies this profile targets first)
       </label>
       {error && <div style={{ color: 'var(--wafer-danger)', fontSize: 12 }}>{error}</div>}
       {notice && <div style={{ color: 'var(--wafer-muted)', fontSize: 12 }}>{notice}</div>}
@@ -78,7 +80,14 @@ export function ProfilesPanel() {
             ) : (
               <button
                 type="button"
-                onClick={() => (p.encrypted ? setApplyingId(p.id) : void doApply(p.id, false))}
+                onClick={() => {
+                  if (p.encrypted) {
+                    setApplyingId(p.id);
+                    setApplyPass('');
+                  } else {
+                    void doApply(p.id, false);
+                  }
+                }}
               >
                 Apply
               </button>

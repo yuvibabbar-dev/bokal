@@ -70,6 +70,7 @@ export const profilesStore = createStore<ProfilesState>((set, get) => ({
       let removed = 0;
       if (opts?.replace) {
         // Clear existing cookies for every URL this profile touches, then apply — a true restore.
+        // Best-effort: removes existing cookies for the profile's URLs, then sets. A partial set-failure leaves those cookies cleared with no rollback (reported as failed).
         const urls = [...new Set(cookies.map((c) => cookieUrl(c)))];
         for (const url of urls) {
           for (const existing of await getCookiesForUrl(url)) {
