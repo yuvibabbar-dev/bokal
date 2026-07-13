@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { GrantAccess } from '../../components/GrantAccess';
+import { CookieList } from '../../components/CookieList';
 import { useCookiesStore, cookiesStore, hydrateFromStorage } from '../../stores/cookies-store';
 import { onPermissionsChanged } from '../../lib/permissions';
 
@@ -27,7 +28,7 @@ export function App() {
       <div style={{ color: '#555', marginBottom: 8 }}>
         {loading ? 'Loading…' : `${cookies.length} cookies · ${activeUrl ?? 'unknown site'}`}
       </div>
-      {/* CookieList wired in Task 10 */}
+      <CookieList cookies={cookies} />
     </main>
   );
 }
