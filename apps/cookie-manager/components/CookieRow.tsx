@@ -10,7 +10,7 @@ export function CookieRow({
   onDelete?: (c: CookieAttrs) => void;
 }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 8px', borderBottom: '1px solid #eee' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 8px', borderBottom: '1px solid var(--wafer-border)' }}>
       <button
         type="button"
         onClick={() => onEdit?.(cookie)}
@@ -18,7 +18,7 @@ export function CookieRow({
       >
         <div style={{ fontWeight: 600 }}>{cookie.name}</div>
         {/* value is attacker-controlled → text node only, never HTML */}
-        <div style={{ color: '#555', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{cookie.value}</div>
+        <div style={{ color: 'var(--wafer-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{cookie.value}</div>
       </button>
       <button type="button" aria-label={`Delete ${cookie.name}`} title="Delete" onClick={() => onDelete?.(cookie)} style={{ flexShrink: 0 }}>✕</button>
     </div>

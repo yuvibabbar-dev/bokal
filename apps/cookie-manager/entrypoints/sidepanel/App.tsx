@@ -4,6 +4,7 @@ import { CookieList } from '../../components/CookieList';
 import { SearchBar } from '../../components/SearchBar';
 import { CookieEditor } from '../../components/CookieEditor';
 import { IoBar } from '../../components/IoBar';
+import { ThemeToggle } from '../../components/ThemeToggle';
 import { useCookiesStore, cookiesStore, hydrateFromStorage } from '../../stores/cookies-store';
 import { onPermissionsChanged } from '../../lib/permissions';
 import type { CookieAttrs } from '../../lib/cookie-types';
@@ -57,8 +58,9 @@ export function App() {
       <IoBar />
       <button type="button" onClick={() => setEditing({ draft: newDraft(), original: null })} style={{ marginBottom: 8 }}>＋ Add cookie</button>
       <SearchBar />
-      <div style={{ color: '#555', marginBottom: 8 }}>
-        {loading ? 'Loading…' : `${filtered.length} cookies · ${activeUrl ?? 'unknown site'}`}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--wafer-muted)', marginBottom: 8 }}>
+        <span>{loading ? 'Loading…' : `${filtered.length} cookies · ${activeUrl ?? 'unknown site'}`}</span>
+        <ThemeToggle />
       </div>
       <CookieList
         cookies={filtered}

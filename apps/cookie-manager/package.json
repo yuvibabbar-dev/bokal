@@ -14,7 +14,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zustand": "5.0.14",
-    "@tanstack/react-virtual": "3.14.6"
+    "@tanstack/react-virtual": "3.14.6",
+    "@wafer/ui-kit": "workspace:*"
   },
   "devDependencies": {
     "@wafer/tsconfig": "workspace:*",

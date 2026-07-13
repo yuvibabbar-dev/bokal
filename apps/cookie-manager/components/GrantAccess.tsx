@@ -10,7 +10,7 @@ export function GrantAccess({ onGrant }: { onGrant: () => void }) {
   return (
     <div style={{ padding: 16, font: '13px system-ui' }}>
       <h1 style={{ fontSize: 15, margin: '0 0 8px' }}>Wafer</h1>
-      <p style={{ margin: '0 0 12px', color: '#555' }}>
+      <p style={{ margin: '0 0 12px', color: 'var(--wafer-muted)' }}>
         Grant access to read cookies for this site. Wafer requests no site access until you allow it.
       </p>
       <button type="button" onClick={handleClick} style={{ padding: '6px 12px', cursor: 'pointer' }}>
