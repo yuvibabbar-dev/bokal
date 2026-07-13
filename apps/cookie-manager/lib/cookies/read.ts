@@ -24,6 +24,11 @@ export async function getCookiesForUrl(url: string): Promise<CookieAttrs[]> {
   return cookies.map(fromChrome);
 }
 
+export async function getAllCookies(): Promise<CookieAttrs[]> {
+  const cookies = await chrome.cookies.getAll({});
+  return cookies.map(fromChrome);
+}
+
 export async function getPartitionedCookiesForUrl(url: string): Promise<CookieAttrs[]> {
   const site = siteFromUrl(url);
   if (!site) return [];

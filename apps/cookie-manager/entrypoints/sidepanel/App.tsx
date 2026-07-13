@@ -10,6 +10,7 @@ import { UpgradeButton } from '../../components/UpgradeButton';
 import { useCookiesStore, cookiesStore, hydrateFromStorage } from '../../stores/cookies-store';
 import { useEntitlement, entitlementStore } from '../../stores/entitlement-store';
 import { onPermissionsChanged } from '../../lib/permissions';
+import { SOFT_DOMAIN_COOKIE_WARN } from '../../lib/cookies/validation';
 import type { CookieAttrs } from '../../lib/cookie-types';
 
 export function App() {
@@ -20,6 +21,7 @@ export function App() {
   const cookies = useCookiesStore((s) => s.cookies);
   const query = useCookiesStore((s) => s.query);
   const showPartitioned = useCookiesStore((s) => s.showPartitioned);
+  const scope = useCookiesStore((s) => s.scope);
   const [editing, setEditing] = useState<{ draft: CookieAttrs; original: CookieAttrs | null } | null>(null);
   const entitled = useEntitlement((s) => s.entitled);
   const [Pro, setPro] = useState<ComponentType | null>(null);
@@ -83,11 +85,18 @@ export function App() {
       <SearchBar />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--wafer-muted)', marginBottom: 8 }}>
         <span>{loading ? 'Loading…' : `${filtered.length} cookies · ${activeUrl ?? 'unknown site'}`}</span>
+        <select aria-label="Scope" value={scope} onChange={(e) => cookiesStore.getState().setScope(e.target.value as 'site' | 'all')} style={{ fontSize: 11 }}>
+          <option value="site">This site</option>
+          <option value="all">All cookies</option>
+        </select>
         <label style={{ fontSize: 11, color: 'var(--wafer-muted)' }}>
           <input type="checkbox" checked={showPartitioned} onChange={(e) => cookiesStore.getState().setShowPartitioned(e.target.checked)} /> Show partitioned (CHIPS)
         </label>
         <ThemeToggle />
       </div>
+      {scope === 'site' && cookies.length >= SOFT_DOMAIN_COOKIE_WARN && (
+        <div style={{ fontSize: 11, color: 'var(--wafer-muted)', marginBottom: 6 }}>⚠ {cookies.length} cookies — near Chrome's ~180-per-domain limit.</div>
+      )}
       <CookieList
         cookies={filtered}
         onEdit={(c) => setEditing({ draft: c, original: c })}
