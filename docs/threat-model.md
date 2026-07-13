@@ -121,11 +121,15 @@ prints a cookie value or a user's passphrase, which then ends up in `chrome://ex
 worker logs, crash reports, or a screenshot the user shares for support.
 
 **Mitigation / enforced by:** `apps/cookie-manager/lib/security/redaction.test.ts` is a static
-audit, not a manual review: it walks every shipped `.ts`/`.tsx` file (excluding tests, `.output`,
-`node_modules`, `.wxt`, `e2e`) and fails if any `console.log/error/warn/info/debug(...)` call in
-the same statement references an identifier named `value`, `passphrase`, `pass`, `plaintext`, or
-`blob`. This runs in CI on every push/PR, so a regression is caught before merge rather than
-relying on someone remembering to check.
+audit, not a manual review: it walks every shipped `.ts`/`.tsx` file across the app **and the
+`@wafer/ui-kit` package** (excluding tests, `.output`, `node_modules`, `.wxt`, `e2e`, `dist`) and,
+after stripping string-literal contents (so a word inside a log *message* doesn't trip it), fails
+if any `console.log/error/warn/info/debug/dir/table/trace(...)` call on a line references an
+identifier named `value(s)`, `passphrase`, `pass`, `plaintext`, `blob`, `cookie(s)`, `draft`,
+`profile`, or `secret` — catching whole-object logging (`console.log(cookie)`), not just `.value`
+access. This runs in CI on every push/PR. **Known blind spot** (stated honestly, since this is a
+tripwire not a proof): the scan is line-by-line, so a `console` call split across multiple lines,
+or a value aliased into an unrelated variable name, can evade it — code review remains the backstop.
 
 ### 3.3 Malicious update / supply-chain compromise exfiltrating cookies
 
