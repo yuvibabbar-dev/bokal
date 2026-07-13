@@ -16,6 +16,7 @@ export function IoBar({ cookies, scope }: { cookies: CookieAttrs[]; scope: 'site
   const [status, setStatus] = useState<string | null>(null);
 
   function hostSlug(): string {
+    if (scope === 'all') return 'all-sites';
     try { return activeUrl ? new URL(activeUrl).hostname : 'cookies'; } catch { return 'cookies'; }
   }
 
@@ -53,6 +54,8 @@ export function IoBar({ cookies, scope }: { cookies: CookieAttrs[]; scope: 'site
       setStatus(`Import failed: ${parsed.errors[0] ?? 'not valid JSON or a cookie header'}`);
       return;
     }
+    // Importing while viewing "All cookies" writes across many domains — confirm the blast radius.
+    if (scope === 'all' && !confirm(`Import ${toImport.length} cookies? They will be written to their own domains across all sites.`)) return;
     const res = await cookiesStore.getState().importCookies(toImport);
     if (res.failed > 0) {
       const more = res.errors.length > 1 ? ` (+${res.errors.length - 1} more)` : '';
