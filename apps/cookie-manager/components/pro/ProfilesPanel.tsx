@@ -24,7 +24,7 @@ export function ProfilesPanel() {
     const passphrase = encrypted ? (prompt('Passphrase to decrypt this profile:') ?? undefined) : undefined;
     if (encrypted && !passphrase) return;
     const res = await profilesStore.getState().apply(id, passphrase);
-    if (res) alert(`Applied ${res.applied} cookies${res.failed ? `, ${res.failed} failed` : ''}.`);
+    if (res.applied || res.failed) alert(`Applied ${res.applied} cookies${res.failed ? `, ${res.failed} failed` : ''}.`);
   }
 
   return (
@@ -40,6 +40,11 @@ export function ProfilesPanel() {
           Save current cookies
         </button>
       </div>
+      {!encrypt && (
+        <div style={{ fontSize: 11, color: 'var(--wafer-muted)', marginBottom: 6 }}>
+          ⚠ Saved unencrypted — cookie values are readable on this device. Enable Encrypt for auth/session cookies.
+        </div>
+      )}
       {error && <div style={{ color: 'var(--wafer-danger)', fontSize: 12 }}>{error}</div>}
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {profiles.map((p) => (

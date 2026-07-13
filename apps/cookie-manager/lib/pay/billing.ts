@@ -1,3 +1,5 @@
+import { USE_MOCK_BILLING } from './config';
+
 export interface Billing {
   getEntitlement(): Promise<{ paid: boolean }>;
   openUpgrade(): Promise<void>;
@@ -18,5 +20,8 @@ export class MockBilling implements Billing {
 }
 
 export function getBilling(): Billing {
-  return new MockBilling();
+  if (USE_MOCK_BILLING) return new MockBilling();
+  // Real billing not wired yet — see docs/pro-monetization.md. This throw is the launch guard:
+  // flipping USE_MOCK_BILLING to false forces implementing ExtPayBilling before Pro can be sold.
+  throw new Error('Billing not configured: set up ExtPay per docs/pro-monetization.md and implement ExtPayBilling.');
 }

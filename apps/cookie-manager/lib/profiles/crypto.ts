@@ -40,6 +40,7 @@ export async function encryptJson(obj: unknown, passphrase: string): Promise<Enc
 }
 
 export async function decryptJson<T>(blob: EncryptedBlob, passphrase: string): Promise<T> {
+  if (blob.v !== 1) throw new Error('Unsupported encrypted profile version');
   const key = await deriveKey(passphrase, fromB64(blob.salt), blob.iter);
   const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: fromB64(blob.iv) as BufferSource }, key, fromB64(blob.ct) as BufferSource);
   return JSON.parse(new TextDecoder().decode(pt)) as T;

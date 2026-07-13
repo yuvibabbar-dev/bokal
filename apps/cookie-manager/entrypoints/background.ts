@@ -16,6 +16,6 @@ export default defineBackground(() => {
 
   chrome.alarms.create('wafer:entitlement', { periodInMinutes: 60 * 24 });
   chrome.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name === 'wafer:entitlement') void import('../lib/pay/sync').then((m) => m.syncEntitlementCache());
+    if (alarm.name === 'wafer:entitlement') void import('../lib/pay/sync').then((m) => m.syncEntitlementCache()).catch(() => {});
   });
 });
