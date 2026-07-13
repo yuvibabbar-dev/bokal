@@ -42,3 +42,24 @@ export function validateCookie(c: CookieAttrs, ctx: { isSecureOrigin: boolean })
 
   return issues;
 }
+
+export interface ImportInvalid {
+  cookie: CookieAttrs;
+  message: string;
+}
+
+/**
+ * Split a batch of to-be-imported cookies into those that pass validation and those that don't.
+ * A cookie's own `secure` flag is used as the secure-origin signal (an import targeting an https
+ * cookie is treated as a secure origin), so `__Secure-`/`__Host-` rules are enforced pre-write.
+ */
+export function validateForImport(cookies: CookieAttrs[]): { valid: CookieAttrs[]; invalid: ImportInvalid[] } {
+  const valid: CookieAttrs[] = [];
+  const invalid: ImportInvalid[] = [];
+  for (const c of cookies) {
+    const issues = validateCookie(c, { isSecureOrigin: c.secure });
+    if (issues.length) invalid.push({ cookie: c, message: issues.map((i) => i.message).join('; ') });
+    else valid.push(c);
+  }
+  return { valid, invalid };
+}

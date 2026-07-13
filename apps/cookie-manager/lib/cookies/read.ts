@@ -25,8 +25,16 @@ export async function getCookiesForUrl(url: string): Promise<CookieAttrs[]> {
 }
 
 export async function getAllCookies(): Promise<CookieAttrs[]> {
-  const cookies = await chrome.cookies.getAll({});
-  return cookies.map(fromChrome);
+  try {
+    // partitionKey:{} returns partitioned AND unpartitioned cookies (Chrome 119+);
+    // getAll({}) alone silently omits CHIPS cookies. See MDN cookies.getAll.
+    const cookies = await chrome.cookies.getAll({ partitionKey: {} });
+    return cookies.map(fromChrome);
+  } catch {
+    // Chrome 114–118 floor: the partitionKey filter isn't supported — unpartitioned only.
+    const cookies = await chrome.cookies.getAll({});
+    return cookies.map(fromChrome);
+  }
 }
 
 async function activePartitionSite(fallbackUrl: string): Promise<string | null> {

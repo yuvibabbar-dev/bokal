@@ -5,6 +5,8 @@ import { getActiveTabUrl, getAllCookies, getCookiesForUrl, getPartitionedCookies
 import { setCookie, removeCookie } from '../lib/cookies/write';
 import { hasAllUrlsPermission } from '../lib/permissions';
 import { cookieId } from '../lib/cookies/keys';
+import { validateForImport } from '../lib/cookies/validation';
+import { recordAction } from '../lib/review';
 
 interface CookiesState {
   granted: boolean;
@@ -76,6 +78,7 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
       if (original && cookieId(original) !== cookieId(c)) {
         await removeCookie(original);
       }
+      await recordAction();
       await get().refresh();
       return { ok: true };
     } catch (err) {
@@ -84,6 +87,7 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
   },
   deleteCookie: async (c) => {
     await removeCookie(c);
+    await recordAction();
     await get().refresh();
   },
   deleteAllForSite: async (list) => {
@@ -92,6 +96,7 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
     for (const c of list) {
       try { await removeCookie(c); removed += 1; } catch { failed += 1; }
     }
+    if (removed > 0) await recordAction();
     await get().refresh();
     return { removed, failed };
   },
@@ -99,7 +104,14 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
     let imported = 0;
     let failed = 0;
     const errors: string[] = [];
-    for (const c of cookies) {
+    // Validate before writing so invalid cookies get a specific reason rather than a silent
+    // browser rejection (both JSON and header imports flow through here).
+    const { valid, invalid } = validateForImport(cookies);
+    for (const { cookie, message } of invalid) {
+      failed += 1;
+      errors.push(`${cookie.name}@${cookie.domain}: ${message}`);
+    }
+    for (const c of valid) {
       try {
         await setCookie(c);
         imported += 1;
@@ -108,6 +120,7 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
         errors.push(`${c.name}@${c.domain}: ${err instanceof Error ? err.message : String(err)}`);
       }
     }
+    if (imported > 0) await recordAction();
     await get().refresh();
     return { imported, failed, errors };
   },

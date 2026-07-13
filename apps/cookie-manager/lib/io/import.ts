@@ -1,4 +1,5 @@
 import type { CookieAttrs, SameSite } from '../cookie-types';
+import { fromAutomationJson } from './automation';
 
 const SAME_SITES: SameSite[] = ['no_restriction', 'lax', 'strict', 'unspecified'];
 
@@ -42,6 +43,10 @@ export function parseCookiesJson(text: string): ParseResult {
   const errors: string[] = [];
   let data: unknown;
   try { data = JSON.parse(text); } catch { return { cookies: [], errors: ['Invalid JSON'] }; }
+  // Playwright storageState / Puppeteer-Playwright cookie arrays take priority over the generic
+  // path so their capitalized SameSite + `expires` seconds are mapped correctly.
+  const automation = fromAutomationJson(data);
+  if (automation) return { cookies: automation, errors: [] };
   let arr: unknown;
   if (Array.isArray(data)) arr = data;
   else if (typeof data === 'object' && data !== null && Array.isArray((data as Record<string, unknown>).cookies)) {

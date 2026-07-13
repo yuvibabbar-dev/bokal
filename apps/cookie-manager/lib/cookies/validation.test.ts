@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateCookie, NAME_VALUE_MAX } from './validation';
+import { validateCookie, validateForImport, NAME_VALUE_MAX } from './validation';
 import type { CookieAttrs } from '../cookie-types';
 
 function base(overrides: Partial<CookieAttrs> = {}): CookieAttrs {
@@ -64,5 +64,24 @@ describe('validateCookie', () => {
   it('rejects an over-long path', () => {
     const issues = validateCookie(base({ path: '/' + 'x'.repeat(1024) }), { isSecureOrigin: true });
     expect(issues.some((i) => i.field === 'path')).toBe(true);
+  });
+});
+
+describe('validateForImport', () => {
+  it('separates valid cookies from invalid ones with reasons', () => {
+    const good = base();
+    const bad = base({ name: '__Host-sid', hostOnly: false, path: '/' }); // __Host- must be host-only
+    const { valid, invalid } = validateForImport([good, bad]);
+    expect(valid).toEqual([good]);
+    expect(invalid).toHaveLength(1);
+    expect(invalid[0]?.cookie).toBe(bad);
+    expect(invalid[0]?.message).toMatch(/__Host-/);
+  });
+
+  it('treats an https-target cookie as a secure origin', () => {
+    // __Secure- on a secure cookie should pass (its own scheme is the origin signal).
+    const { valid, invalid } = validateForImport([base({ name: '__Secure-sid', secure: true })]);
+    expect(invalid).toHaveLength(0);
+    expect(valid).toHaveLength(1);
   });
 });
