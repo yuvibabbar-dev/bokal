@@ -19,6 +19,7 @@ interface CookiesState {
   refresh: () => Promise<void>;
   saveCookie: (c: CookieAttrs, original?: CookieAttrs) => Promise<{ ok: boolean; error?: string }>;
   deleteCookie: (c: CookieAttrs) => Promise<void>;
+  deleteAllForSite: (cookies: CookieAttrs[]) => Promise<{ removed: number; failed: number }>;
   importCookies: (cookies: CookieAttrs[]) => Promise<{ imported: number; failed: number; errors: string[] }>;
 }
 
@@ -75,6 +76,15 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
   deleteCookie: async (c) => {
     await removeCookie(c);
     await get().refresh();
+  },
+  deleteAllForSite: async (list) => {
+    let removed = 0;
+    let failed = 0;
+    for (const c of list) {
+      try { await removeCookie(c); removed += 1; } catch { failed += 1; }
+    }
+    await get().refresh();
+    return { removed, failed };
   },
   importCookies: async (cookies) => {
     let imported = 0;

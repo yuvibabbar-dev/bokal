@@ -1,4 +1,5 @@
 import type { CookieAttrs } from '../lib/cookie-types';
+import { copyText } from '../lib/clipboard';
 
 export function CookieRow({
   cookie,
@@ -25,6 +26,7 @@ export function CookieRow({
         {/* value is attacker-controlled → text node only, never HTML */}
         <div style={{ color: 'var(--wafer-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{cookie.value}</div>
       </button>
+      <button type="button" aria-label={`Copy value of ${cookie.name}`} title="Copy value" onClick={() => void copyText(cookie.value)} style={{ flexShrink: 0 }}>⧉</button>
       <button type="button" aria-label={`Delete ${cookie.name}`} title="Delete" onClick={() => onDelete?.(cookie)} style={{ flexShrink: 0 }}>✕</button>
     </div>
   );
