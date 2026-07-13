@@ -17,6 +17,15 @@ export function useTheme(): [ThemeMode, (m: ThemeMode) => void] {
       setMode(m);
       applyTheme(m);
     });
+    const onChanged = (changes: Record<string, chrome.storage.StorageChange>, area: string): void => {
+      if (area === 'local' && changes[KEY]) {
+        const m = (changes[KEY].newValue as ThemeMode | undefined) ?? 'system';
+        setMode(m);
+        applyTheme(m);
+      }
+    };
+    chrome.storage.onChanged.addListener(onChanged);
+    return () => chrome.storage.onChanged.removeListener(onChanged);
   }, []);
   const set = (m: ThemeMode): void => {
     setMode(m);

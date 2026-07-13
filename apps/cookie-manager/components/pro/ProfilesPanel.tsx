@@ -8,23 +8,31 @@ export function ProfilesPanel() {
   const [name, setName] = useState('');
   const [encrypt, setEncrypt] = useState(false);
   const [pass, setPass] = useState('');
+  const [applyReplace, setApplyReplace] = useState(true);
+  const [applyPass, setApplyPass] = useState('');
+  const [applyingId, setApplyingId] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   useEffect(() => {
     void profilesStore.getState().load();
   }, []);
 
   async function onSave() {
+    setNotice(null);
     if (!name.trim()) return;
     await profilesStore.getState().save(name.trim(), encrypt ? pass : undefined);
     setName('');
     setPass('');
   }
 
-  async function onApply(id: string, encrypted: boolean) {
-    const passphrase = encrypted ? (prompt('Passphrase to decrypt this profile:') ?? undefined) : undefined;
-    if (encrypted && !passphrase) return;
-    const res = await profilesStore.getState().apply(id, passphrase);
-    if (res.applied || res.failed) alert(`Applied ${res.applied} cookies${res.failed ? `, ${res.failed} failed` : ''}.`);
+  async function doApply(id: string, encrypted: boolean) {
+    setNotice(null);
+    const res = await profilesStore.getState().apply(id, { passphrase: encrypted ? applyPass : undefined, replace: applyReplace });
+    setApplyingId(null);
+    setApplyPass('');
+    if (res.applied || res.failed || res.removed) {
+      setNotice(`Applied ${res.applied}${res.removed ? `, replaced ${res.removed}` : ''}${res.failed ? `, ${res.failed} failed` : ''}.`);
+    }
   }
 
   return (
@@ -45,14 +53,45 @@ export function ProfilesPanel() {
           ⚠ Saved unencrypted — cookie values are readable on this device. Enable Encrypt for auth/session cookies.
         </div>
       )}
+      <label style={{ fontSize: 11, color: 'var(--wafer-muted)', display: 'block', marginBottom: 6 }}>
+        <input type="checkbox" checked={applyReplace} onChange={(e) => setApplyReplace(e.target.checked)} /> Apply replaces (clears the cookies this profile targets first)
+      </label>
       {error && <div style={{ color: 'var(--wafer-danger)', fontSize: 12 }}>{error}</div>}
+      {notice && <div style={{ color: 'var(--wafer-muted)', fontSize: 12 }}>{notice}</div>}
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {profiles.map((p) => (
           <li key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 0', borderBottom: '1px solid var(--wafer-border)' }}>
             <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {p.name}{p.encrypted ? ' 🔒' : ''}
             </span>
-            <button type="button" onClick={() => void onApply(p.id, p.encrypted)}>Apply</button>
+            {p.encrypted && applyingId === p.id ? (
+              <>
+                <input
+                  type="password"
+                  value={applyPass}
+                  onChange={(e) => setApplyPass(e.target.value)}
+                  placeholder="Passphrase"
+                  style={{ width: 100 }}
+                />
+                <button type="button" disabled={busy || !applyPass} onClick={() => void doApply(p.id, true)}>
+                  Apply
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  if (p.encrypted) {
+                    setApplyingId(p.id);
+                    setApplyPass('');
+                  } else {
+                    void doApply(p.id, false);
+                  }
+                }}
+              >
+                Apply
+              </button>
+            )}
             <button type="button" onClick={() => void profilesStore.getState().remove(p.id)}>✕</button>
           </li>
         ))}

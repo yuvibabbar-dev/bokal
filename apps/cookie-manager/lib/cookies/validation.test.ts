@@ -60,4 +60,9 @@ describe('validateCookie', () => {
     const issues = validateCookie(base({ name: '' }), { isSecureOrigin: true });
     expect(issues.some((i) => i.field === 'name')).toBe(true);
   });
+
+  it('rejects an over-long path', () => {
+    const issues = validateCookie(base({ path: '/' + 'x'.repeat(1024) }), { isSecureOrigin: true });
+    expect(issues.some((i) => i.field === 'path')).toBe(true);
+  });
 });

@@ -18,6 +18,9 @@ export function validateCookie(c: CookieAttrs, ctx: { isSecureOrigin: boolean })
     issues.push({ field: 'value', message: `name + value exceeds ${NAME_VALUE_MAX} bytes` });
   }
 
+  if (byteLen(c.domain) > ATTR_VALUE_MAX) issues.push({ field: 'domain', message: `domain exceeds ${ATTR_VALUE_MAX} bytes` });
+  if (byteLen(c.path) > ATTR_VALUE_MAX) issues.push({ field: 'path', message: `path exceeds ${ATTR_VALUE_MAX} bytes` });
+
   if (c.name.trim() === '') {
     issues.push({ field: 'name', message: 'Name is required' });
   }

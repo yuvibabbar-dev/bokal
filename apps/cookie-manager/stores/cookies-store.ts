@@ -1,7 +1,7 @@
 import { createStore } from 'zustand/vanilla';
 import { useStore } from 'zustand';
 import type { CookieAttrs } from '../lib/cookie-types';
-import { getActiveTabUrl, getCookiesForUrl, getPartitionedCookiesForUrl } from '../lib/cookies/read';
+import { getActiveTabUrl, getAllCookies, getCookiesForUrl, getPartitionedCookiesForUrl } from '../lib/cookies/read';
 import { setCookie, removeCookie } from '../lib/cookies/write';
 import { hasAllUrlsPermission } from '../lib/permissions';
 import { cookieId } from '../lib/cookies/keys';
@@ -14,11 +14,14 @@ interface CookiesState {
   query: string;
   loading: boolean;
   showPartitioned: boolean;
+  scope: 'site' | 'all';
   setQuery: (q: string) => void;
   setShowPartitioned: (v: boolean) => void;
+  setScope: (s: 'site' | 'all') => void;
   refresh: () => Promise<void>;
   saveCookie: (c: CookieAttrs, original?: CookieAttrs) => Promise<{ ok: boolean; error?: string }>;
   deleteCookie: (c: CookieAttrs) => Promise<void>;
+  deleteAllForSite: (cookies: CookieAttrs[]) => Promise<{ removed: number; failed: number }>;
   importCookies: (cookies: CookieAttrs[]) => Promise<{ imported: number; failed: number; errors: string[] }>;
 }
 
@@ -34,8 +37,10 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
   query: '',
   loading: false,
   showPartitioned: false,
+  scope: 'site',
   setQuery: (q) => set({ query: q }),
   setShowPartitioned: (v) => { set({ showPartitioned: v }); void get().refresh(); },
+  setScope: (s) => { set({ scope: s }); void get().refresh(); },
   refresh: async () => {
     const seq = ++refreshSeq;
     set({ loading: true });
@@ -45,11 +50,16 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
         if (seq === refreshSeq) set({ granted: false, activeUrl: null, cookies: [], loading: false, ready: true });
         return;
       }
+      const scope = get().scope;
       const activeUrl = await getActiveTabUrl();
-      let cookies = activeUrl ? await getCookiesForUrl(activeUrl) : [];
-      if (activeUrl && get().showPartitioned) {
-        const partitioned = await getPartitionedCookiesForUrl(activeUrl);
-        cookies = cookies.concat(partitioned);
+      let cookies: CookieAttrs[];
+      if (scope === 'all') {
+        cookies = await getAllCookies();
+      } else {
+        cookies = activeUrl ? await getCookiesForUrl(activeUrl) : [];
+        if (activeUrl && get().showPartitioned) {
+          cookies = cookies.concat(await getPartitionedCookiesForUrl(activeUrl));
+        }
       }
       if (seq !== refreshSeq) return; // a newer refresh superseded this one
       set({ granted: true, activeUrl, cookies, loading: false, ready: true });
@@ -75,6 +85,15 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
   deleteCookie: async (c) => {
     await removeCookie(c);
     await get().refresh();
+  },
+  deleteAllForSite: async (list) => {
+    let removed = 0;
+    let failed = 0;
+    for (const c of list) {
+      try { await removeCookie(c); removed += 1; } catch { failed += 1; }
+    }
+    await get().refresh();
+    return { removed, failed };
   },
   importCookies: async (cookies) => {
     let imported = 0;
