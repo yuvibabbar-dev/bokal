@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { GrantAccess } from '../../components/GrantAccess';
 import { CookieList } from '../../components/CookieList';
 import { SearchBar } from '../../components/SearchBar';
+import { CookieEditor } from '../../components/CookieEditor';
 import { useCookiesStore, cookiesStore, hydrateFromStorage } from '../../stores/cookies-store';
 import { onPermissionsChanged } from '../../lib/permissions';
+import type { CookieAttrs } from '../../lib/cookie-types';
 
 export function App() {
   const granted = useCookiesStore((s) => s.granted);
@@ -11,12 +13,19 @@ export function App() {
   const activeUrl = useCookiesStore((s) => s.activeUrl);
   const cookies = useCookiesStore((s) => s.cookies);
   const query = useCookiesStore((s) => s.query);
+  const [editing, setEditing] = useState<CookieAttrs | null>(null);
   const filtered = query
     ? cookies.filter((c) => {
         const q = query.toLowerCase();
         return c.name.toLowerCase().includes(q) || c.domain.toLowerCase().includes(q) || c.value.toLowerCase().includes(q);
       })
     : cookies;
+
+  function newDraft(): CookieAttrs {
+    let domain = 'example.com';
+    try { if (activeUrl) domain = new URL(activeUrl).hostname; } catch { /* keep default */ }
+    return { name: '', value: '', domain, path: '/', secure: true, httpOnly: false, sameSite: 'lax', hostOnly: false };
+  }
 
   useEffect(() => {
     void hydrateFromStorage().then(() => cookiesStore.getState().refresh());
@@ -38,13 +47,22 @@ export function App() {
 
   if (!granted) return <GrantAccess onGrant={() => void cookiesStore.getState().refresh()} />;
 
+  if (granted && editing) {
+    return <CookieEditor initial={editing} activeUrl={activeUrl} onDone={() => setEditing(null)} />;
+  }
+
   return (
     <main style={{ font: '13px system-ui', padding: 12 }}>
+      <button type="button" onClick={() => setEditing(newDraft())} style={{ marginBottom: 8 }}>＋ Add cookie</button>
       <SearchBar />
       <div style={{ color: '#555', marginBottom: 8 }}>
         {loading ? 'Loading…' : `${filtered.length} cookies · ${activeUrl ?? 'unknown site'}`}
       </div>
-      <CookieList cookies={filtered} />
+      <CookieList
+        cookies={filtered}
+        onEdit={(c) => setEditing(c)}
+        onDelete={(c) => { if (confirm(`Delete cookie "${c.name}"?`)) void cookiesStore.getState().deleteCookie(c).catch((e) => console.error('[wafer] delete failed', e)); }}
+      />
     </main>
   );
 }
