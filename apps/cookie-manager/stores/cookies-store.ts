@@ -6,6 +6,7 @@ import { setCookie, removeCookie } from '../lib/cookies/write';
 import { hasAllUrlsPermission } from '../lib/permissions';
 import { cookieId } from '../lib/cookies/keys';
 import { validateForImport } from '../lib/cookies/validation';
+import { recordAction } from '../lib/review';
 
 interface CookiesState {
   granted: boolean;
@@ -77,6 +78,7 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
       if (original && cookieId(original) !== cookieId(c)) {
         await removeCookie(original);
       }
+      await recordAction();
       await get().refresh();
       return { ok: true };
     } catch (err) {
@@ -85,6 +87,7 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
   },
   deleteCookie: async (c) => {
     await removeCookie(c);
+    await recordAction();
     await get().refresh();
   },
   deleteAllForSite: async (list) => {
@@ -93,6 +96,7 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
     for (const c of list) {
       try { await removeCookie(c); removed += 1; } catch { failed += 1; }
     }
+    if (removed > 0) await recordAction();
     await get().refresh();
     return { removed, failed };
   },
@@ -116,6 +120,7 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
         errors.push(`${c.name}@${c.domain}: ${err instanceof Error ? err.message : String(err)}`);
       }
     }
+    if (imported > 0) await recordAction();
     await get().refresh();
     return { imported, failed, errors };
   },

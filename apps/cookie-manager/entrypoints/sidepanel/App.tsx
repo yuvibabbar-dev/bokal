@@ -11,6 +11,7 @@ import { useCookiesStore, cookiesStore, hydrateFromStorage } from '../../stores/
 import { useEntitlement, entitlementStore } from '../../stores/entitlement-store';
 import { onPermissionsChanged } from '../../lib/permissions';
 import { SOFT_DOMAIN_COOKIE_WARN } from '../../lib/cookies/validation';
+import { shouldPromptReview, dismissReviewPrompt, reviewUrl } from '../../lib/review';
 import type { CookieAttrs } from '../../lib/cookie-types';
 
 export function App() {
@@ -25,6 +26,7 @@ export function App() {
   const [editing, setEditing] = useState<{ draft: CookieAttrs; original: CookieAttrs | null } | null>(null);
   const entitled = useEntitlement((s) => s.entitled);
   const [Pro, setPro] = useState<ComponentType | null>(null);
+  const [showReview, setShowReview] = useState(false);
   const filtered = query
     ? cookies.filter((c) => {
         const q = query.toLowerCase();
@@ -68,6 +70,11 @@ export function App() {
     }
   }, [entitled, Pro]);
 
+  // Re-check the review nudge after each action (the cookie list changes on every refresh).
+  useEffect(() => {
+    if (!showReview) void shouldPromptReview().then((v) => { if (v) setShowReview(true); });
+  }, [cookies, showReview]);
+
   if (!ready) {
     return <main style={{ font: '13px system-ui', padding: 12, color: 'var(--wafer-muted)' }}>Loading…</main>;
   }
@@ -80,6 +87,13 @@ export function App() {
 
   return (
     <main style={{ font: '13px system-ui', padding: 12 }}>
+      {showReview && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 8px', marginBottom: 8, border: '1px solid var(--wafer-border)', borderRadius: 4, fontSize: 12 }}>
+          <span style={{ flex: 1 }}>Enjoying Wafer? A quick review helps others find it.</span>
+          <a href={reviewUrl()} target="_blank" rel="noreferrer" onClick={() => { void dismissReviewPrompt(); setShowReview(false); }}>Leave a review</a>
+          <button type="button" onClick={() => { void dismissReviewPrompt(); setShowReview(false); }} aria-label="Dismiss">✕</button>
+        </div>
+      )}
       <IoBar cookies={filtered} scope={scope} />
       <button type="button" onClick={() => setEditing({ draft: newDraft(), original: null })} style={{ marginBottom: 8 }}>＋ Add cookie</button>
       <SearchBar />
