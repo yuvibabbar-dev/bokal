@@ -1,0 +1,8 @@
+{
+  "extends": "@wafer/tsconfig/base.json",
+  "compilerOptions": {
+    "types": ["chrome"]
+  },
+  "include": ["entrypoints", "lib", "stores", "components", "wxt.config.ts"],
+  "references": []
+}
