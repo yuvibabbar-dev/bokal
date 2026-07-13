@@ -10,5 +10,5 @@ export function cookieId(
 ): string {
   const store = c.storeId ?? '0';
   const top = c.partitionKey?.topLevelSite ?? '';
-  return [store, top, c.domain, c.path, c.name].join('|');
+  return [store, top, c.domain, c.path, c.name].map(encodeURIComponent).join('|');
 }

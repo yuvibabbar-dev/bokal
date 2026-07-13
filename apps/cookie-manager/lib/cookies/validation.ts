@@ -5,7 +5,7 @@ export const ATTR_VALUE_MAX = 1024;
 export const SOFT_DOMAIN_COOKIE_WARN = 180;
 
 export interface ValidationIssue {
-  field: keyof CookieAttrs | 'name';
+  field: keyof CookieAttrs;
   message: string;
 }
 

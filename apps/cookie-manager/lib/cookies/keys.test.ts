@@ -23,4 +23,10 @@ describe('cookieId', () => {
     const part = cookieId({ name: 'sid', domain: 'example.com', path: '/', partitionKey: { topLevelSite: 'https://top.example' } });
     expect(unpart).not.toBe(part);
   });
+  it('does not collide when a field contains the delimiter character', () => {
+    const a = cookieId({ name: 'b', domain: 'example.com', path: '/a|', storeId: '0' });
+    const b = cookieId({ name: 'b', domain: 'example.com', path: '/a', storeId: '0' });
+    // Without escaping these would both be "0||example.com|/a|b".
+    expect(a).not.toBe(b);
+  });
 });

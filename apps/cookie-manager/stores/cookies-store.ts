@@ -11,20 +11,18 @@ interface CookiesState {
   query: string;
   loading: boolean;
   setQuery: (q: string) => void;
-  setGranted: (g: boolean) => void;
   refresh: () => Promise<void>;
 }
 
 const SESSION_KEY = 'wafer:lastCookies';
 
-export const cookiesStore = createStore<CookiesState>((set, get) => ({
+export const cookiesStore = createStore<CookiesState>((set) => ({
   granted: false,
   activeUrl: null,
   cookies: [],
   query: '',
   loading: false,
   setQuery: (q) => set({ query: q }),
-  setGranted: (granted) => set({ granted }),
   refresh: async () => {
     set({ loading: true });
     try {
