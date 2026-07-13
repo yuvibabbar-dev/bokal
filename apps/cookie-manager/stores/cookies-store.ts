@@ -16,6 +16,7 @@ interface CookiesState {
   refresh: () => Promise<void>;
   saveCookie: (c: CookieAttrs, original?: CookieAttrs) => Promise<{ ok: boolean; error?: string }>;
   deleteCookie: (c: CookieAttrs) => Promise<void>;
+  importCookies: (cookies: CookieAttrs[]) => Promise<{ imported: number; failed: number; errors: string[] }>;
 }
 
 const SESSION_KEY = 'wafer:lastCookies';
@@ -64,6 +65,22 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
   deleteCookie: async (c) => {
     await removeCookie(c);
     await get().refresh();
+  },
+  importCookies: async (cookies) => {
+    let imported = 0;
+    let failed = 0;
+    const errors: string[] = [];
+    for (const c of cookies) {
+      try {
+        await setCookie(c);
+        imported += 1;
+      } catch (err) {
+        failed += 1;
+        errors.push(`${c.name}@${c.domain}: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+    await get().refresh();
+    return { imported, failed, errors };
   },
 }));
 

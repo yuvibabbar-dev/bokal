@@ -3,6 +3,7 @@ import { GrantAccess } from '../../components/GrantAccess';
 import { CookieList } from '../../components/CookieList';
 import { SearchBar } from '../../components/SearchBar';
 import { CookieEditor } from '../../components/CookieEditor';
+import { IoBar } from '../../components/IoBar';
 import { useCookiesStore, cookiesStore, hydrateFromStorage } from '../../stores/cookies-store';
 import { onPermissionsChanged } from '../../lib/permissions';
 import type { CookieAttrs } from '../../lib/cookie-types';
@@ -53,6 +54,7 @@ export function App() {
 
   return (
     <main style={{ font: '13px system-ui', padding: 12 }}>
+      <IoBar />
       <button type="button" onClick={() => setEditing({ draft: newDraft(), original: null })} style={{ marginBottom: 8 }}>＋ Add cookie</button>
       <SearchBar />
       <div style={{ color: '#555', marginBottom: 8 }}>
