@@ -1,5 +1,7 @@
 # Wafer — Build Review (all 6 milestones complete)
 
+> **Update (2026-07-13):** a 7th milestone (**M7 — pre-launch parity + bug fixes**) also landed after a market/code review — bulk delete-all, copy/clipboard + header-string I/O, profile apply-as-replace, all-cookies view, and 6 verified bug fixes. **For the authoritative current state and resume instructions, read [`HANDOFF.md`](HANDOFF.md).**
+
 You said "build everything, I'll review; for things that need my input, research the best-selling option." Here's the final state.
 
 ## TL;DR
