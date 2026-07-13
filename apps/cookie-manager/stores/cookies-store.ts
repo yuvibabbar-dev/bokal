@@ -7,7 +7,7 @@ import { hasAllUrlsPermission } from '../lib/permissions';
 import { cookieId } from '../lib/cookies/keys';
 import { validateForImport } from '../lib/cookies/validation';
 import { recordAction } from '../lib/review';
-import { loadRules, partitionDeletable } from '../lib/rules/rules';
+import { loadRules, partitionDeletable, isProtected } from '../lib/rules/rules';
 
 interface CookiesState {
   granted: boolean;
@@ -87,6 +87,8 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
     }
   },
   deleteCookie: async (c) => {
+    // Data-layer enforcement of the protect invariant (the disabled UI button is not the boundary).
+    if (isProtected(await loadRules(), c)) return;
     await removeCookie(c);
     await recordAction();
     await get().refresh();

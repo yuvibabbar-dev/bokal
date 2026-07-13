@@ -46,6 +46,12 @@ describe('rules', () => {
     expect(matchesBlock(r, c({ domain: 'example.com' }))).toBe(false);
   });
 
+  it('matchesBlock is case-insensitive (cookie domains are lowercase-canonical)', () => {
+    const r: Rules = { protectedIds: [], pinnedIds: [], blockedDomains: ['DoubleClick.NET'] };
+    expect(matchesBlock(r, c({ domain: 'ad.doubleclick.net' }))).toBe(true);
+    expect(matchesBlock(r, c({ domain: 'doubleclick.net' }))).toBe(true);
+  });
+
   it('sortPinned puts pinned first, stable otherwise', () => {
     const a = c({ name: 'a' }), b = c({ name: 'b' }), d = c({ name: 'd' });
     const r: Rules = { protectedIds: [], pinnedIds: [cookieId(d)], blockedDomains: [] };

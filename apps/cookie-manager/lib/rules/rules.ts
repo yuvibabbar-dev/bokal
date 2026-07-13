@@ -10,7 +10,7 @@ export interface Rules {
   blockedDomains: string[];
 }
 
-const RULES_KEY = 'wafer:rules';
+export const RULES_KEY = 'wafer:rules';
 
 const EMPTY: Rules = { protectedIds: [], pinnedIds: [], blockedDomains: [] };
 
@@ -41,7 +41,8 @@ export function isPinned(rules: Rules, c: CookieAttrs): boolean {
   return rules.pinnedIds.includes(cookieId(c));
 }
 
-const bare = (d: string): string => d.replace(/^\./, '');
+// Cookie domains are lowercase-canonical in Chrome, so normalize block rules to match.
+const bare = (d: string): string => d.replace(/^\./, '').toLowerCase();
 
 /** True if the cookie's domain equals or is a subdomain of any blocked domain (leading dot ignored). */
 export function matchesBlock(rules: Rules, c: CookieAttrs): boolean {

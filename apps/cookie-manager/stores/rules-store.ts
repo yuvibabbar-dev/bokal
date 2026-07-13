@@ -32,7 +32,7 @@ export const rulesStore = createStore<RulesState>((set, get) => ({
     await saveRules(next);
   },
   addBlock: async (domain) => {
-    const d = domain.trim().replace(/^\./, '');
+    const d = domain.trim().replace(/^\./, '').toLowerCase();
     if (!d) return;
     const r = get().rules;
     if (r.blockedDomains.includes(d)) return;
@@ -49,8 +49,9 @@ export const rulesStore = createStore<RulesState>((set, get) => ({
 }));
 
 // Keep panels in sync when rules change in another context (the SW never writes rules, but a
-// second panel or the DevTools surface might).
-chrome.storage.onChanged.addListener((changes, area) => {
+// second panel or the DevTools surface might). Guard the listener so importing this store under a
+// minimal chrome mock (no storage.onChanged) doesn't throw at module load.
+chrome.storage.onChanged?.addListener((changes, area) => {
   if (area === 'local' && changes[RULES_KEY]) {
     rulesStore.setState({ rules: { ...EMPTY, ...(changes[RULES_KEY].newValue as Partial<Rules> | undefined) } });
   }
