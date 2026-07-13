@@ -15,5 +15,8 @@ export default defineConfig({
     content_security_policy: {
       extension_pages: "script-src 'self'; object-src 'self'",
     },
+    // TEST-ONLY: in E2E builds, grant host access at install so specs bypass the runtime dialog.
+    // Never set for the published build.
+    ...(process.env.WAFER_E2E ? { host_permissions: ['<all_urls>'] } : {}),
   },
 });
