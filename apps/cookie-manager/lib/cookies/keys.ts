@@ -6,9 +6,9 @@ export function cookieUrl(c: Pick<CookieAttrs, 'domain' | 'path' | 'secure'>): s
 }
 
 export function cookieId(
-  c: Pick<CookieAttrs, 'name' | 'domain' | 'path' | 'storeId' | 'partitionKey'>,
+  c: Pick<CookieAttrs, 'name' | 'domain' | 'path' | 'storeId' | 'partitionKey' | 'hostOnly'>,
 ): string {
   const store = c.storeId ?? '0';
   const top = c.partitionKey?.topLevelSite ?? '';
-  return [store, top, c.domain, c.path, c.name].map(encodeURIComponent).join('|');
+  return [store, top, c.domain, c.path, c.name, String(c.hostOnly)].map(encodeURIComponent).join('|');
 }
