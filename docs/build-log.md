@@ -137,4 +137,14 @@ M8-T8: complete — threat-model notes export-all reuses the <all_urls> grant + 
 M8 whole-branch review (general-purpose adversarial): CLEAN — no Critical/Important. All brief suspicions traced and confirmed correct. 2 Minor fixed (commit d012347): clearer "no cookies found" import message; documented CHIPS omission in automation formats (inherent — Playwright/Puppeteer have no partitionKey field).
 M8 FINDING FOR FOUNDER (pre-submission): store copy (permission-justifications.md:36, listing.md:66) says host access "for the specific site you choose", but code requests <all_urls>. Decide: (a) build per-site permission model (spec §3 intent; restores claim + unblocks T6), or (b) correct copy to the runtime all-sites grant.
 M8: COMPLETE — merged to master (cb28a6a). 75 tests, tsc clean, build+zip, E2E both builds green, no host_permissions, Pro code still chunked.
+
+## M9 (feat/m9-parity) — Parity + differentiation. Plan: docs/superpowers/plans/2026-07-13-wafer-m9-parity.md
+M9-T1: complete — lib/rules/rules.ts (protect/pin/block predicates + storage); 8 tests (commit a02ee49)
+M9-T2: complete — protect + pin UI (CookieRow lock/pin, CookieList sort, deleteAllForSite skips protected → {removed,failed,skipped}); rules-store (commit 411139c)
+M9-T3: complete — per-domain block rules (SW reactive auto-remove, loop-guarded; BlockRules UI with honest "reactive, not network-level" copy) (commit e318654)
+M9-T4: complete — DevTools panel (devtools + devtools-panel entrypoints reuse App; setInspectedTab binds to inspectedWindow.tabId); read.test +1 (commit 876ad9e)
+M9-T5: complete — listing names new free features + adds alarms/unlimitedStorage to permissions; host-access line left for founder (commit ac82413)
+M9-T6 (popup): DEFERRED + FLAGGED — a popup requires action.default_popup which overrides openPanelOnActionClick, regressing the side-panel-first flagship UX. Founder product decision (popup-primary like Cookie-Editor vs keep side-panel-primary).
+M9 whole-branch review (general-purpose adversarial): 1 Critical + 2 Important + 3 Minor, ALL FIXED (commit after review). C1: profile apply-as-replace wiped protected cookies (default-on, silent) → now skips protected. I2: SW block-remove ignored protection → protect now beats block. I3: single deleteCookie was UI-deep only → now guarded at the data layer. M1: block matching case-insensitive. M2: guard rules-store onChanged listener. M3: SW rules cache. Loop-safety, permissions, no-value-logging, Pro-isolation all verified clean by review.
+M9: COMPLETE — merged to master (2d2945c). 84 tests, tsc clean, build+zip, E2E both builds green, manifest adds devtools_page with no host_permissions, ProfilesPanel still chunked.
 ```
