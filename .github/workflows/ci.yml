@@ -1,0 +1,35 @@
+name: CI
+on:
+  push: { branches: [master] }
+  pull_request: {}
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9.9.0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @wafer/cookie-manager exec tsc --noEmit
+      - run: pnpm -r test
+      - run: pnpm --filter @wafer/cookie-manager build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chrome-mv3
+          path: apps/cookie-manager/.output/chrome-mv3
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9.9.0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @wafer/cookie-manager e2e:install
+      - name: E2E against the normal build (grant-gate path)
+        run: pnpm --filter @wafer/cookie-manager build && xvfb-run -a pnpm --filter @wafer/cookie-manager e2e
+      - name: E2E against the e2e build (granted-UI path)
+        run: pnpm --filter @wafer/cookie-manager build:e2e && WAFER_E2E=1 xvfb-run -a pnpm --filter @wafer/cookie-manager e2e

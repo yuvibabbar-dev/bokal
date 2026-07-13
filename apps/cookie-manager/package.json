@@ -6,9 +6,12 @@
   "scripts": {
     "dev": "wxt",
     "build": "wxt build",
+    "build:e2e": "WAFER_E2E=1 wxt build",
     "zip": "wxt zip",
     "postinstall": "wxt prepare",
-    "test": "vitest run"
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "e2e:install": "playwright install chromium"
   },
   "dependencies": {
     "react": "^19.0.0",
@@ -18,6 +21,7 @@
     "@wafer/ui-kit": "workspace:*"
   },
   "devDependencies": {
+    "@playwright/test": "^1.48.0",
     "@wafer/tsconfig": "workspace:*",
     "@wxt-dev/module-react": "1.1.3",
     "wxt": "0.20.27",
