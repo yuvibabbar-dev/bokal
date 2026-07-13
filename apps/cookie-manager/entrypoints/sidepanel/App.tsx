@@ -14,6 +14,7 @@ import type { CookieAttrs } from '../../lib/cookie-types';
 
 export function App() {
   const granted = useCookiesStore((s) => s.granted);
+  const ready = useCookiesStore((s) => s.ready);
   const loading = useCookiesStore((s) => s.loading);
   const activeUrl = useCookiesStore((s) => s.activeUrl);
   const cookies = useCookiesStore((s) => s.cookies);
@@ -36,7 +37,7 @@ export function App() {
   }
 
   useEffect(() => {
-    void hydrateFromStorage().then(() => cookiesStore.getState().refresh());
+    void hydrateFromStorage().catch(() => {}).then(() => cookiesStore.getState().refresh());
     void entitlementStore.getState().refresh();
     const unsub = onPermissionsChanged(() => void cookiesStore.getState().refresh());
     const onActivated = (): void => void cookiesStore.getState().refresh();
@@ -59,6 +60,10 @@ export function App() {
       void import('../../components/pro/ProfilesPanel').then((m) => setPro(() => m.ProfilesPanel));
     }
   }, [entitled, Pro]);
+
+  if (!ready) {
+    return <main style={{ font: '13px system-ui', padding: 12, color: 'var(--wafer-muted)' }}>Loading…</main>;
+  }
 
   if (!granted) return <GrantAccess onGrant={() => void cookiesStore.getState().refresh()} />;
 
