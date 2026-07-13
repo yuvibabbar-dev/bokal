@@ -13,6 +13,9 @@ importers:
       '@tanstack/react-virtual':
         specifier: 3.14.6
         version: 3.14.6(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@wafer/ui-kit':
+        specifier: workspace:*
+        version: link:../../packages/ui-kit
       react:
         specifier: ^19.0.0
         version: 19.2.7
@@ -58,6 +61,18 @@ importers:
         version: 0.20.27(@types/node@26.1.1)(jiti@2.7.0)(rolldown@1.1.5)(rollup@4.62.2)
 
   packages/tsconfig: {}
+
+  packages/ui-kit:
+    devDependencies:
+      '@types/chrome':
+        specifier: ^0.0.287
+        version: 0.0.287
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.17
+      react:
+        specifier: ^19.0.0
+        version: 19.2.7
 
 packages:
 

@@ -22,7 +22,7 @@ export function CookieList({
     useFlushSync: false, // avoids flushSync scroll warnings under React 19
   });
 
-  if (cookies.length === 0) return <div style={{ color: '#888', padding: 8 }}>No cookies.</div>;
+  if (cookies.length === 0) return <div style={{ color: 'var(--wafer-muted)', padding: 8 }}>No cookies.</div>;
 
   return (
     <div ref={parentRef} style={{ height: 'calc(100vh - 90px)', overflow: 'auto' }}>

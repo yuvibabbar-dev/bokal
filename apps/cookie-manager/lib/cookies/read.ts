@@ -1,4 +1,5 @@
 import type { CookieAttrs, SameSite } from '../cookie-types';
+import { siteFromUrl } from '../site';
 
 export function fromChrome(c: chrome.cookies.Cookie): CookieAttrs {
   return {
@@ -21,6 +22,17 @@ export function fromChrome(c: chrome.cookies.Cookie): CookieAttrs {
 export async function getCookiesForUrl(url: string): Promise<CookieAttrs[]> {
   const cookies = await chrome.cookies.getAll({ url });
   return cookies.map(fromChrome);
+}
+
+export async function getPartitionedCookiesForUrl(url: string): Promise<CookieAttrs[]> {
+  const site = siteFromUrl(url);
+  if (!site) return [];
+  try {
+    const cookies = await chrome.cookies.getAll({ url, partitionKey: { topLevelSite: site } });
+    return cookies.map(fromChrome);
+  } catch {
+    return [];
+  }
 }
 
 export async function getActiveTabUrl(): Promise<string | null> {

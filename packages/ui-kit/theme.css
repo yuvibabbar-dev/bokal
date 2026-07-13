@@ -1,0 +1,29 @@
+:root {
+  --wafer-bg: #ffffff;
+  --wafer-fg: #1a1a1a;
+  --wafer-muted: #666666;
+  --wafer-border: #e6e6e6;
+  --wafer-accent: #2563eb;
+  --wafer-danger: #b00020;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --wafer-bg: #1e1e1e;
+    --wafer-fg: #eaeaea;
+    --wafer-muted: #9a9a9a;
+    --wafer-border: #333333;
+    --wafer-accent: #5b9dff;
+    --wafer-danger: #ff6b6b;
+  }
+}
+:root[data-theme='dark'] {
+  --wafer-bg: #1e1e1e;
+  --wafer-fg: #eaeaea;
+  --wafer-muted: #9a9a9a;
+  --wafer-border: #333333;
+  --wafer-accent: #5b9dff;
+  --wafer-danger: #ff6b6b;
+}
+html, body { background: var(--wafer-bg); color: var(--wafer-fg); margin: 0; }
+button { color: var(--wafer-fg); background: var(--wafer-bg); border: 1px solid var(--wafer-border); border-radius: 4px; padding: 4px 8px; cursor: pointer; }
+input, textarea, select { background: var(--wafer-bg); color: var(--wafer-fg); border: 1px solid var(--wafer-border); border-radius: 4px; padding: 4px 6px; }

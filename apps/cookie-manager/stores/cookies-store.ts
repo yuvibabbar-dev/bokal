@@ -1,7 +1,7 @@
 import { createStore } from 'zustand/vanilla';
 import { useStore } from 'zustand';
 import type { CookieAttrs } from '../lib/cookie-types';
-import { getActiveTabUrl, getCookiesForUrl } from '../lib/cookies/read';
+import { getActiveTabUrl, getCookiesForUrl, getPartitionedCookiesForUrl } from '../lib/cookies/read';
 import { setCookie, removeCookie } from '../lib/cookies/write';
 import { hasAllUrlsPermission } from '../lib/permissions';
 import { cookieId } from '../lib/cookies/keys';
@@ -12,10 +12,13 @@ interface CookiesState {
   cookies: CookieAttrs[];
   query: string;
   loading: boolean;
+  showPartitioned: boolean;
   setQuery: (q: string) => void;
+  setShowPartitioned: (v: boolean) => void;
   refresh: () => Promise<void>;
   saveCookie: (c: CookieAttrs, original?: CookieAttrs) => Promise<{ ok: boolean; error?: string }>;
   deleteCookie: (c: CookieAttrs) => Promise<void>;
+  importCookies: (cookies: CookieAttrs[]) => Promise<{ imported: number; failed: number; errors: string[] }>;
 }
 
 const SESSION_KEY = 'wafer:lastCookies';
@@ -28,7 +31,9 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
   cookies: [],
   query: '',
   loading: false,
+  showPartitioned: false,
   setQuery: (q) => set({ query: q }),
+  setShowPartitioned: (v) => { set({ showPartitioned: v }); void get().refresh(); },
   refresh: async () => {
     const seq = ++refreshSeq;
     set({ loading: true });
@@ -39,7 +44,11 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
         return;
       }
       const activeUrl = await getActiveTabUrl();
-      const cookies = activeUrl ? await getCookiesForUrl(activeUrl) : [];
+      let cookies = activeUrl ? await getCookiesForUrl(activeUrl) : [];
+      if (activeUrl && get().showPartitioned) {
+        const partitioned = await getPartitionedCookiesForUrl(activeUrl);
+        cookies = cookies.concat(partitioned);
+      }
       if (seq !== refreshSeq) return; // a newer refresh superseded this one
       set({ granted: true, activeUrl, cookies, loading: false });
       // chrome.storage is the source of truth for cross-context rehydrate.
@@ -64,6 +73,22 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
   deleteCookie: async (c) => {
     await removeCookie(c);
     await get().refresh();
+  },
+  importCookies: async (cookies) => {
+    let imported = 0;
+    let failed = 0;
+    const errors: string[] = [];
+    for (const c of cookies) {
+      try {
+        await setCookie(c);
+        imported += 1;
+      } catch (err) {
+        failed += 1;
+        errors.push(`${c.name}@${c.domain}: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+    await get().refresh();
+    return { imported, failed, errors };
   },
 }));
 
