@@ -69,7 +69,19 @@ Wafer ships `optional_host_permissions: ['<all_urls>']` (not `host_permissions`)
 build installs with **zero** host access. The user must explicitly grant `<all_urls>` via
 `chrome.permissions.request` (`apps/cookie-manager/lib/permissions.ts`), which Chrome requires to
 be called synchronously inside a user gesture — Wafer can't silently self-grant this in the
-background. This is the primary consent boundary in the product.
+background. This is the primary consent boundary in the product. This single `<all_urls>` grant
+is persistent and covers every feature, including the all-domains export/import and the
+all-cookies view — there is no separate broad-permission request; nothing is transmitted off the
+device regardless of scope.
+
+> **Accuracy flag (pre-submission, for the founder):** the grant model is currently
+> **all-or-nothing `<all_urls>`** — `refresh()` gates on `hasAllUrlsPermission()`, so a per-site
+> grant would not satisfy the app. The store copy in `docs/store/permission-justifications.md`
+> and `docs/store/listing.md` says host access is requested "for the specific site you choose,"
+> which does **not** match the code. Resolve before submitting: either (a) implement the per-site
+> permission model the design spec §3 intended (restores the stronger claim and unblocks the
+> deferred native per-site access chip), or (b) correct the copy to describe the runtime
+> all-sites grant. Tracked in the M8 report.
 
 **2.3 Extension vs. local storage.** `chrome.storage.local` (small state — the mock entitlement
 flag) and IndexedDB (`lib/profiles/db.ts`, database `wafer`, object store `profiles`) are both
