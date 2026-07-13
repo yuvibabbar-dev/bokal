@@ -18,6 +18,10 @@ export function validateCookie(c: CookieAttrs, ctx: { isSecureOrigin: boolean })
     issues.push({ field: 'value', message: `name + value exceeds ${NAME_VALUE_MAX} bytes` });
   }
 
+  if (c.name.trim() === '') {
+    issues.push({ field: 'name', message: 'Name is required' });
+  }
+
   if (c.name.startsWith('__Secure-')) {
     if (!c.secure) issues.push({ field: 'secure', message: '__Secure- cookies must be Secure' });
     if (!ctx.isSecureOrigin) issues.push({ field: 'name', message: '__Secure- requires an HTTPS origin' });

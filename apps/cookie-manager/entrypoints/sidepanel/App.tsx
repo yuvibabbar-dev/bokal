@@ -13,7 +13,7 @@ export function App() {
   const activeUrl = useCookiesStore((s) => s.activeUrl);
   const cookies = useCookiesStore((s) => s.cookies);
   const query = useCookiesStore((s) => s.query);
-  const [editing, setEditing] = useState<CookieAttrs | null>(null);
+  const [editing, setEditing] = useState<{ draft: CookieAttrs; original: CookieAttrs | null } | null>(null);
   const filtered = query
     ? cookies.filter((c) => {
         const q = query.toLowerCase();
@@ -48,19 +48,19 @@ export function App() {
   if (!granted) return <GrantAccess onGrant={() => void cookiesStore.getState().refresh()} />;
 
   if (granted && editing) {
-    return <CookieEditor initial={editing} activeUrl={activeUrl} onDone={() => setEditing(null)} />;
+    return <CookieEditor initial={editing.draft} original={editing.original} activeUrl={activeUrl} onDone={() => setEditing(null)} />;
   }
 
   return (
     <main style={{ font: '13px system-ui', padding: 12 }}>
-      <button type="button" onClick={() => setEditing(newDraft())} style={{ marginBottom: 8 }}>＋ Add cookie</button>
+      <button type="button" onClick={() => setEditing({ draft: newDraft(), original: null })} style={{ marginBottom: 8 }}>＋ Add cookie</button>
       <SearchBar />
       <div style={{ color: '#555', marginBottom: 8 }}>
         {loading ? 'Loading…' : `${filtered.length} cookies · ${activeUrl ?? 'unknown site'}`}
       </div>
       <CookieList
         cookies={filtered}
-        onEdit={(c) => setEditing(c)}
+        onEdit={(c) => setEditing({ draft: c, original: c })}
         onDelete={(c) => { if (confirm(`Delete cookie "${c.name}"?`)) void cookiesStore.getState().deleteCookie(c).catch((e) => console.error('[wafer] delete failed', e)); }}
       />
     </main>

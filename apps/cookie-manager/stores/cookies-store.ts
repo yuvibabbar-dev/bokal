@@ -4,6 +4,7 @@ import type { CookieAttrs } from '../lib/cookie-types';
 import { getActiveTabUrl, getCookiesForUrl } from '../lib/cookies/read';
 import { setCookie, removeCookie } from '../lib/cookies/write';
 import { hasAllUrlsPermission } from '../lib/permissions';
+import { cookieId } from '../lib/cookies/keys';
 
 interface CookiesState {
   granted: boolean;
@@ -13,7 +14,7 @@ interface CookiesState {
   loading: boolean;
   setQuery: (q: string) => void;
   refresh: () => Promise<void>;
-  saveCookie: (c: CookieAttrs) => Promise<{ ok: boolean; error?: string }>;
+  saveCookie: (c: CookieAttrs, original?: CookieAttrs) => Promise<{ ok: boolean; error?: string }>;
   deleteCookie: (c: CookieAttrs) => Promise<void>;
 }
 
@@ -48,9 +49,12 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
       if (seq === refreshSeq) set({ loading: false });
     }
   },
-  saveCookie: async (c) => {
+  saveCookie: async (c, original) => {
     try {
       await setCookie(c);
+      if (original && cookieId(original) !== cookieId(c)) {
+        await removeCookie(original);
+      }
       await get().refresh();
       return { ok: true };
     } catch (err) {

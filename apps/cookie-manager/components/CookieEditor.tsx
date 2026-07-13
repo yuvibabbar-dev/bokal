@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { CookieAttrs, SameSite } from '../lib/cookie-types';
 import { validateCookie } from '../lib/cookies/validation';
 import { isSecureOrigin } from '../lib/origin';
+import { cookieUrl } from '../lib/cookies/keys';
 import { cookiesStore } from '../stores/cookies-store';
 
 const SAME_SITE: SameSite[] = ['unspecified', 'lax', 'strict', 'no_restriction'];
@@ -22,11 +23,11 @@ function fromLocalInput(v: string): number | undefined {
 const rowStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 };
 const labelStyle: React.CSSProperties = { fontSize: 11, color: '#666' };
 
-export function CookieEditor({ initial, activeUrl, onDone }: { initial: CookieAttrs; activeUrl: string | null; onDone: () => void }) {
+export function CookieEditor({ initial, original, activeUrl, onDone }: { initial: CookieAttrs; original: CookieAttrs | null; activeUrl: string | null; onDone: () => void }) {
   const [draft, setDraft] = useState<CookieAttrs>(initial);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const secureOrigin = activeUrl ? isSecureOrigin(activeUrl) : false;
+  const secureOrigin = isSecureOrigin(cookieUrl(draft));
   const issues = validateCookie(draft, { isSecureOrigin: secureOrigin });
   const isSession = draft.expirationDate === undefined;
 
@@ -37,7 +38,7 @@ export function CookieEditor({ initial, activeUrl, onDone }: { initial: CookieAt
   async function onSave() {
     setSaveError(null);
     setBusy(true);
-    const res = await cookiesStore.getState().saveCookie(draft);
+    const res = await cookiesStore.getState().saveCookie(draft, original ?? undefined);
     setBusy(false);
     if (res.ok) onDone();
     else setSaveError(res.error ?? 'Failed to save');

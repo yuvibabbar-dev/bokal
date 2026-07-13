@@ -19,7 +19,8 @@ export function toSetDetails(c: CookieAttrs): chrome.cookies.SetDetails {
 }
 
 export async function setCookie(c: CookieAttrs): Promise<void> {
-  await chrome.cookies.set(toSetDetails(c));
+  const result = await chrome.cookies.set(toSetDetails(c));
+  if (!result) throw new Error('The browser rejected the cookie (check its attributes).');
 }
 
 export async function removeCookie(c: CookieAttrs): Promise<void> {
