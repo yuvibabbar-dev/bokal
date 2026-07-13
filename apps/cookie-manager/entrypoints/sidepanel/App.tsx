@@ -9,6 +9,7 @@ import { ThemeToggle } from '../../components/ThemeToggle';
 import { UpgradeButton } from '../../components/UpgradeButton';
 import { useCookiesStore, cookiesStore, hydrateFromStorage } from '../../stores/cookies-store';
 import { useEntitlement, entitlementStore } from '../../stores/entitlement-store';
+import { useRules, rulesStore } from '../../stores/rules-store';
 import { onPermissionsChanged } from '../../lib/permissions';
 import { SOFT_DOMAIN_COOKIE_WARN } from '../../lib/cookies/validation';
 import { shouldPromptReview, dismissReviewPrompt, reviewUrl } from '../../lib/review';
@@ -25,6 +26,7 @@ export function App() {
   const scope = useCookiesStore((s) => s.scope);
   const [editing, setEditing] = useState<{ draft: CookieAttrs; original: CookieAttrs | null } | null>(null);
   const entitled = useEntitlement((s) => s.entitled);
+  const rules = useRules((s) => s.rules);
   const [Pro, setPro] = useState<ComponentType | null>(null);
   const [showReview, setShowReview] = useState(false);
   const filtered = query
@@ -43,6 +45,7 @@ export function App() {
   useEffect(() => {
     void hydrateFromStorage().catch(() => {}).then(() => cookiesStore.getState().refresh());
     void entitlementStore.getState().refresh();
+    void rulesStore.getState().refresh();
     const unsub = onPermissionsChanged(() => void cookiesStore.getState().refresh());
     const onActivated = (): void => void cookiesStore.getState().refresh();
     chrome.tabs.onActivated.addListener(onActivated);
@@ -113,8 +116,11 @@ export function App() {
       )}
       <CookieList
         cookies={filtered}
+        rules={rules}
         onEdit={(c) => setEditing({ draft: c, original: c })}
         onDelete={(c) => { if (confirm(`Delete cookie "${c.name}"?`)) void cookiesStore.getState().deleteCookie(c).catch((e) => console.error('[wafer] delete failed', e)); }}
+        onTogglePin={(c) => void rulesStore.getState().togglePin(c)}
+        onToggleProtect={(c) => void rulesStore.getState().toggleProtect(c)}
       />
       {entitled ? (Pro ? <Pro /> : null) : <div style={{ padding: '8px 12px' }}><UpgradeButton /></div>}
     </main>

@@ -7,6 +7,7 @@ import { hasAllUrlsPermission } from '../lib/permissions';
 import { cookieId } from '../lib/cookies/keys';
 import { validateForImport } from '../lib/cookies/validation';
 import { recordAction } from '../lib/review';
+import { loadRules, partitionDeletable } from '../lib/rules/rules';
 
 interface CookiesState {
   granted: boolean;
@@ -23,7 +24,7 @@ interface CookiesState {
   refresh: () => Promise<void>;
   saveCookie: (c: CookieAttrs, original?: CookieAttrs) => Promise<{ ok: boolean; error?: string }>;
   deleteCookie: (c: CookieAttrs) => Promise<void>;
-  deleteAllForSite: (cookies: CookieAttrs[]) => Promise<{ removed: number; failed: number }>;
+  deleteAllForSite: (cookies: CookieAttrs[]) => Promise<{ removed: number; failed: number; skipped: number }>;
   importCookies: (cookies: CookieAttrs[]) => Promise<{ imported: number; failed: number; errors: string[] }>;
 }
 
@@ -91,14 +92,17 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
     await get().refresh();
   },
   deleteAllForSite: async (list) => {
+    // Protected cookies are never deleted by any Wafer action.
+    const rules = await loadRules();
+    const { deletable, protectedSkipped } = partitionDeletable(list, rules);
     let removed = 0;
     let failed = 0;
-    for (const c of list) {
+    for (const c of deletable) {
       try { await removeCookie(c); removed += 1; } catch { failed += 1; }
     }
     if (removed > 0) await recordAction();
     await get().refresh();
-    return { removed, failed };
+    return { removed, failed, skipped: protectedSkipped };
   },
   importCookies: async (cookies) => {
     let imported = 0;
