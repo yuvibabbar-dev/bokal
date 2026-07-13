@@ -8,6 +8,7 @@ import { cookieId } from '../lib/cookies/keys';
 
 interface CookiesState {
   granted: boolean;
+  ready: boolean;
   activeUrl: string | null;
   cookies: CookieAttrs[];
   query: string;
@@ -27,6 +28,7 @@ let refreshSeq = 0;
 
 export const cookiesStore = createStore<CookiesState>((set, get) => ({
   granted: false,
+  ready: false,
   activeUrl: null,
   cookies: [],
   query: '',
@@ -40,7 +42,7 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
     try {
       const granted = await hasAllUrlsPermission();
       if (!granted) {
-        if (seq === refreshSeq) set({ granted: false, activeUrl: null, cookies: [], loading: false });
+        if (seq === refreshSeq) set({ granted: false, activeUrl: null, cookies: [], loading: false, ready: true });
         return;
       }
       const activeUrl = await getActiveTabUrl();
@@ -50,12 +52,12 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
         cookies = cookies.concat(partitioned);
       }
       if (seq !== refreshSeq) return; // a newer refresh superseded this one
-      set({ granted: true, activeUrl, cookies, loading: false });
+      set({ granted: true, activeUrl, cookies, loading: false, ready: true });
       // chrome.storage is the source of truth for cross-context rehydrate.
       await chrome.storage.session.set({ [SESSION_KEY]: { activeUrl, cookies } });
     } catch (err) {
       console.error('[wafer] refresh failed', err);
-      if (seq === refreshSeq) set({ loading: false });
+      if (seq === refreshSeq) set({ loading: false, ready: true });
     }
   },
   saveCookie: async (c, original) => {
