@@ -45,12 +45,17 @@ Trust is the whole point of Wafer:
 FEATURES
 • Full cookie control: view, add, edit, and delete cookies, including HttpOnly
   cookies that UI-only tools can't touch.
-• Search and filter across all cookies for a site.
-• Export to JSON and Netscape (cookies.txt) — no "downloads" permission needed.
-• Import from JSON (compatible with Cookie-Editor and EditThisCookie exports).
+• Search and filter; view cookies for the current site or across all sites.
+• Protect cookies from deletion, pin important ones to the top, and block
+  cookies from specific domains (reactive cleanup).
+• Export to JSON, Netscape (cookies.txt), and cookie-header formats — no
+  "downloads" permission needed.
+• Export for test automation: Playwright storageState and Puppeteer formats.
+• Import from JSON (Cookie-Editor / EditThisCookie compatible), cookie headers,
+  and Playwright/Puppeteer files.
 • CHIPS partition inspector for modern partitioned cookies.
-• Dark mode.
-• Fast, virtualized lists that stay smooth across thousands of cookies.
+• DevTools panel: inspect and edit the current tab's cookies inside DevTools.
+• Dark mode and fast, virtualized lists across thousands of cookies.
 
 WHO IT'S FOR
 • Web developers debugging sessions and authentication.
@@ -60,8 +65,13 @@ WHO IT'S FOR
 PERMISSIONS, IN PLAIN ENGLISH
 • cookies — the core function: read, create, edit, and delete cookies for the
   site you're managing.
-• storage — saves your local preferences (dark mode, filters) on your device.
+• storage — saves your local preferences (dark mode) and cookie rules
+  (protect/pin/block) on your device.
 • sidePanel — renders Wafer's side-panel interface next to the page.
+• unlimitedStorage — lets Pro cookie profiles grow past the default quota;
+  everything stays on your device.
+• alarms — schedules a periodic local re-check of your Pro license; nothing is
+  transmitted.
 • Host access — required by Chrome's cookies API to read/write cookies for a
   domain. Wafer requests it only at runtime for the specific site you choose,
   never for all sites up front.
