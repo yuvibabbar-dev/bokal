@@ -78,7 +78,7 @@ export function App() {
 
   return (
     <main style={{ font: '13px system-ui', padding: 12 }}>
-      <IoBar />
+      <IoBar cookies={filtered} />
       <button type="button" onClick={() => setEditing({ draft: newDraft(), original: null })} style={{ marginBottom: 8 }}>＋ Add cookie</button>
       <SearchBar />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--wafer-muted)', marginBottom: 8 }}>

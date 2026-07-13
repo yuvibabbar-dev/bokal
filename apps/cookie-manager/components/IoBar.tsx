@@ -5,9 +5,11 @@ import { parseCookiesJson } from '../lib/io/import';
 import { downloadText } from '../lib/io/download';
 import { toHeaderString, parseHeaderString } from '../lib/io/header';
 import { copyText } from '../lib/clipboard';
+import type { CookieAttrs } from '../lib/cookie-types';
 
-export function IoBar() {
-  const cookies = useCookiesStore((s) => s.cookies);
+// `cookies` is the list currently SHOWN (search-filtered) — so export/copy/delete-all act on
+// exactly what the user sees, and the "Delete all N shown" confirmation is accurate.
+export function IoBar({ cookies }: { cookies: CookieAttrs[] }) {
   const activeUrl = useCookiesStore((s) => s.activeUrl);
   const fileRef = useRef<HTMLInputElement>(null);
   const [status, setStatus] = useState<string | null>(null);
@@ -21,16 +23,16 @@ export function IoBar() {
     e.target.value = '';
     if (!file) return;
     const text = await file.text();
-    let cookies = parseCookiesJson(text).cookies;
+    let toImport = parseCookiesJson(text).cookies;
     let note = '';
-    if (cookies.length === 0) {
+    if (toImport.length === 0) {
       let domain = 'example.com';
       try { if (activeUrl) domain = new URL(activeUrl).hostname; } catch { /* keep default */ }
-      cookies = parseHeaderString(text, domain);
-      note = cookies.length ? ' (as header string)' : '';
+      toImport = parseHeaderString(text, domain);
+      note = toImport.length ? ' (as header string)' : '';
     }
-    if (cookies.length === 0) { setStatus('Import failed: not valid JSON or a cookie header'); return; }
-    const res = await cookiesStore.getState().importCookies(cookies);
+    if (toImport.length === 0) { setStatus('Import failed: not valid JSON or a cookie header'); return; }
+    const res = await cookiesStore.getState().importCookies(toImport);
     setStatus(`Imported ${res.imported}, failed ${res.failed}${note}`);
   }
 
