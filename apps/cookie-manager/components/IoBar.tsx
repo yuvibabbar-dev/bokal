@@ -51,7 +51,10 @@ export function IoBar({ cookies, scope }: { cookies: CookieAttrs[]; scope: 'site
       note = toImport.length ? ' (as header string)' : '';
     }
     if (toImport.length === 0) {
-      setStatus(`Import failed: ${parsed.errors[0] ?? 'not valid JSON or a cookie header'}`);
+      // Distinguish "couldn't parse" from "parsed fine but held no cookies" (e.g. an empty
+      // but valid storageState / cookie array) — the latter isn't a failure.
+      if (parsed.errors.length === 0) { setStatus('No cookies found in the file'); return; }
+      setStatus(`Import failed: ${parsed.errors[0]}`);
       return;
     }
     // Importing while viewing "All cookies" writes across many domains — confirm the blast radius.

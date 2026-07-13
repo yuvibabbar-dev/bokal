@@ -26,6 +26,10 @@ const SAME_SITE_IN: Record<PwSameSite, SameSite> = {
   None: 'no_restriction',
 };
 
+// NOTE: partitionKey (CHIPS) is intentionally not represented — the Playwright/Puppeteer cookie
+// schemas have no field for it. A partitioned cookie exported here and re-imported into Wafer would
+// come back unpartitioned (wider scope); use the native JSON export (toJson) for lossless Wafer↔Wafer
+// round-trips of partitioned cookies. Do not "add" partitionKey here without a target-format field.
 function toAutomationCookie(c: CookieAttrs): AutomationCookie {
   const out: AutomationCookie = {
     name: c.name,
