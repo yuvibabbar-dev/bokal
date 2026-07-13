@@ -4,7 +4,7 @@
 > Chrome Web Store and Microsoft Edge Add-ons listing forms. Do not alter wording — this is the
 > approved, locked copy.
 
-## TITLE (name field — 60 / 75 chars)
+## TITLE (name field — 58 / 75 chars)
 
 ```
 Wafer - Cookie Editor & Manager (Open Source, No Tracking)

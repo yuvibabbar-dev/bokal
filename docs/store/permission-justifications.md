@@ -16,13 +16,17 @@
 
 - **`cookies`** — Core and only function: read, create, edit and delete cookies for the site the
   user is managing. Without it the extension cannot work.
-- **`storage`** — Stores local UI preferences (dark mode, filters) and, for Pro users, named
-  cookie profiles/snapshots. All data is kept on the device via `chrome.storage.local`; nothing
-  is transmitted.
+- **`storage`** — Stores local preferences via `chrome.storage.local` (theme, and the Pro
+  entitlement cache) and a temporary cookie snapshot via `chrome.storage.session` (so the panel
+  can rehydrate instantly on reopen). Note: the query/CHIPS-toggle filter state is in-memory only
+  and is not persisted. For Pro users, named cookie profiles/snapshots are stored separately in
+  IndexedDB (not `chrome.storage.local`; see `unlimitedStorage` below). All data is kept on the
+  device; nothing is transmitted.
 - **`sidePanel`** — Provides the side-panel view so users can inspect and edit cookies next to
   the page they are working on.
-- **`unlimitedStorage`** — Lets Pro users keep more than a handful of local cookie
-  profiles/snapshots without hitting the default 10 MB quota. Everything stays on the device;
+- **`unlimitedStorage`** — Lifts the browser's default IndexedDB eviction/quota limits for the
+  Pro cookie-profile library, so users can keep more than a handful of saved profiles/snapshots
+  (profiles are stored in IndexedDB, not `chrome.storage.local`). Everything stays on the device;
   nothing is transmitted.
 - **`alarms`** — Schedules a daily local re-check of the user's Pro entitlement status (e.g.
   trial expiry) so the paywall stays accurate without polling on every action. No data leaves

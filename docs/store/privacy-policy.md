@@ -18,9 +18,13 @@ browsing history, and contains no analytics, telemetry, ads, or remote code.
 Where your data goes: nowhere. Wafer transmits no data off your device. There is
 no server, no cloud, and no account.
 
-Local storage: your UI preferences and, if you use Pro cookie profiles, your
-saved cookie snapshots are stored only on your device via chrome.storage.local;
-Pro profiles can be encrypted at rest with a passphrase you set.
+Local storage: everything Wafer stores lives only on your device, split across a
+few browser-local mechanisms and never synced anywhere. Your theme preference
+and your Pro entitlement status are stored via chrome.storage.local; the
+current cookie list is cached temporarily via chrome.storage.session so
+re-opening the panel is instant; if you use Pro cookie profiles, your saved
+profiles/snapshots are stored only on your device in IndexedDB (not
+chrome.storage.local), and can be encrypted at rest with a passphrase you set.
 
 Third parties: none. We do not sell, share, or transfer any user data to anyone.
 
@@ -28,8 +32,10 @@ Payments (Pro): purchases are processed by ExtensionPay and Stripe; Wafer never
 sees or stores your payment details, and no cookie data is shared with them.
 
 Permissions: 'cookies' and host access are used solely to manage cookies for
-sites you choose; 'storage' and 'unlimitedStorage' persist local preferences and
-profiles on your device; 'sidePanel' renders the optional side-panel UI.
+sites you choose; 'storage' persists your local preferences, entitlement
+status, and cookie snapshot on your device; 'unlimitedStorage' lifts the
+default IndexedDB quota so your Pro cookie-profile library isn't capped;
+'sidePanel' renders the optional side-panel UI.
 
 Changes: if data practices ever change, we will update this policy and disclose
 it before the change takes effect.

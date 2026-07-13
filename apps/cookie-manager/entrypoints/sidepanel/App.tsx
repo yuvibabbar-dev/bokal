@@ -37,7 +37,7 @@ export function App() {
   }
 
   useEffect(() => {
-    void hydrateFromStorage().then(() => cookiesStore.getState().refresh());
+    void hydrateFromStorage().catch(() => {}).then(() => cookiesStore.getState().refresh());
     void entitlementStore.getState().refresh();
     const unsub = onPermissionsChanged(() => void cookiesStore.getState().refresh());
     const onActivated = (): void => void cookiesStore.getState().refresh();

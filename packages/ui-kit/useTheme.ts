@@ -12,7 +12,7 @@ export function applyTheme(mode: ThemeMode): void {
 export function useTheme(): [ThemeMode, (m: ThemeMode) => void] {
   const [mode, setMode] = useState<ThemeMode>('system');
   useEffect(() => {
-    void chrome.storage.sync.get(KEY).then((r) => {
+    void chrome.storage.local.get(KEY).then((r) => {
       const m = (r[KEY] as ThemeMode | undefined) ?? 'system';
       setMode(m);
       applyTheme(m);
@@ -21,7 +21,8 @@ export function useTheme(): [ThemeMode, (m: ThemeMode) => void] {
   const set = (m: ThemeMode): void => {
     setMode(m);
     applyTheme(m);
-    void chrome.storage.sync.set({ [KEY]: m });
+    // Persisted to chrome.storage.local (device-local only); theme does not sync across devices.
+    void chrome.storage.local.set({ [KEY]: m });
   };
   return [mode, set];
 }
