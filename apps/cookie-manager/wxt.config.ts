@@ -8,7 +8,7 @@ export default defineConfig({
     version: '1.0.0',
     description: 'View, edit, add, delete, import, and export browser cookies.',
     minimum_chrome_version: '114',
-    permissions: ['cookies', 'storage', 'sidePanel', 'unlimitedStorage'],
+    permissions: ['cookies', 'storage', 'sidePanel', 'unlimitedStorage', 'alarms'],
     optional_host_permissions: ['<all_urls>'],
     action: { default_title: 'Wafer' },
     side_panel: { default_path: 'sidepanel.html' },
