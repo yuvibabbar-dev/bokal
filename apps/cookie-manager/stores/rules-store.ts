@@ -14,7 +14,7 @@ interface RulesState {
 }
 
 const RULES_KEY = 'wafer:rules';
-const EMPTY: Rules = { protectedIds: [], pinnedIds: [], blockedDomains: [] };
+const EMPTY: Rules = { protectedIds: [], pinnedIds: [], blockedDomains: [], keepDomains: [], autoSweep: false };
 
 export const rulesStore = createStore<RulesState>((set, get) => ({
   rules: EMPTY,
