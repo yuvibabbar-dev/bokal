@@ -28,6 +28,6 @@ describe('getAllCookies', () => {
     });
     const out = await getAllCookies();
     expect(out).toHaveLength(1);
-    expect(out[0].name).toBe('a');
+    expect(out[0]?.name).toBe('a');
   });
 });

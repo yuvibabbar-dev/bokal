@@ -5,6 +5,7 @@ import { getActiveTabUrl, getAllCookies, getCookiesForUrl, getPartitionedCookies
 import { setCookie, removeCookie } from '../lib/cookies/write';
 import { hasAllUrlsPermission } from '../lib/permissions';
 import { cookieId } from '../lib/cookies/keys';
+import { validateForImport } from '../lib/cookies/validation';
 
 interface CookiesState {
   granted: boolean;
@@ -99,7 +100,14 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
     let imported = 0;
     let failed = 0;
     const errors: string[] = [];
-    for (const c of cookies) {
+    // Validate before writing so invalid cookies get a specific reason rather than a silent
+    // browser rejection (both JSON and header imports flow through here).
+    const { valid, invalid } = validateForImport(cookies);
+    for (const { cookie, message } of invalid) {
+      failed += 1;
+      errors.push(`${cookie.name}@${cookie.domain}: ${message}`);
+    }
+    for (const c of valid) {
       try {
         await setCookie(c);
         imported += 1;
