@@ -5,6 +5,7 @@ import { CookieList } from '../../components/CookieList';
 import { SearchBar } from '../../components/SearchBar';
 import { CookieEditor } from '../../components/CookieEditor';
 import { IoBar } from '../../components/IoBar';
+import { BlockRules } from '../../components/BlockRules';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { UpgradeButton } from '../../components/UpgradeButton';
 import { useCookiesStore, cookiesStore, hydrateFromStorage } from '../../stores/cookies-store';
@@ -122,6 +123,7 @@ export function App() {
         onTogglePin={(c) => void rulesStore.getState().togglePin(c)}
         onToggleProtect={(c) => void rulesStore.getState().toggleProtect(c)}
       />
+      <BlockRules />
       {entitled ? (Pro ? <Pro /> : null) : <div style={{ padding: '8px 12px' }}><UpgradeButton /></div>}
     </main>
   );
