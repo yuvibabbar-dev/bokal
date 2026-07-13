@@ -29,9 +29,13 @@ export const profilesStore = createStore<ProfilesState>((set, get) => ({
   busy: false,
   error: null,
   load: async () => {
-    const profiles = await getAllProfiles();
-    profiles.sort((a, b) => b.createdAt - a.createdAt);
-    set({ profiles });
+    try {
+      const profiles = await getAllProfiles();
+      profiles.sort((a, b) => b.createdAt - a.createdAt);
+      set({ profiles });
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : String(err) });
+    }
   },
   save: async (name, passphrase) => {
     set({ busy: true, error: null });
@@ -81,8 +85,12 @@ export const profilesStore = createStore<ProfilesState>((set, get) => ({
     }
   },
   remove: async (id) => {
-    await deleteProfileDb(id);
-    await get().load();
+    try {
+      await deleteProfileDb(id);
+      await get().load();
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : String(err) });
+    }
   },
 }));
 

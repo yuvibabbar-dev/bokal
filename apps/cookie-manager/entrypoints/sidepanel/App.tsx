@@ -42,6 +42,10 @@ export function App() {
     const unsub = onPermissionsChanged(() => void cookiesStore.getState().refresh());
     const onActivated = (): void => void cookiesStore.getState().refresh();
     chrome.tabs.onActivated.addListener(onActivated);
+    const onUpdated = (_tabId: number, info: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab): void => {
+      if (info.status === 'complete' && tab.active) void cookiesStore.getState().refresh();
+    };
+    chrome.tabs.onUpdated.addListener(onUpdated);
     const onMessage = (msg: unknown): void => {
       if (typeof msg === 'object' && msg !== null && (msg as { type?: string }).type === 'wafer:cookies-changed') {
         void cookiesStore.getState().refresh();
@@ -51,6 +55,7 @@ export function App() {
     return () => {
       unsub();
       chrome.tabs.onActivated.removeListener(onActivated);
+      chrome.tabs.onUpdated.removeListener(onUpdated);
       chrome.runtime.onMessage.removeListener(onMessage);
     };
   }, []);

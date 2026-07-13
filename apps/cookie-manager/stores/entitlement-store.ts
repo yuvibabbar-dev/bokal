@@ -17,15 +17,19 @@ async function readCache(): Promise<EntitlementCache | null> {
   return (r[CACHE_KEY] as EntitlementCache | undefined) ?? null;
 }
 
+let entSeq = 0;
+
 export const entitlementStore = createStore<EntitlementState>((set) => ({
   entitled: false,
   loading: false,
   refresh: async () => {
-    set({ loading: true });
+    const seq = ++entSeq;
+    if (seq === entSeq) set({ loading: true });
     // Decide from cache first (offline-friendly), then attempt a live re-check.
     const cached = await readCache();
-    set({ entitled: isEntitled(cached, Date.now(), GRACE_MS) });
+    if (seq === entSeq) set({ entitled: isEntitled(cached, Date.now(), GRACE_MS) });
     const fresh = await syncEntitlementCache();
+    if (seq !== entSeq) return;
     if (fresh) set({ entitled: isEntitled(fresh, Date.now(), GRACE_MS) });
     set({ loading: false });
   },
