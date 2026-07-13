@@ -23,9 +23,16 @@ export function App() {
     const unsub = onPermissionsChanged(() => void cookiesStore.getState().refresh());
     const onActivated = (): void => void cookiesStore.getState().refresh();
     chrome.tabs.onActivated.addListener(onActivated);
+    const onMessage = (msg: unknown): void => {
+      if (typeof msg === 'object' && msg !== null && (msg as { type?: string }).type === 'wafer:cookies-changed') {
+        void cookiesStore.getState().refresh();
+      }
+    };
+    chrome.runtime.onMessage.addListener(onMessage);
     return () => {
       unsub();
       chrome.tabs.onActivated.removeListener(onActivated);
+      chrome.runtime.onMessage.removeListener(onMessage);
     };
   }, []);
 
