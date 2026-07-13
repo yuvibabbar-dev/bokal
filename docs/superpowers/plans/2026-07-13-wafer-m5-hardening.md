@@ -285,8 +285,10 @@ jobs:
         with: { node-version: 24, cache: pnpm }
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @wafer/cookie-manager e2e:install
-      - run: pnpm --filter @wafer/cookie-manager build:e2e
-      - run: xvfb-run -a pnpm --filter @wafer/cookie-manager e2e
+      - name: E2E against the normal build (grant-gate path)
+        run: pnpm --filter @wafer/cookie-manager build && xvfb-run -a pnpm --filter @wafer/cookie-manager e2e
+      - name: E2E against the e2e build (granted-UI path)
+        run: pnpm --filter @wafer/cookie-manager build:e2e && xvfb-run -a pnpm --filter @wafer/cookie-manager e2e
 ```
 - [ ] **Step 2: Commit** `git add .github/workflows/ci.yml && git commit -m "ci: GitHub Actions — tsc, vitest, build+artifact, Playwright E2E (xvfb)"`
 
