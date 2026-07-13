@@ -1,8 +1,7 @@
 {
-  "extends": "@wafer/tsconfig/base.json",
+  "extends": "./.wxt/tsconfig.json",
   "compilerOptions": {
-    "types": ["chrome"]
-  },
-  "include": ["entrypoints", "lib", "stores", "components", "wxt.config.ts"],
-  "references": []
+    "noUncheckedIndexedAccess": true,
+    "jsx": "react-jsx"
+  }
 }
