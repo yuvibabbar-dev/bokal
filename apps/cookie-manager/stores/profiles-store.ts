@@ -3,7 +3,9 @@ import { useStore } from 'zustand';
 import type { Profile } from '../lib/profiles/types';
 import { putProfile, getAllProfiles, deleteProfileDb } from '../lib/profiles/db';
 import { encryptJson, decryptJson } from '../lib/profiles/crypto';
-import { setCookie } from '../lib/cookies/write';
+import { setCookie, removeCookie } from '../lib/cookies/write';
+import { cookieUrl } from '../lib/cookies/keys';
+import { getCookiesForUrl } from '../lib/cookies/read';
 import { cookiesStore } from './cookies-store';
 import type { CookieAttrs } from '../lib/cookie-types';
 
@@ -13,7 +15,7 @@ interface ProfilesState {
   error: string | null;
   load: () => Promise<void>;
   save: (name: string, passphrase?: string) => Promise<void>;
-  apply: (id: string, passphrase?: string) => Promise<{ applied: number; failed: number }>;
+  apply: (id: string, opts?: { passphrase?: string; replace?: boolean }) => Promise<{ applied: number; failed: number; removed: number }>;
   remove: (id: string) => Promise<void>;
 }
 
@@ -59,12 +61,27 @@ export const profilesStore = createStore<ProfilesState>((set, get) => ({
       set({ busy: false });
     }
   },
-  apply: async (id, passphrase) => {
+  apply: async (id, opts) => {
     set({ busy: true, error: null });
     try {
       const profile = get().profiles.find((p) => p.id === id);
       if (!profile) throw new Error('Profile not found');
-      const cookies = await cookiesOf(profile, passphrase);
+      const cookies = await cookiesOf(profile, opts?.passphrase);
+      let removed = 0;
+      if (opts?.replace) {
+        // Clear existing cookies for every URL this profile touches, then apply — a true restore.
+        const urls = [...new Set(cookies.map((c) => cookieUrl(c)))];
+        for (const url of urls) {
+          for (const existing of await getCookiesForUrl(url)) {
+            try {
+              await removeCookie(existing);
+              removed += 1;
+            } catch {
+              /* best effort */
+            }
+          }
+        }
+      }
       let applied = 0;
       let failed = 0;
       for (const c of cookies) {
@@ -76,10 +93,10 @@ export const profilesStore = createStore<ProfilesState>((set, get) => ({
         }
       }
       await cookiesStore.getState().refresh();
-      return { applied, failed };
+      return { applied, failed, removed };
     } catch (err) {
       set({ error: err instanceof Error ? err.message : String(err) });
-      return { applied: 0, failed: 0 };
+      return { applied: 0, failed: 0, removed: 0 };
     } finally {
       set({ busy: false });
     }
