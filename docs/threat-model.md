@@ -83,6 +83,13 @@ device regardless of scope.
 > deferred native per-site access chip), or (b) correct the copy to describe the runtime
 > all-sites grant. Tracked in the M8 report.
 
+**2.2b Automatic cleanup + block rules.** Block rules (reactive, in the service worker) and the
+optional daily cleanup sweep (`wafer:cleanup` alarm) both *delete* cookies; they never transmit
+anything. Both honor the protect list (a protected cookie is never removed, even by a sweep or a
+block match — enforced at the data layer, not the UI). Cleanup is on-demand or once-daily while the
+browser runs; Wafer has no `tabs` permission, so it cannot act on tab close. Rules live in
+`chrome.storage.local`.
+
 **2.3 Extension vs. local storage.** `chrome.storage.local` (small state — the mock entitlement
 flag) and IndexedDB (`lib/profiles/db.ts`, database `wafer`, object store `profiles`) are both
 extension-origin storage: isolated from web pages and other extensions by the browser, but not

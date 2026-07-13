@@ -48,6 +48,10 @@ FEATURES
 • Search and filter; view cookies for the current site or across all sites.
 • Protect cookies from deletion, pin important ones to the top, and block
   cookies from specific domains (reactive cleanup).
+• Automatic cleanup: keep a list of sites to preserve, then clear everything
+  else with one click or a daily sweep (protected cookies are always kept).
+• Cookie audit hints: flags missing SameSite, unpartitioned cross-site cookies,
+  and oversized cookies right in the list.
 • Export to JSON, Netscape (cookies.txt), and cookie-header formats — no
   "downloads" permission needed.
 • Export for test automation: Playwright storageState and Puppeteer formats.
