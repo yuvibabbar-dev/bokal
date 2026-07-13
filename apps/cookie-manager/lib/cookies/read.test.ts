@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getAllCookies } from './read';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { getAllCookies, getActiveTabUrl, setInspectedTab } from './read';
 
 const uP = { name: 'a', value: '1', domain: 'x.com', path: '/', secure: true, httpOnly: false, sameSite: 'lax', hostOnly: true };
 const part = {
@@ -29,5 +29,23 @@ describe('getAllCookies', () => {
     const out = await getAllCookies();
     expect(out).toHaveLength(1);
     expect(out[0]?.name).toBe('a');
+  });
+});
+
+describe('getActiveTabUrl inspected-tab override (DevTools)', () => {
+  afterEach(() => setInspectedTab(null)); // module-level state — reset so it can't leak between tests
+
+  it('reads the inspected tab url when set, else the active tab', async () => {
+    (globalThis as unknown as { chrome: unknown }).chrome = {
+      tabs: {
+        get: vi.fn(async (id: number) => ({ id, url: 'https://inspected.example/' })),
+        query: vi.fn(async () => [{ id: 1, url: 'https://active.example/' }]),
+      },
+    };
+    setInspectedTab(5);
+    expect(await getActiveTabUrl()).toBe('https://inspected.example/');
+    expect(chrome.tabs.get).toHaveBeenCalledWith(5);
+    setInspectedTab(null);
+    expect(await getActiveTabUrl()).toBe('https://active.example/');
   });
 });

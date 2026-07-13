@@ -1,6 +1,11 @@
 import type { CookieAttrs, SameSite } from '../cookie-types';
 import { siteFromUrl } from '../site';
 
+// In the DevTools panel there is no "active side-panel tab" — cookies must be read for the tab
+// being inspected. The devtools-panel entrypoint sets this to chrome.devtools.inspectedWindow.tabId.
+let inspectedTabId: number | null = null;
+export function setInspectedTab(id: number | null): void { inspectedTabId = id; }
+
 export function fromChrome(c: chrome.cookies.Cookie): CookieAttrs {
   return {
     name: c.name,
@@ -43,9 +48,9 @@ async function activePartitionSite(fallbackUrl: string): Promise<string | null> 
   };
   if (typeof api.getPartitionKey === 'function') {
     try {
-      const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-      if (tab?.id !== undefined) {
-        const { partitionKey } = await api.getPartitionKey({ tabId: tab.id, frameId: 0 });
+      const tabId = inspectedTabId ?? (await chrome.tabs.query({ active: true, lastFocusedWindow: true }))[0]?.id;
+      if (tabId !== undefined && tabId !== null) {
+        const { partitionKey } = await api.getPartitionKey({ tabId, frameId: 0 });
         if (partitionKey?.topLevelSite) return partitionKey.topLevelSite;
       }
     } catch {
@@ -67,6 +72,9 @@ export async function getPartitionedCookiesForUrl(url: string): Promise<CookieAt
 }
 
 export async function getActiveTabUrl(): Promise<string | null> {
+  if (inspectedTabId !== null) {
+    try { return (await chrome.tabs.get(inspectedTabId)).url ?? null; } catch { return null; }
+  }
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
   // tab.url is present only once <all_urls> host permission is granted (we don't declare "tabs").
   return tab?.url ?? null;

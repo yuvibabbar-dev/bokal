@@ -6,6 +6,7 @@ import { encryptJson, decryptJson } from '../lib/profiles/crypto';
 import { setCookie, removeCookie } from '../lib/cookies/write';
 import { cookieUrl } from '../lib/cookies/keys';
 import { getCookiesForUrl } from '../lib/cookies/read';
+import { loadRules, isProtected } from '../lib/rules/rules';
 import { cookiesStore } from './cookies-store';
 import type { CookieAttrs } from '../lib/cookie-types';
 
@@ -71,9 +72,12 @@ export const profilesStore = createStore<ProfilesState>((set, get) => ({
       if (opts?.replace) {
         // Clear existing cookies for every URL this profile touches, then apply — a true restore.
         // Best-effort: removes existing cookies for the profile's URLs, then sets. A partial set-failure leaves those cookies cleared with no rollback (reported as failed).
+        // Protected cookies are never removed, even on a replace (data-layer protect invariant).
+        const rules = await loadRules();
         const urls = [...new Set(cookies.map((c) => cookieUrl(c)))];
         for (const url of urls) {
           for (const existing of await getCookiesForUrl(url)) {
+            if (isProtected(rules, existing)) continue;
             try {
               await removeCookie(existing);
               removed += 1;
