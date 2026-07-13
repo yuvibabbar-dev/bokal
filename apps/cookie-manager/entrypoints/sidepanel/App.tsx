@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
+import type { ComponentType } from 'react';
 import { GrantAccess } from '../../components/GrantAccess';
 import { CookieList } from '../../components/CookieList';
 import { SearchBar } from '../../components/SearchBar';
 import { CookieEditor } from '../../components/CookieEditor';
 import { IoBar } from '../../components/IoBar';
 import { ThemeToggle } from '../../components/ThemeToggle';
+import { UpgradeButton } from '../../components/UpgradeButton';
 import { useCookiesStore, cookiesStore, hydrateFromStorage } from '../../stores/cookies-store';
+import { useEntitlement, entitlementStore } from '../../stores/entitlement-store';
 import { onPermissionsChanged } from '../../lib/permissions';
 import type { CookieAttrs } from '../../lib/cookie-types';
 
@@ -17,6 +20,8 @@ export function App() {
   const query = useCookiesStore((s) => s.query);
   const showPartitioned = useCookiesStore((s) => s.showPartitioned);
   const [editing, setEditing] = useState<{ draft: CookieAttrs; original: CookieAttrs | null } | null>(null);
+  const entitled = useEntitlement((s) => s.entitled);
+  const [Pro, setPro] = useState<ComponentType | null>(null);
   const filtered = query
     ? cookies.filter((c) => {
         const q = query.toLowerCase();
@@ -32,6 +37,7 @@ export function App() {
 
   useEffect(() => {
     void hydrateFromStorage().then(() => cookiesStore.getState().refresh());
+    void entitlementStore.getState().refresh();
     const unsub = onPermissionsChanged(() => void cookiesStore.getState().refresh());
     const onActivated = (): void => void cookiesStore.getState().refresh();
     chrome.tabs.onActivated.addListener(onActivated);
@@ -47,6 +53,12 @@ export function App() {
       chrome.runtime.onMessage.removeListener(onMessage);
     };
   }, []);
+
+  useEffect(() => {
+    if (entitled && !Pro) {
+      void import('../../components/pro/ProfilesPanel').then((m) => setPro(() => m.ProfilesPanel));
+    }
+  }, [entitled, Pro]);
 
   if (!granted) return <GrantAccess onGrant={() => void cookiesStore.getState().refresh()} />;
 
@@ -71,6 +83,7 @@ export function App() {
         onEdit={(c) => setEditing({ draft: c, original: c })}
         onDelete={(c) => { if (confirm(`Delete cookie "${c.name}"?`)) void cookiesStore.getState().deleteCookie(c).catch((e) => console.error('[wafer] delete failed', e)); }}
       />
+      {entitled ? (Pro ? <Pro /> : null) : <div style={{ padding: '8px 12px' }}><UpgradeButton /></div>}
     </main>
   );
 }
