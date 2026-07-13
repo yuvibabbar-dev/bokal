@@ -16,7 +16,12 @@ export function CookieRow({
         onClick={() => onEdit?.(cookie)}
         style={{ flex: 1, minWidth: 0, textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit' }}
       >
-        <div style={{ fontWeight: 600 }}>{cookie.name}</div>
+        <div style={{ fontWeight: 600 }}>
+          {cookie.name}
+          {cookie.partitionKey?.topLevelSite && (
+            <span title={`Partitioned: ${cookie.partitionKey.topLevelSite}`} style={{ fontSize: 10, color: 'var(--wafer-accent)', border: '1px solid var(--wafer-border)', borderRadius: 3, padding: '0 3px', marginLeft: 4 }}>CHIPS</span>
+          )}
+        </div>
         {/* value is attacker-controlled → text node only, never HTML */}
         <div style={{ color: 'var(--wafer-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{cookie.value}</div>
       </button>

@@ -15,6 +15,7 @@ export function App() {
   const activeUrl = useCookiesStore((s) => s.activeUrl);
   const cookies = useCookiesStore((s) => s.cookies);
   const query = useCookiesStore((s) => s.query);
+  const showPartitioned = useCookiesStore((s) => s.showPartitioned);
   const [editing, setEditing] = useState<{ draft: CookieAttrs; original: CookieAttrs | null } | null>(null);
   const filtered = query
     ? cookies.filter((c) => {
@@ -60,6 +61,9 @@ export function App() {
       <SearchBar />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--wafer-muted)', marginBottom: 8 }}>
         <span>{loading ? 'Loading…' : `${filtered.length} cookies · ${activeUrl ?? 'unknown site'}`}</span>
+        <label style={{ fontSize: 11, color: 'var(--wafer-muted)' }}>
+          <input type="checkbox" checked={showPartitioned} onChange={(e) => cookiesStore.getState().setShowPartitioned(e.target.checked)} /> Show partitioned (CHIPS)
+        </label>
         <ThemeToggle />
       </div>
       <CookieList

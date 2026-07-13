@@ -23,6 +23,16 @@ export async function getCookiesForUrl(url: string): Promise<CookieAttrs[]> {
   return cookies.map(fromChrome);
 }
 
+export async function getPartitionedCookiesForUrl(url: string): Promise<CookieAttrs[]> {
+  try {
+    const site = new URL(url).origin;
+    const cookies = await chrome.cookies.getAll({ url, partitionKey: { topLevelSite: site } });
+    return cookies.map(fromChrome);
+  } catch {
+    return [];
+  }
+}
+
 export async function getActiveTabUrl(): Promise<string | null> {
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
   // tab.url is present only once <all_urls> host permission is granted (we don't declare "tabs").
