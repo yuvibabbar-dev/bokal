@@ -23,7 +23,8 @@ export function IoBar({ cookies, scope }: { cookies: CookieAttrs[]; scope: 'site
     e.target.value = '';
     if (!file) return;
     const text = await file.text();
-    let toImport = parseCookiesJson(text).cookies;
+    const parsed = parseCookiesJson(text);
+    let toImport = parsed.cookies;
     let note = '';
     if (toImport.length === 0) {
       let domain = 'example.com';
@@ -31,9 +32,17 @@ export function IoBar({ cookies, scope }: { cookies: CookieAttrs[]; scope: 'site
       toImport = parseHeaderString(text, domain);
       note = toImport.length ? ' (as header string)' : '';
     }
-    if (toImport.length === 0) { setStatus('Import failed: not valid JSON or a cookie header'); return; }
+    if (toImport.length === 0) {
+      setStatus(`Import failed: ${parsed.errors[0] ?? 'not valid JSON or a cookie header'}`);
+      return;
+    }
     const res = await cookiesStore.getState().importCookies(toImport);
-    setStatus(`Imported ${res.imported}, failed ${res.failed}${note}`);
+    if (res.failed > 0) {
+      const more = res.errors.length > 1 ? ` (+${res.errors.length - 1} more)` : '';
+      setStatus(`Imported ${res.imported}, failed ${res.failed}${note} — ${res.errors[0] ?? ''}${more}`);
+    } else {
+      setStatus(`Imported ${res.imported}${note}`);
+    }
   }
 
   return (
