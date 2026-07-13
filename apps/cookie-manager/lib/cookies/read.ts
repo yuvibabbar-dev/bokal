@@ -29,8 +29,26 @@ export async function getAllCookies(): Promise<CookieAttrs[]> {
   return cookies.map(fromChrome);
 }
 
+async function activePartitionSite(fallbackUrl: string): Promise<string | null> {
+  const api = chrome.cookies as {
+    getPartitionKey?: (d: { tabId: number; frameId: number }) => Promise<{ partitionKey: { topLevelSite?: string } }>;
+  };
+  if (typeof api.getPartitionKey === 'function') {
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+      if (tab?.id !== undefined) {
+        const { partitionKey } = await api.getPartitionKey({ tabId: tab.id, frameId: 0 });
+        if (partitionKey?.topLevelSite) return partitionKey.topLevelSite;
+      }
+    } catch {
+      /* fall through to heuristic */
+    }
+  }
+  return siteFromUrl(fallbackUrl);
+}
+
 export async function getPartitionedCookiesForUrl(url: string): Promise<CookieAttrs[]> {
-  const site = siteFromUrl(url);
+  const site = await activePartitionSite(url);
   if (!site) return [];
   try {
     const cookies = await chrome.cookies.getAll({ url, partitionKey: { topLevelSite: site } });
