@@ -13,4 +13,9 @@ export default defineBackground(() => {
   }, 120);
 
   chrome.cookies.onChanged.addListener(() => notify.trigger());
+
+  chrome.alarms.create('wafer:entitlement', { periodInMinutes: 60 * 24 });
+  chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === 'wafer:entitlement') void import('../lib/pay/sync').then((m) => m.syncEntitlementCache()).catch(() => {});
+  });
 });
