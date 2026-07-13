@@ -1,16 +1,30 @@
 import { createDebouncer } from '../lib/debounce';
-import { loadRules, matchesBlock, isProtected, RULES_KEY, type Rules } from '../lib/rules/rules';
-import { fromChrome } from '../lib/cookies/read';
+import { loadRules, matchesBlock, isProtected, computeCleanup, RULES_KEY, type Rules } from '../lib/rules/rules';
+import { fromChrome, getAllCookies } from '../lib/cookies/read';
 import { removeCookie } from '../lib/cookies/write';
+
+const CLEANUP_ALARM = 'wafer:cleanup';
 
 export default defineBackground(() => {
   // Cache rules within the service-worker lifetime to avoid a storage read per cookie change;
   // invalidate whenever the rules are edited.
   let cachedRules: Rules | null = null;
   const currentRules = (): Promise<Rules> => (cachedRules ? Promise.resolve(cachedRules) : loadRules().then((r) => (cachedRules = r)));
+
+  // Keep the daily cleanup alarm in sync with the autoSweep flag.
+  const syncCleanupAlarm = async (): Promise<void> => {
+    const { autoSweep } = await loadRules();
+    if (autoSweep) await chrome.alarms.create(CLEANUP_ALARM, { periodInMinutes: 60 * 24 });
+    else await chrome.alarms.clear(CLEANUP_ALARM);
+  };
+
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === 'local' && changes[RULES_KEY]) cachedRules = null;
+    if (area === 'local' && changes[RULES_KEY]) {
+      cachedRules = null;
+      void syncCleanupAlarm();
+    }
   });
+  void syncCleanupAlarm();
   chrome.sidePanel
     .setPanelBehavior({ openPanelOnActionClick: true })
     .catch((err) => console.error('[wafer] setPanelBehavior failed', err));
@@ -42,5 +56,15 @@ export default defineBackground(() => {
   });
   chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === 'wafer:entitlement') void import('../lib/pay/sync').then((m) => m.syncEntitlementCache()).catch(() => {});
+    if (alarm.name === CLEANUP_ALARM) {
+      // Daily sweep: remove everything not on the keep-list (never a protected cookie). No value logging.
+      void loadRules()
+        .then(async (rules) => {
+          for (const c of computeCleanup(await getAllCookies(), rules)) {
+            await removeCookie(c).catch(() => {});
+          }
+        })
+        .catch(() => {});
+    }
   });
 });

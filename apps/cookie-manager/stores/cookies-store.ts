@@ -7,7 +7,7 @@ import { hasAllUrlsPermission } from '../lib/permissions';
 import { cookieId } from '../lib/cookies/keys';
 import { validateForImport } from '../lib/cookies/validation';
 import { recordAction } from '../lib/review';
-import { loadRules, partitionDeletable, isProtected } from '../lib/rules/rules';
+import { loadRules, partitionDeletable, isProtected, computeCleanup } from '../lib/rules/rules';
 
 interface CookiesState {
   granted: boolean;
@@ -25,6 +25,7 @@ interface CookiesState {
   saveCookie: (c: CookieAttrs, original?: CookieAttrs) => Promise<{ ok: boolean; error?: string }>;
   deleteCookie: (c: CookieAttrs) => Promise<void>;
   deleteAllForSite: (cookies: CookieAttrs[]) => Promise<{ removed: number; failed: number; skipped: number }>;
+  cleanupNow: () => Promise<{ removed: number; failed: number }>;
   importCookies: (cookies: CookieAttrs[]) => Promise<{ imported: number; failed: number; errors: string[] }>;
 }
 
@@ -105,6 +106,19 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
     if (removed > 0) await recordAction();
     await get().refresh();
     return { removed, failed, skipped: protectedSkipped };
+  },
+  cleanupNow: async () => {
+    // Remove every cookie not on the keep-list (and never a protected one). Needs <all_urls>.
+    const rules = await loadRules();
+    const removable = computeCleanup(await getAllCookies(), rules);
+    let removed = 0;
+    let failed = 0;
+    for (const c of removable) {
+      try { await removeCookie(c); removed += 1; } catch { failed += 1; }
+    }
+    if (removed > 0) await recordAction();
+    await get().refresh();
+    return { removed, failed };
   },
   importCookies: async (cookies) => {
     let imported = 0;

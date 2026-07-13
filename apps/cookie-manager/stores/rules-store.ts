@@ -11,6 +11,9 @@ interface RulesState {
   togglePin: (c: CookieAttrs) => Promise<void>;
   addBlock: (domain: string) => Promise<void>;
   removeBlock: (domain: string) => Promise<void>;
+  addKeep: (domain: string) => Promise<void>;
+  removeKeep: (domain: string) => Promise<void>;
+  setAutoSweep: (on: boolean) => Promise<void>;
 }
 
 const RULES_KEY = 'wafer:rules';
@@ -43,6 +46,27 @@ export const rulesStore = createStore<RulesState>((set, get) => ({
   removeBlock: async (domain) => {
     const r = get().rules;
     const next: Rules = { ...r, blockedDomains: r.blockedDomains.filter((x) => x !== domain) };
+    set({ rules: next });
+    await saveRules(next);
+  },
+  addKeep: async (domain) => {
+    const d = domain.trim().replace(/^\./, '').toLowerCase();
+    if (!d) return;
+    const r = get().rules;
+    if (r.keepDomains.includes(d)) return;
+    const next: Rules = { ...r, keepDomains: [...r.keepDomains, d] };
+    set({ rules: next });
+    await saveRules(next);
+  },
+  removeKeep: async (domain) => {
+    const r = get().rules;
+    const next: Rules = { ...r, keepDomains: r.keepDomains.filter((x) => x !== domain) };
+    set({ rules: next });
+    await saveRules(next);
+  },
+  setAutoSweep: async (on) => {
+    const r = get().rules;
+    const next: Rules = { ...r, autoSweep: on };
     set({ rules: next });
     await saveRules(next);
   },
