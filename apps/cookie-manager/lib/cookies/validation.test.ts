@@ -55,4 +55,9 @@ describe('validateCookie', () => {
     const issues = validateCookie(base({ value: 'x'.repeat(NAME_VALUE_MAX) }), { isSecureOrigin: true });
     expect(issues.some((i) => i.field === 'value')).toBe(true);
   });
+
+  it('rejects an empty name', () => {
+    const issues = validateCookie(base({ name: '' }), { isSecureOrigin: true });
+    expect(issues.some((i) => i.field === 'name')).toBe(true);
+  });
 });

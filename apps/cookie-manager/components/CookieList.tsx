@@ -4,7 +4,15 @@ import type { CookieAttrs } from '../lib/cookie-types';
 import { cookieId } from '../lib/cookies/keys';
 import { CookieRow } from './CookieRow';
 
-export function CookieList({ cookies }: { cookies: CookieAttrs[] }) {
+export function CookieList({
+  cookies,
+  onEdit,
+  onDelete,
+}: {
+  cookies: CookieAttrs[];
+  onEdit: (c: CookieAttrs) => void;
+  onDelete: (c: CookieAttrs) => void;
+}) {
   const parentRef = useRef<HTMLDivElement>(null);
   const virtualizer = useVirtualizer({
     count: cookies.length,
@@ -26,7 +34,7 @@ export function CookieList({ cookies }: { cookies: CookieAttrs[] }) {
               key={cookieId(cookie)}
               style={{ position: 'absolute', top: 0, left: 0, width: '100%', transform: `translateY(${item.start}px)` }}
             >
-              <CookieRow cookie={cookie} />
+              <CookieRow cookie={cookie} onEdit={onEdit} onDelete={onDelete} />
             </div>
           );
         })}
