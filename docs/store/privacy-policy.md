@@ -12,8 +12,10 @@ What Bokal accesses: to do its job, Bokal reads and writes the cookies of the
 site you choose to manage, using Chrome's cookies API. This includes
 authentication cookies and other data stored in the site's browser storage.
 
-What Bokal does NOT do: Bokal collects no personal information, tracks no
-browsing history, and contains no analytics, telemetry, ads, or remote code.
+What Bokal does NOT do: Bokal tracks no browsing history and contains no
+analytics, telemetry, ads, or remote code. It collects no personal information
+from free users at all. The single exception, for Pro buyers only, is the email
+address you purchase with (see Payments below).
 
 Where your cookie data goes: nowhere. Bokal never transmits your cookies — or any
 browsing data — off your device. There is no Bokal server and no account. The
@@ -22,7 +24,7 @@ it then verifies your license with ExtensionPay and processes payment through
 Stripe (see Payments below). If you never open the upgrade page, Bokal contacts
 no server at all.
 
-Local storage: everything BOKAL stores lives only on your device and is never
+Local storage: your cookie data lives only on your device and is never
 synced. Your theme preference, cookie rules, and Pro entitlement status are
 stored via chrome.storage.local; the current cookie list is cached temporarily
 via chrome.storage.session so re-opening the panel is instant; if you use Pro
@@ -41,10 +43,17 @@ user's data reaches no third party, because a free user contacts no server.
 
 Payments (Pro): if you buy Pro, purchases are processed by ExtensionPay and
 Stripe, and Bokal verifies your license status with ExtensionPay. Bokal never
-sees or stores your payment details, and no cookie or browsing data is ever
-shared with them — only your license status is checked. These checks happen only
+sees or stores your card details, and no cookie or browsing data is ever
+shared with them — only your license is checked. These checks happen only
 after you choose to purchase (or open the upgrade page); free users are never
 contacted.
+
+Personal data (Pro buyers only): when you purchase Pro, ExtensionPay returns the
+email address you paid with, and it is stored in your browser's synced extension
+storage so your license follows you across your signed-in Chrome profiles. It is
+used solely to identify your license. It is never linked to your cookies or
+browsing data, never sold, and never shared. Free users have no email stored,
+because free users never contact the billing service at all.
 
 Permissions: 'cookies' and host access are used solely to manage cookies for
 sites you choose; 'storage' persists your local preferences, entitlement

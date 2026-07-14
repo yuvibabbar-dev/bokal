@@ -1,0 +1,45 @@
+name: Deploy site to GitHub Pages
+
+# Publishes site/ (landing page + privacy policy) to GitHub Pages.
+# The Chrome Web Store requires a public privacy-policy URL, and Google requires the Limited Use
+# statement to appear on the extension's homepage — site/privacy.html and site/index.html carry both.
+#
+# ONE-TIME SETUP (repo owner): the repo must be PUBLIC (Pages needs a public repo on free plans),
+# then Settings → Pages → Build and deployment → Source: "GitHub Actions".
+#
+# Resulting URLs:
+#   https://yuvibabbar-dev.github.io/bokal/
+#   https://yuvibabbar-dev.github.io/bokal/privacy.html   <- paste this into the CWS privacy field
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never cancel a running deployment; queue instead.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+      - id: deployment
+        uses: actions/deploy-pages@v4

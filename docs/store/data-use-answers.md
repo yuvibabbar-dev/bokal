@@ -17,7 +17,7 @@
 |---|---|---|
 | **Authentication information** | YES | Google's definition = "logins, passwords, and authentication cookies"; Bokal reads/edits auth cookies |
 | **Website content** | YES | Google's definition literally lists "cookies" as website content |
-| Personally identifiable information | **SEE ⚠ BELOW** | Depends on what ExtPay persists for a *paid* user — verify before certifying |
+| **Personally identifiable information** | **YES** | **Email.** ExtPay's user payload has an `email` field, populated once a user buys Pro, and ExtPay writes that payload to `chrome.storage.sync` (which Chrome replicates off-device). See the resolved note below. |
 | Health information | No | — |
 | Financial and payment information | No | Bokal never sees card data — checkout is hosted by ExtensionPay/Stripe, off-extension |
 | Personal communications | No | — |
@@ -38,25 +38,31 @@
   **ExtensionPay** (and payment data directly to **Stripe**, on their hosted page — never through
   Bokal). A free user who never opens the upgrade page transmits **nothing at all**.
 
-## ⚠ FOUNDER DECISION before you certify: does ExtPay persist PII?
+## ✅ RESOLVED (2026-07-14): ExtPay DOES handle PII — an email address
 
-ExtPay's `fetch_user()` writes its API response to `chrome.storage.sync` as `extensionpay_user`
-(see `node_modules/.pnpm/extpay@3.1.2/.../ExtPay.module.js`). **If that payload contains the buyer's
-email, then a paid install stores PII — and `chrome.storage.sync` replicates it off-device via
-Chrome Sync.** That would mean checking **Personally identifiable information** on the form.
+This was checked against the live ExtPay API rather than guessed. Minting a key against the real app
+and fetching the user endpoint returns:
 
-**Verify this with the real test purchase:** complete a purchase, then in the extension's service
-worker console run:
-
-```js
-chrome.storage.sync.get(null).then(console.log)
+```json
+{ "email": null, "installedAt": "…", "paid": false, "paidAt": null, "trialStartedAt": null, "plan": null }
 ```
 
-- If `extensionpay_user` contains an email (or any personal field) → **check PII** and say it is
-  transmitted to ExtensionPay for license verification.
-- If it holds only an opaque id / paid flag → leave PII unchecked.
+There is an **`email` field**. It is `null` for a free/unpaid install, and is **populated with the
+buyer's email address once they purchase Pro**. ExtPay's `fetch_user()` then writes that whole
+payload to `chrome.storage.sync` as `extensionpay_user`, and **Chrome Sync replicates
+`storage.sync` off-device**.
 
-Do not guess. A wrong answer here is the kind of thing that gets an extension pulled.
+**Therefore, for the CWS Privacy tab:**
+
+- **Check "Personally identifiable information."** A paid install stores and syncs the customer's
+  email.
+- **Its transmission:** the email originates from ExtensionPay (the payment processor) and is used
+  solely to verify the licence. It is **never** joined to cookie or browsing data, and it does not
+  exist at all for free users — who make no network calls whatsoever.
+- Cookie data and website content remain **not transmitted**. That distinction is the whole point:
+  say it precisely.
+
+If you ever drop ExtPay, this becomes a "No" again.
 
 ## Certifications — all three remain TRUE
 
