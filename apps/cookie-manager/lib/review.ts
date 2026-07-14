@@ -1,7 +1,7 @@
 // One-time, non-incentivized review nudge shown after the user's 3rd successful cookie action.
 // Counter + shown-flag live in storage.local; once shown/dismissed it never counts or prompts again.
-const COUNT_KEY = 'wafer:actionCount';
-const SHOWN_KEY = 'wafer:reviewPromptShown';
+const COUNT_KEY = 'bokal:actionCount';
+const SHOWN_KEY = 'bokal:reviewPromptShown';
 const THRESHOLD = 3;
 
 async function getLocal<T>(key: string): Promise<T | undefined> {

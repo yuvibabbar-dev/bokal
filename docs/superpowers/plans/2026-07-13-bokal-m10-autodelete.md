@@ -1,4 +1,4 @@
-# Wafer M10 — Auto-delete + Audit Implementation Plan
+# Bokal M10 — Auto-delete + Audit Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:executing-plans. Steps use `- [ ]` syntax.
 
@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- **No `tabs` permission** → no on-tab-close cleanup (that's why CAD needed `tabs`). Wafer's cleanup is on-demand + an optional daily `chrome.alarms` sweep. Every piece of UI copy must state this honestly.
+- **No `tabs` permission** → no on-tab-close cleanup (that's why CAD needed `tabs`). Bokal's cleanup is on-demand + an optional daily `chrome.alarms` sweep. Every piece of UI copy must state this honestly.
 - Protected cookies are never removed by cleanup (reuse the data-layer `isProtected` guard).
 - All M10 features are Free (the CAD-capture play). Scheduled/advanced sweeps are a documented candidate Pro lever to revisit with launch data — do NOT gate anything Pro in M10.
 - No new permissions (reuse `alarms`, `cookies`, `storage`, `<all_urls>`). No value logging; text-node rendering preserved. Free build ships no Pro code.
@@ -43,13 +43,13 @@ it('computeCleanup removes non-kept, non-protected cookies', () => {
   expect(out.map((x) => x.name)).toEqual(['g']); // keep kept, protected kept, tracker removed
 });
 it('loadRules fills new fields as defaults for old data', async () => {
-  await chrome.storage.local.set({ 'wafer:rules': { protectedIds: ['x'] } });
+  await chrome.storage.local.set({ 'bokal:rules': { protectedIds: ['x'] } });
   const r = await loadRules();
   expect(r).toEqual({ protectedIds: ['x'], pinnedIds: [], blockedDomains: [], keepDomains: [], autoSweep: false });
 });
 ```
 
-- [ ] **Step 2:** Run `pnpm --filter @wafer/cookie-manager exec vitest run lib/rules/rules.test.ts` → FAIL.
+- [ ] **Step 2:** Run `pnpm --filter @bokal/cookie-manager exec vitest run lib/rules/rules.test.ts` → FAIL.
 - [ ] **Step 3: Implement** — add fields to `Rules` + `EMPTY`; `loadRules` returns all five with `?? []`/`?? false`; `matchesKeep` mirrors `matchesBlock`; `computeCleanup = cookies.filter((c) => !matchesKeep(rules, c) && !isProtected(rules, c))`.
 - [ ] **Step 4:** Run → PASS; `pnpm -r test` green.
 - [ ] **Step 5: Commit** `feat(m10): cleanup model — keep-list + computeCleanup`
@@ -63,16 +63,16 @@ it('loadRules fills new fields as defaults for old data', async () => {
 - Modify: `apps/cookie-manager/stores/rules-store.ts` (add `addKeep`/`removeKeep`/`setAutoSweep`)
 - Create: `apps/cookie-manager/components/CleanupRules.tsx` (keep-list editor, Clean-now button, auto-sweep toggle, honest copy)
 - Modify: `apps/cookie-manager/entrypoints/sidepanel/App.tsx` (render `<CleanupRules />`)
-- Modify: `apps/cookie-manager/entrypoints/background.ts` (daily `wafer:cleanup` alarm when `autoSweep`, running `computeCleanup`)
+- Modify: `apps/cookie-manager/entrypoints/background.ts` (daily `bokal:cleanup` alarm when `autoSweep`, running `computeCleanup`)
 
 **Interfaces:**
 - `cleanupNow()` — `getAllCookies()` → `computeCleanup` → `removeCookie` each → refresh; returns counts.
-- SW: on `autoSweep` true, ensure a daily `wafer:cleanup` alarm; on false, clear it. Alarm handler runs the same cleanup. React to the `wafer:rules` change to add/clear the alarm.
+- SW: on `autoSweep` true, ensure a daily `bokal:cleanup` alarm; on false, clear it. Alarm handler runs the same cleanup. React to the `bokal:rules` change to add/clear the alarm.
 
 - [ ] **Step 1:** `cookies-store.cleanupNow` — `const rules = await loadRules(); const removable = computeCleanup(await getAllCookies(), rules);` loop `removeCookie`; count; `recordAction` if removed; refresh. (Needs `<all_urls>` — same as the all view.)
 - [ ] **Step 2:** `rules-store` — `addKeep(domain)` (lowercase/trim), `removeKeep(domain)`, `setAutoSweep(bool)` (persist to rules).
-- [ ] **Step 3:** `CleanupRules.tsx` — a `<details>` section: keep-list input+list; "Clean now" button (`cookiesStore.getState().cleanupNow()` → status "Removed N, kept M"); an auto-sweep checkbox. Copy: "Clean now deletes all cookies except your keep-list (protected cookies are always kept). Auto-sweep runs once a day while your browser is open — Wafer has no ‘tabs’ permission, so it can't clear cookies the moment you close a tab." No values shown.
-- [ ] **Step 4:** `background.ts` — a helper `syncCleanupAlarm()`: `const { autoSweep } = await loadRules(); if (autoSweep) chrome.alarms.create('wafer:cleanup', { periodInMinutes: 60*24 }); else chrome.alarms.clear('wafer:cleanup');`. Call it on startup and on `storage.onChanged` for `wafer:rules`. In `onAlarm`, on `'wafer:cleanup'` run `computeCleanup(await getAllCookies(), await loadRules())` and remove each (reuse cached rules; never log values).
+- [ ] **Step 3:** `CleanupRules.tsx` — a `<details>` section: keep-list input+list; "Clean now" button (`cookiesStore.getState().cleanupNow()` → status "Removed N, kept M"); an auto-sweep checkbox. Copy: "Clean now deletes all cookies except your keep-list (protected cookies are always kept). Auto-sweep runs once a day while your browser is open — Bokal has no ‘tabs’ permission, so it can't clear cookies the moment you close a tab." No values shown.
+- [ ] **Step 4:** `background.ts` — a helper `syncCleanupAlarm()`: `const { autoSweep } = await loadRules(); if (autoSweep) chrome.alarms.create('bokal:cleanup', { periodInMinutes: 60*24 }); else chrome.alarms.clear('bokal:cleanup');`. Call it on startup and on `storage.onChanged` for `bokal:rules`. In `onAlarm`, on `'bokal:cleanup'` run `computeCleanup(await getAllCookies(), await loadRules())` and remove each (reuse cached rules; never log values).
 - [ ] **Step 5:** `App.tsx` — render `<CleanupRules />` near `<BlockRules />`.
 - [ ] **Step 6:** `tsc` clean; `pnpm -r test` green; `build` ok; redaction green.
 - [ ] **Step 7: Commit** `feat(m10): whitelist cookie cleanup — Clean now + optional daily sweep`
@@ -120,7 +120,7 @@ describe('auditCookie', () => {
 **Files:**
 - Modify: `apps/cookie-manager/components/CookieRow.tsx` (⚠ badge when `auditCookie(cookie).length`, title lists messages)
 
-- [ ] **Step 1:** In `CookieRow`, `const flags = auditCookie(cookie);` render, next to the CHIPS badge, `{flags.length > 0 && <span title={flags.map((f) => f.message).join('\n')} style={{ fontSize: 10, color: 'var(--wafer-muted)', marginLeft: 4 }}>⚠</span>}`. No value in the title. Keep value a text node.
+- [ ] **Step 1:** In `CookieRow`, `const flags = auditCookie(cookie);` render, next to the CHIPS badge, `{flags.length > 0 && <span title={flags.map((f) => f.message).join('\n')} style={{ fontSize: 10, color: 'var(--bokal-muted)', marginLeft: 4 }}>⚠</span>}`. No value in the title. Keep value a text node.
 - [ ] **Step 2:** `tsc` clean; `pnpm -r test` green (CookieRow XSS test still passes); `build` ok.
 - [ ] **Step 3: Commit** `feat(m10): per-row audit badge`
 
@@ -132,13 +132,13 @@ describe('auditCookie', () => {
 - Modify: `docs/store/listing.md` (add auto-delete/cleanup + audit to FEATURES)
 - Modify: `docs/threat-model.md` (note the daily cleanup alarm + that cleanup honors protection and is on-demand/scheduled, not on-tab-close)
 
-- [ ] **Step 1:** Add to `listing.md` FEATURES: "Automatic cleanup: keep-list plus one-click or daily removal of everything else (protected cookies always kept)." and "Cookie audit hints: flags missing SameSite, unpartitioned cross-site cookies, and more." Update `threat-model.md` §2 with the `wafer:cleanup` alarm behavior.
+- [ ] **Step 1:** Add to `listing.md` FEATURES: "Automatic cleanup: keep-list plus one-click or daily removal of everything else (protected cookies always kept)." and "Cookie audit hints: flags missing SameSite, unpartitioned cross-site cookies, and more." Update `threat-model.md` §2 with the `bokal:cleanup` alarm behavior.
 - [ ] **Step 2: Full gate:**
   ```bash
-  pnpm -r test && pnpm --filter @wafer/cookie-manager exec tsc --noEmit
-  pnpm --filter @wafer/cookie-manager build && pnpm --filter @wafer/cookie-manager zip
-  pnpm --filter @wafer/cookie-manager exec playwright test
-  pnpm --filter @wafer/cookie-manager build:e2e && WAFER_E2E=1 pnpm --filter @wafer/cookie-manager exec playwright test
+  pnpm -r test && pnpm --filter @bokal/cookie-manager exec tsc --noEmit
+  pnpm --filter @bokal/cookie-manager build && pnpm --filter @bokal/cookie-manager zip
+  pnpm --filter @bokal/cookie-manager exec playwright test
+  pnpm --filter @bokal/cookie-manager build:e2e && BOKAL_E2E=1 pnpm --filter @bokal/cookie-manager exec playwright test
   ```
   Confirm: tests green; manifest `permissions` still exactly `["cookies","storage","sidePanel","unlimitedStorage","alarms"]`, no `host_permissions`; ProfilesPanel still a separate chunk; E2E green both builds.
 - [ ] **Step 3: Commit** `docs(m10): listing + threat-model for cleanup and audit`

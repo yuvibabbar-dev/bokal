@@ -56,7 +56,7 @@ export function App() {
     };
     chrome.tabs.onUpdated.addListener(onUpdated);
     const onMessage = (msg: unknown): void => {
-      if (typeof msg === 'object' && msg !== null && (msg as { type?: string }).type === 'wafer:cookies-changed') {
+      if (typeof msg === 'object' && msg !== null && (msg as { type?: string }).type === 'bokal:cookies-changed') {
         void cookiesStore.getState().refresh();
       }
     };
@@ -87,7 +87,7 @@ export function App() {
   }, [cookies, showReview]);
 
   if (!ready) {
-    return <main style={{ font: '13px system-ui', padding: 12, color: 'var(--wafer-muted)' }}>Loading…</main>;
+    return <main style={{ font: '13px system-ui', padding: 12, color: 'var(--bokal-muted)' }}>Loading…</main>;
   }
 
   if (!granted) return <GrantAccess activeUrl={activeUrl} scope={scope} onGrant={() => void cookiesStore.getState().refresh()} />;
@@ -99,8 +99,8 @@ export function App() {
   return (
     <main style={{ font: '13px system-ui', padding: 12 }}>
       {showReview && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 8px', marginBottom: 8, border: '1px solid var(--wafer-border)', borderRadius: 4, fontSize: 12 }}>
-          <span style={{ flex: 1 }}>Enjoying Wafer? A quick review helps others find it.</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 8px', marginBottom: 8, border: '1px solid var(--bokal-border)', borderRadius: 4, fontSize: 12 }}>
+          <span style={{ flex: 1 }}>Enjoying Bokal? A quick review helps others find it.</span>
           <a href={reviewUrl()} target="_blank" rel="noreferrer" onClick={() => { void dismissReviewPrompt(); setShowReview(false); }}>Leave a review</a>
           <button type="button" onClick={() => { void dismissReviewPrompt(); setShowReview(false); }} aria-label="Dismiss">✕</button>
         </div>
@@ -108,25 +108,25 @@ export function App() {
       <IoBar cookies={filtered} scope={scope} />
       <button type="button" onClick={() => setEditing({ draft: newDraft(), original: null })} style={{ marginBottom: 8 }}>＋ Add cookie</button>
       <SearchBar />
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--wafer-muted)', marginBottom: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--bokal-muted)', marginBottom: 8 }}>
         <span>{loading ? 'Loading…' : `${filtered.length} cookies · ${activeUrl ?? 'unknown site'}`}</span>
         <select aria-label="Scope" value={scope} onChange={(e) => cookiesStore.getState().setScope(e.target.value as 'site' | 'all')} style={{ fontSize: 11 }}>
           <option value="site">This site</option>
           <option value="all">All cookies</option>
         </select>
-        <label style={{ fontSize: 11, color: 'var(--wafer-muted)' }}>
+        <label style={{ fontSize: 11, color: 'var(--bokal-muted)' }}>
           <input type="checkbox" checked={showPartitioned} disabled={scope === 'all'} onChange={(e) => cookiesStore.getState().setShowPartitioned(e.target.checked)} /> Show partitioned (CHIPS)
         </label>
         <ThemeToggle />
       </div>
       {scope === 'site' && cookies.length >= SOFT_DOMAIN_COOKIE_WARN && (
-        <div style={{ fontSize: 11, color: 'var(--wafer-muted)', marginBottom: 6 }}>⚠ {cookies.length} cookies — near Chrome's ~180-per-domain limit.</div>
+        <div style={{ fontSize: 11, color: 'var(--bokal-muted)', marginBottom: 6 }}>⚠ {cookies.length} cookies — near Chrome's ~180-per-domain limit.</div>
       )}
       <CookieList
         cookies={filtered}
         rules={rules}
         onEdit={(c) => setEditing({ draft: c, original: c })}
-        onDelete={(c) => { if (confirm(`Delete cookie "${c.name}"?`)) void cookiesStore.getState().deleteCookie(c).catch((e) => console.error('[wafer] delete failed', e)); }}
+        onDelete={(c) => { if (confirm(`Delete cookie "${c.name}"?`)) void cookiesStore.getState().deleteCookie(c).catch((e) => console.error('[bokal] delete failed', e)); }}
         onTogglePin={(c) => void rulesStore.getState().togglePin(c)}
         onToggleProtect={(c) => void rulesStore.getState().toggleProtect(c)}
       />

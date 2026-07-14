@@ -1,4 +1,4 @@
-# Wafer — Build Review (all 6 milestones complete)
+# Bokal — Build Review (all 6 milestones complete)
 
 > **Update (2026-07-13):** a 7th milestone (**M7 — pre-launch parity + bug fixes**) also landed after a market/code review — bulk delete-all, copy/clipboard + header-string I/O, profile apply-as-replace, all-cookies view, and 6 verified bug fixes. **For the authoritative current state and resume instructions, read [`HANDOFF.md`](HANDOFF.md).**
 
@@ -12,12 +12,12 @@ You said "build everything, I'll review; for things that need my input, research
 
 ## What's built (verify it yourself)
 ```bash
-cd /Users/yuvibabbar/Desktop/Projects/chrome_extensions/wafer
+cd /Users/yuvibabbar/Desktop/Projects/chrome_extensions/bokal
 pnpm install
 pnpm -r test                                         # 54 passing
-pnpm --filter @wafer/cookie-manager exec tsc --noEmit # clean
-pnpm --filter @wafer/cookie-manager build && pnpm --filter @wafer/cookie-manager zip
-#   -> apps/cookie-manager/.output/wafercookie-manager-1.0.0-chrome.zip  (the CWS upload)
+pnpm --filter @bokal/cookie-manager exec tsc --noEmit # clean
+pnpm --filter @bokal/cookie-manager build && pnpm --filter @bokal/cookie-manager zip
+#   -> apps/cookie-manager/.output/bokalcookie-manager-1.0.0-chrome.zip  (the CWS upload)
 # Load unpacked: chrome://extensions -> Developer mode -> Load unpacked -> apps/cookie-manager/.output/chrome-mv3
 ```
 
@@ -25,7 +25,7 @@ pnpm --filter @wafer/cookie-manager build && pnpm --filter @wafer/cookie-manager
 |---|---|---|---|
 | **M1** Foundation | monorepo, minimal manifest (**no `tabs`**, runtime `<all_urls>` grant), XSS-safe searchable cookie viewer, background `onChanged` relay | 16 | `e743177` |
 | **M2** CRUD | add/edit/delete + wired validation (`__Host-`/`__Secure-`/SameSite/size), edit **replaces** (no orphan duplicates), write wrapper, refresh guard | 29 | `0694f45` |
-| **M3** I/O · theme · CHIPS | JSON + Netscape export, JSON import (Blob+anchor, no `downloads` perm), `@wafer/ui-kit` light/dark theme, CHIPS partition inspector | 41 | `654dec6` |
+| **M3** I/O · theme · CHIPS | JSON + Netscape export, JSON import (Blob+anchor, no `downloads` perm), `@bokal/ui-kit` light/dark theme, CHIPS partition inspector | 41 | `654dec6` |
 | **M4** Pro layer | mock-mode Billing + entitlement (14-day grace, daily alarm re-check), **AES-GCM+PBKDF2 profile encryption**, IndexedDB profiles, snapshot/apply/delete, **dynamic-import gating (free build ships no Pro code)** | 51 | `cac007c` |
 | **M5** Hardening | integration round-trips, a **redaction guard** (fails CI on value/passphrase logging), **Playwright E2E** (verified in real Chromium), GitHub Actions CI, threat model | 54 | `97c165f` |
 | **M6** Store-prep | privacy policy + listing + permission justifications + data-use answers + trader checklist + submission guide, **generated icons + real screenshots**, flash fix, publishable zip | 54 | `40847ca` |
@@ -37,7 +37,7 @@ Full detail + paste-ready copy: [`docs/business/2026-07-13-business-recommendati
 - **Tagline:** "Every cookie, under your control. Nothing leaves your device." *(now literally true — see the M6 fix below)*
 - **Pricing:** **$4.99/mo · $19/yr · $39 lifetime** ($29 launch), lifetime featured; 7-day reverse trial on the 2nd profile.
 - **Free vs Pro:** free keeps everything already built (CRUD incl. HttpOnly, search, JSON/Netscape export + import, CHIPS, dark mode); **Pro = local cookie profiles + optional encryption**.
-- **Store title (58/75):** `Wafer - Cookie Editor & Manager (Open Source, No Tracking)`; **summary (126/132)** and full description, permission justifications, data-use answers, and a hostable **privacy policy** are all paste-ready in `docs/store/`.
+- **Store title (58/75):** `Bokal - Cookie Editor & Manager (Open Source, No Tracking)`; **summary (126/132)** and full description, permission justifications, data-use answers, and a hostable **privacy policy** are all paste-ready in `docs/store/`.
 
 ## What the reviews caught (and fixed)
 A flavor of the adversarial passes doing real work: **M2** — editing a cookie's name used to create a *duplicate* (fixed to remove the original, incl. the host-only edge). **M3** — CHIPS queried the wrong site form; ui-kit React made a peer dep. **M4** — the `USE_MOCK_BILLING` flag was dead (made it a real launch guard so mock-Pro can't ship by accident). **M5** — the E2E's flagship granted test could silently *self-skip* (false green) under CI timing → made deterministic and **proven to run** in real Chromium. **M6** — the privacy policy claimed "nothing leaves your device," but the theme setting synced via `chrome.storage.sync` → **moved theme to `storage.local`** so the claim is true.

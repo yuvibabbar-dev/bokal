@@ -6,9 +6,10 @@ import { dirname, join } from 'node:path';
 const outDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'icon');
 mkdirSync(outDir, { recursive: true });
 
-// Wafer brand mark — concept A "notched wafer" (see docs/superpowers/specs/2026-07-13-wafer-brand-design.md):
-// an amber disc on graphite with one flat edge (the silicon-wafer orientation flat) and chip/die
-// squares that double as chocolate chips. Fixed colors — a logo does NOT invert for dark mode.
+// Bokal brand mark (see docs/superpowers/specs/2026-07-13-bokal-brand-design.md): an amber cookie
+// disc on graphite with one flat edge and chip squares. The flat edge is what keeps the icon from
+// collapsing into a generic amber blob at 16px — a plain circle has no silhouette.
+// Fixed colors — a logo does NOT invert for dark mode.
 const GRAPHITE = '#24282C';
 const AMBER = '#E9A83E';
 const CHIP = '#B67A22';

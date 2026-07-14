@@ -3,11 +3,11 @@ import { loadRules, matchesBlock, isProtected, computeCleanup, RULES_KEY, type R
 import { fromChrome, getAllCookies } from '../lib/cookies/read';
 import { removeCookie } from '../lib/cookies/write';
 
-const CLEANUP_ALARM = 'wafer:cleanup';
+const CLEANUP_ALARM = 'bokal:cleanup';
 
 // NOTE: we deliberately do NOT call ExtPay().startBackground() here. Constructing ExtPay writes an
 // install marker to chrome.storage.sync (which Chrome replicates off-device), and its message
-// listener is inert for Wafer since we ship no extensionpay.com content script. The panel's
+// listener is inert for Bokal since we ship no extensionpay.com content script. The panel's
 // getUser()/openPaymentPage() are self-contained and work without it, so a free user who never
 // engages Pro triggers no ExtPay construction and no off-device write.
 
@@ -40,11 +40,11 @@ export default defineBackground(() => {
   void syncCleanupAlarm();
   chrome.sidePanel
     .setPanelBehavior({ openPanelOnActionClick: true })
-    .catch((err) => console.error('[wafer] setPanelBehavior failed', err));
+    .catch((err) => console.error('[bokal] setPanelBehavior failed', err));
 
   // Coalesce the remove-then-write double-fire ("overwrite" then "explicit") into one signal.
   const notify = createDebouncer(() => {
-    chrome.runtime.sendMessage({ type: 'wafer:cookies-changed' }).catch(() => {
+    chrome.runtime.sendMessage({ type: 'bokal:cookies-changed' }).catch(() => {
       // No receiver (panel closed) — safe to ignore.
     });
   }, 120);
@@ -64,11 +64,11 @@ export default defineBackground(() => {
       .catch(() => {});
   });
 
-  void chrome.alarms.get('wafer:entitlement').then((existing) => {
-    if (!existing) chrome.alarms.create('wafer:entitlement', { periodInMinutes: 60 * 24 });
+  void chrome.alarms.get('bokal:entitlement').then((existing) => {
+    if (!existing) chrome.alarms.create('bokal:entitlement', { periodInMinutes: 60 * 24 });
   });
   chrome.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name === 'wafer:entitlement') void import('../lib/pay/sync').then((m) => m.syncEntitlementCache()).catch(() => {});
+    if (alarm.name === 'bokal:entitlement') void import('../lib/pay/sync').then((m) => m.syncEntitlementCache()).catch(() => {});
     if (alarm.name === CLEANUP_ALARM) {
       // Daily sweep: remove everything not on the keep-list (never a protected cookie). No value logging.
       // Re-check the flags at fire time (defense-in-depth against a stale alarm): never wipe-all on

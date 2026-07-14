@@ -1,4 +1,4 @@
-# Wafer — Milestone 2: Cookie CRUD — Implementation Plan
+# Bokal — Milestone 2: Cookie CRUD — Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Steps use checkbox (`- [ ]`).
 
@@ -51,7 +51,7 @@ describe('isSecureOrigin', () => {
   it('is false for a non-url', () => expect(isSecureOrigin('not a url')).toBe(false));
 });
 ```
-- [ ] **Step 2: Run → FAIL** `pnpm --filter @wafer/cookie-manager test` (origin not found)
+- [ ] **Step 2: Run → FAIL** `pnpm --filter @bokal/cookie-manager test` (origin not found)
 - [ ] **Step 3: Implement** — `apps/cookie-manager/lib/origin.ts`
 ```ts
 const LOOPBACK = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
@@ -196,7 +196,7 @@ export async function removeCookie(c: CookieAttrs): Promise<void> {
       set({ granted: true, activeUrl, cookies, loading: false });
       await chrome.storage.session.set({ [SESSION_KEY]: { activeUrl, cookies } });
     } catch (err) {
-      console.error('[wafer] refresh failed', err);
+      console.error('[bokal] refresh failed', err);
       if (seq === refreshSeq) set({ loading: false });
     }
   },
@@ -218,7 +218,7 @@ export async function removeCookie(c: CookieAttrs): Promise<void> {
   },
 ```
   7. Add the `CookieAttrs` import if not already imported (it is, via the existing `import type { CookieAttrs } from '../lib/cookie-types';`).
-- [ ] **Step 2: `tsc --noEmit` exit 0** and `pnpm --filter @wafer/cookie-manager test` (existing tests still green).
+- [ ] **Step 2: `tsc --noEmit` exit 0** and `pnpm --filter @bokal/cookie-manager test` (existing tests still green).
 - [ ] **Step 3: Commit** `git add apps/cookie-manager/stores/cookies-store.ts && git commit -m "feat: store saveCookie/deleteCookie + refresh in-flight guard"`
 
 ---
@@ -341,7 +341,7 @@ export function CookieEditor({ initial, activeUrl, onDone }: { initial: CookieAt
 }
 ```
 > Note on `Date.now()`: used only to seed a default expiry (24h out) when the user unchecks "session" — a UI default, not test logic. Acceptable.
-- [ ] **Step 2: `tsc --noEmit` exit 0** and `pnpm --filter @wafer/cookie-manager build` succeeds.
+- [ ] **Step 2: `tsc --noEmit` exit 0** and `pnpm --filter @bokal/cookie-manager build` succeeds.
 - [ ] **Step 3: Commit** `git add apps/cookie-manager/components/CookieEditor.tsx && git commit -m "feat: CookieEditor add/edit form with wired validation"`
 
 ---
@@ -407,7 +407,7 @@ export function CookieRow({ cookie, onEdit, onDelete }: { cookie: CookieAttrs; o
         onDelete={(c) => { if (confirm(`Delete cookie "${c.name}"?`)) void cookiesStore.getState().deleteCookie(c); }}
       />
 ```
-- [ ] **Step 4: Verify** `tsc --noEmit` exit 0; `pnpm --filter @wafer/cookie-manager test` green; `pnpm --filter @wafer/cookie-manager build` succeeds.
+- [ ] **Step 4: Verify** `tsc --noEmit` exit 0; `pnpm --filter @bokal/cookie-manager test` green; `pnpm --filter @bokal/cookie-manager build` succeeds.
 - [ ] **Step 5: Commit** `git add apps/cookie-manager/components/CookieRow.tsx apps/cookie-manager/components/CookieList.tsx apps/cookie-manager/entrypoints/sidepanel/App.tsx && git commit -m "feat: wire cookie add/edit/delete into the panel"`
 
 ---

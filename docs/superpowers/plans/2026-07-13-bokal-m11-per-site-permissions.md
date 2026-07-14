@@ -1,8 +1,8 @@
-# Wafer M11 — Per-Site Permission Model Implementation Plan
+# Bokal M11 — Per-Site Permission Model Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:executing-plans. Steps use `- [ ]`.
 
-**Goal:** Make Wafer's runtime host-access grant **per-site** (the active origin only) instead of a single broad `<all_urls>` grant, so the store claim "access to the specific site you choose" becomes literally true — while keeping "no `tabs` permission, no install-time host permissions." Reserve `<all_urls>` as an explicit opt-in for the genuinely broad features (all-cookies view, all-sites export/import, cleanup sweep).
+**Goal:** Make Bokal's runtime host-access grant **per-site** (the active origin only) instead of a single broad `<all_urls>` grant, so the store claim "access to the specific site you choose" becomes literally true — while keeping "no `tabs` permission, no install-time host permissions." Reserve `<all_urls>` as an explicit opt-in for the genuinely broad features (all-cookies view, all-sites export/import, cleanup sweep).
 
 **Decision provenance:** deep-research (2026-07-13, 22 confirmed / 3 refuted claims, primary Chrome docs + Cookie-Editor source). Per-origin host permission + `cookies` is necessary and sufficient for that origin's cookies; `<all_urls>` only for all-sites enumeration; `activeTab` does NOT grant `chrome.cookies` but DOES let us read the active tab's URL on a gesture (so we can request the right origin without `tabs`). Decision 2 (surface): keep side-panel-primary; add onboarding, do NOT add `action.default_popup`.
 
@@ -15,7 +15,7 @@
 - Keep **no `tabs` permission** and **no install-time `host_permissions`**. Add only `activeTab` (shows no install warning; is NOT the `tabs` permission). Keep `optional_host_permissions: ['<all_urls>']` as the grantable superset (Chrome requires a declared pattern to request any subset of it).
 - Never log cookie values; values render as text nodes only. Free build ships no Pro code.
 - Do NOT regress the working broad path: `<all_urls>`, once granted, must still satisfy every scope (per-site checks pass when broad is held).
-- **Verification caveat (call out in the report):** Chrome permission *prompts* and `activeTab` timing can't be exercised by the standalone-panel Playwright harness (it pre-grants via the WAFER_E2E manifest). The per-site permission LOGIC is unit-tested; the actual grant prompt needs real-browser QA — same limitation the current broad flow already has.
+- **Verification caveat (call out in the report):** Chrome permission *prompts* and `activeTab` timing can't be exercised by the standalone-panel Playwright harness (it pre-grants via the BOKAL_E2E manifest). The per-site permission LOGIC is unit-tested; the actual grant prompt needs real-browser QA — same limitation the current broad flow already has.
 - Commit per task; keep `pnpm -r test` + `tsc` green.
 
 ---
@@ -66,7 +66,7 @@ describe('hasSiteAccess / requestSiteAccess', () => {
 });
 ```
 
-- [ ] **Step 2:** Run `pnpm --filter @wafer/cookie-manager exec vitest run lib/permissions.test.ts` → FAIL.
+- [ ] **Step 2:** Run `pnpm --filter @bokal/cookie-manager exec vitest run lib/permissions.test.ts` → FAIL.
 - [ ] **Step 3: Implement** the four functions. `registrableDomain`: split on `.`; if ≤2 labels or the host is all-numeric (IP), return host; if last two labels are in `MULTI_PART_SUFFIXES` (a small set: `co.uk gov.uk ac.uk com.au net.au org.au co.nz co.jp co.kr com.br com.cn co.in co.za`), return last 3 labels, else last 2. `siteOriginPatterns`: `new URL(url)`, bail (`[]`) unless protocol is `http:`/`https:`.
 - [ ] **Step 4:** Run → PASS; `pnpm -r test` green; `tsc` clean.
 - [ ] **Step 5: Commit** `feat(m11): per-site host-permission helpers (registrableDomain, siteOriginPatterns, has/requestSiteAccess)`
@@ -109,9 +109,9 @@ describe('hasSiteAccess / requestSiteAccess', () => {
 **Behavior:**
 - GrantAccess receives `activeUrl` and `scope`.
 - `site` scope with a known `activeUrl`: primary button "Allow cookies for **{host}**" → `requestSiteAccess(activeUrl)` (URL known from mount, so the request stays synchronous in the click). A secondary, muted link "Enable access for all sites instead" → `requestAllUrls()`.
-- `site` scope with NO `activeUrl` (e.g. a tab Wafer can't yet see): copy "Reopen Wafer from the toolbar icon on the site you want to manage" + a fallback "Allow all sites" button → `requestAllUrls()`.
+- `site` scope with NO `activeUrl` (e.g. a tab Bokal can't yet see): copy "Reopen Bokal from the toolbar icon on the site you want to manage" + a fallback "Allow all sites" button → `requestAllUrls()`.
 - `all` scope not granted: "Enable access for all sites to view every cookie" → `requestAllUrls()`.
-- Onboarding hint (Decision 2 mitigation): one muted line — "Wafer lives in the side panel — click the toolbar icon any time to open it here."
+- Onboarding hint (Decision 2 mitigation): one muted line — "Bokal lives in the side panel — click the toolbar icon any time to open it here."
 
 - [ ] **Step 1:** Rework `GrantAccess` to take `{ activeUrl, scope, onGrant }` and render the branch above; import `requestSiteAccess`, `requestAllUrls`. Each handler calls the request synchronously (no await before it) then `.then((g) => { if (g) onGrant(); })`.
 - [ ] **Step 2:** `App`: `<GrantAccess activeUrl={activeUrl} scope={scope} onGrant={...} />`.
@@ -125,13 +125,13 @@ describe('hasSiteAccess / requestSiteAccess', () => {
 **Files:**
 - Modify: `docs/store/permission-justifications.md` (host line — now literally true), `docs/store/listing.md` (host line), `docs/store/privacy-policy.md` (if needed), `docs/threat-model.md` (§2.2 — remove the accuracy-gap flag; describe the per-site default + broad opt-in + activeTab)
 
-- [ ] **Step 1:** Rewrite the host-access copy to the now-true statement: Wafer declares no host access at install; it requests access **for the specific site you're on** at runtime (via Chrome's prompt), and requests all-sites access only when you open the all-cookies view / export all sites / run cleanup. Add `activeTab` to the plain-English permissions list ("read the current tab's address so Wafer can ask for access to just that site; not the `tabs` permission, shows no install warning"). Remove the `docs/threat-model.md` §2.2 "accuracy flag" block (the gap is now closed) and describe the per-site model.
+- [ ] **Step 1:** Rewrite the host-access copy to the now-true statement: Bokal declares no host access at install; it requests access **for the specific site you're on** at runtime (via Chrome's prompt), and requests all-sites access only when you open the all-cookies view / export all sites / run cleanup. Add `activeTab` to the plain-English permissions list ("read the current tab's address so Bokal can ask for access to just that site; not the `tabs` permission, shows no install warning"). Remove the `docs/threat-model.md` §2.2 "accuracy flag" block (the gap is now closed) and describe the per-site model.
 - [ ] **Step 2: Full gate:**
   ```bash
-  pnpm -r test && pnpm --filter @wafer/cookie-manager exec tsc --noEmit
-  pnpm --filter @wafer/cookie-manager build && pnpm --filter @wafer/cookie-manager zip
-  pnpm --filter @wafer/cookie-manager exec playwright test
-  pnpm --filter @wafer/cookie-manager build:e2e && WAFER_E2E=1 pnpm --filter @wafer/cookie-manager exec playwright test
+  pnpm -r test && pnpm --filter @bokal/cookie-manager exec tsc --noEmit
+  pnpm --filter @bokal/cookie-manager build && pnpm --filter @bokal/cookie-manager zip
+  pnpm --filter @bokal/cookie-manager exec playwright test
+  pnpm --filter @bokal/cookie-manager build:e2e && BOKAL_E2E=1 pnpm --filter @bokal/cookie-manager exec playwright test
   ```
   Confirm: tests green; manifest `permissions` = the 5 + `activeTab`, no `host_permissions`, `optional_host_permissions:['<all_urls>']`, `devtools_page` present; ProfilesPanel still a separate chunk; E2E green both builds.
 - [ ] **Step 3: Commit** `docs(m11): store copy + threat-model now describe the (true) per-site permission model`

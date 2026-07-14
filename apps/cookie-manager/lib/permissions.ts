@@ -10,7 +10,7 @@ export function requestAllUrls(): Promise<boolean> {
 }
 
 // --- Per-site host access -----------------------------------------------------------------------
-// Wafer requests host access for just the site the user is on, never <all_urls>, except for the
+// Bokal requests host access for just the site the user is on, never <all_urls>, except for the
 // genuinely broad features (all-cookies view, all-sites export, cleanup). Per Chrome's cookies API,
 // per-origin host permission + "cookies" is sufficient to read/write that origin's cookies.
 

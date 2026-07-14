@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="apps/cookie-manager/public/icon/128.png" width="96" height="96" alt="Wafer icon">
+  <img src="apps/cookie-manager/public/icon/128.png" width="96" height="96" alt="Bokal icon">
 </p>
 
-<h1 align="center">Wafer</h1>
+<h1 align="center">Bokal</h1>
 
 <p align="center">
   A trustworthy, open-source cookie manager for Chrome and Edge (Manifest V3).<br>
@@ -15,15 +15,15 @@
 > suite, but is not yet published to the Chrome Web Store / Edge Add-ons. See
 > [`docs/HANDOFF.md`](docs/HANDOFF.md) for the current state and remaining launch steps.
 >
-> **License:** [**GPL-3.0-or-later**](LICENSE). Wafer bundles ExtPay, which is copyleft
+> **License:** [**GPL-3.0-or-later**](LICENSE). Bokal bundles ExtPay, which is copyleft
 > (AGPL-3.0-or-later), so the combined work is conveyed under GPL-compatible terms — a permissive
 > license like MIT would not be compliant. Reasoning in
 > [`docs/licensing-notes.md`](docs/licensing-notes.md); dependency licenses in
 > [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).
 
-## What Wafer is
+## What Bokal is
 
-Wafer is a Manifest V3 cookie manager built around a single promise: **your cookies never leave
+Bokal is a Manifest V3 cookie manager built around a single promise: **your cookies never leave
 your device.** No server, no account, no telemetry, no analytics, no remote code. It reads and
 writes cookies through Chrome's `cookies` API and does everything locally.
 
@@ -49,7 +49,7 @@ and login states, and privacy-conscious users who want to see and control what s
 - **DevTools panel** — inspect and edit the current tab's cookies inside DevTools.
 - **Dark mode** and virtualized lists that stay fast across thousands of cookies.
 
-## Wafer Pro (optional, paid)
+## Bokal Pro (optional, paid)
 
 Pro adds **named local cookie profiles** — snapshot a site's cookies and switch between saved sets
 (e.g. different test accounts) in one click — with **optional passphrase encryption** (AES-GCM +
@@ -73,7 +73,7 @@ Every privacy claim here is meant to be **literally true against the code** — 
   `optional_host_permissions: ['<all_urls>']`, requested at runtime for the specific site you're
   managing (via `activeTab` to read the current URL), and only escalated to all-sites when you
   explicitly open the all-cookies view, export all sites, or run cleanup.
-- **No remote code** — everything Wafer runs is in the published package.
+- **No remote code** — everything Bokal runs is in the published package.
 - **Cookie values are never logged**, and render as text nodes only (an XSS regression test locks
   this). Enforced by [`redaction.test.ts`](apps/cookie-manager/lib/security/redaction.test.ts) in CI.
 - The published manifest is:
@@ -81,7 +81,7 @@ Every privacy claim here is meant to be **literally true against the code** — 
 
 Context: the [permission landscape backs a minimal-permission stance — a peer-reviewed 2022 study
 found only ~39.8% of Chrome Web Store extensions comply with the spirit of least
-privilege](https://link.springer.com/article/10.1007/s10207-022-00610-w). Wafer's threat model is
+privilege](https://link.springer.com/article/10.1007/s10207-022-00610-w). Bokal's threat model is
 documented in [`docs/threat-model.md`](docs/threat-model.md).
 
 ## Repository layout
@@ -107,8 +107,8 @@ Requires **Node ≥ 24** and **pnpm 9.9.0** (`corepack enable` will provide pnpm
 
 ```bash
 pnpm install
-pnpm --filter @wafer/cookie-manager dev      # WXT dev server
-pnpm --filter @wafer/cookie-manager build     # -> apps/cookie-manager/.output/chrome-mv3
+pnpm --filter @bokal/cookie-manager dev      # WXT dev server
+pnpm --filter @bokal/cookie-manager build     # -> apps/cookie-manager/.output/chrome-mv3
 ```
 
 Load `apps/cookie-manager/.output/chrome-mv3` as an unpacked extension at `chrome://extensions`.
@@ -117,10 +117,10 @@ Load `apps/cookie-manager/.output/chrome-mv3` as an unpacked extension at `chrom
 
 ```bash
 pnpm -r test                                              # unit tests (vitest)
-pnpm --filter @wafer/cookie-manager exec tsc --noEmit     # type-check
-pnpm --filter @wafer/cookie-manager build                 # production build
-pnpm --filter @wafer/cookie-manager zip                   # -> .output/*.zip (store upload)
-pnpm --filter @wafer/cookie-manager e2e                   # Playwright E2E (smoke)
+pnpm --filter @bokal/cookie-manager exec tsc --noEmit     # type-check
+pnpm --filter @bokal/cookie-manager build                 # production build
+pnpm --filter @bokal/cookie-manager zip                   # -> .output/*.zip (store upload)
+pnpm --filter @bokal/cookie-manager e2e                   # Playwright E2E (smoke)
 ```
 
 CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs type-check, unit tests, build, and
@@ -134,5 +134,5 @@ the trust posture true, and [`SECURITY.md`](SECURITY.md) to report a vulnerabili
 ## License
 
 **GPL-3.0-or-later** — see [`LICENSE`](LICENSE). You are free to use, study, modify, and
-redistribute Wafer; derivative works must remain under the same license. Third-party dependency
+redistribute Bokal; derivative works must remain under the same license. Third-party dependency
 licenses are listed in [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).

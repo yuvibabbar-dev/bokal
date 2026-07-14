@@ -9,7 +9,7 @@ function base(o: Partial<CookieAttrs> = {}): CookieAttrs {
 describe('toJson', () => {
   it('wraps cookies with format+version and round-trips via JSON.parse', () => {
     const parsed = JSON.parse(toJson([base()], 'https://example.com'));
-    expect(parsed.format).toBe('wafer-cookies');
+    expect(parsed.format).toBe('bokal-cookies');
     expect(parsed.version).toBe(1);
     expect(parsed.exportedFrom).toBe('https://example.com');
     expect(parsed.cookies).toHaveLength(1);

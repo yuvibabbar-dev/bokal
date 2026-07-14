@@ -14,7 +14,7 @@ export interface Rules {
   autoSweep: boolean;
 }
 
-export const RULES_KEY = 'wafer:rules';
+export const RULES_KEY = 'bokal:rules';
 
 const EMPTY: Rules = { protectedIds: [], pinnedIds: [], blockedDomains: [], keepDomains: [], autoSweep: false };
 

@@ -31,7 +31,7 @@ describe('rules', () => {
   });
 
   it('loadRules fills new fields as defaults for old stored data', async () => {
-    await chrome.storage.local.set({ 'wafer:rules': { protectedIds: ['x'] } });
+    await chrome.storage.local.set({ 'bokal:rules': { protectedIds: ['x'] } });
     expect(await loadRules()).toEqual({ protectedIds: ['x'], pinnedIds: [], blockedDomains: [], keepDomains: [], autoSweep: false });
   });
 

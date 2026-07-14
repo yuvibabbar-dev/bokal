@@ -1,15 +1,15 @@
-# Wafer — Design Spec (Cookie Manager, MV3 Chrome Extension)
+# Bokal — Design Spec (Cookie Manager, MV3 Chrome Extension)
 
 - **Date:** 2026-07-13
 - **Status:** Approved design — ready for implementation planning
-- **Source architecture doc:** [`wafer.md`](../../../wafer.md)
+- **Source architecture doc:** [`bokal.md`](../../../bokal.md)
 - **Research provenance:** all technical decisions below were verified against current (July 2026) primary sources via a 10-area research + adversarial-verification pass; every verification returned "upheld". See §14.
 
 ---
 
 ## 0. Summary & scope
 
-**Wafer** is a Manifest V3 Chrome/Edge cookie manager (React + TypeScript) positioned into the vacuum left by EditThisCookie: **minimal permissions, no remote code, local-first, published source.** Every decision is filtered through that trust positioning.
+**Bokal** is a Manifest V3 Chrome/Edge cookie manager (React + TypeScript) positioned into the vacuum left by EditThisCookie: **minimal permissions, no remote code, local-first, published source.** Every decision is filtered through that trust positioning.
 
 **In scope (full MVP, doc Weeks 1–6):**
 1. Free core: WXT scaffold, runtime `<all_urls>` permission flow, full cookie CRUD with prefix/SameSite/size validation, search/filter, virtualized list, XSS-safe rendering, import/export, dark mode, CHIPS partition inspector.
@@ -19,7 +19,7 @@
 
 **Deferred (post-launch, not in this build):** cloud sync + Cloudflare backend + E2E crypto; tracker/compliance scoring (Tracker Radar is non-commercial-licensed); Firefox port (`sidebar_action` fork); the second JSON-viewer extension.
 
-**Boundary — requires the user, cannot be done from here:** real Stripe payment test; registering a real ExtPay app ID; CWS/Edge developer accounts, store submission, and EU-DSA trader verification (public legal name/address/SMS phone); hosting the privacy-policy URL. Wafer delivers the built, zipped, ready-to-upload package plus all copy/artifacts; the user performs account-bound actions.
+**Boundary — requires the user, cannot be done from here:** real Stripe payment test; registering a real ExtPay app ID; CWS/Edge developer accounts, store submission, and EU-DSA trader verification (public legal name/address/SMS phone); hosting the privacy-policy URL. Bokal delivers the built, zipped, ready-to-upload package plus all copy/artifacts; the user performs account-bound actions.
 
 ---
 
@@ -27,7 +27,7 @@
 
 | Area | Decision |
 |---|---|
-| Product name | **Wafer** |
+| Product name | **Bokal** |
 | Framework | **WXT** (Vite-based), version **pinned** (pre-1.0; 0.x minor bumps can break) |
 | Repo | **pnpm monorepo**, cookie-manager app only; shared `ui-kit`/`pay`/`tsconfig` packages so the JSON viewer slots in later with no refactor |
 | Payments | **ExtPay** with a **placeholder app ID in dev/mock mode**; swap real ID + Stripe later. Provider not abstracted behind an interface (YAGNI); ExtPay wrapper isolated in `packages/pay` if a swap is ever needed |
@@ -41,11 +41,11 @@
 
 ## 2. Repo layout
 
-Git repo + pnpm workspace rooted at `chrome_extensions/wafer/`.
+Git repo + pnpm workspace rooted at `chrome_extensions/bokal/`.
 
 ```
-wafer/
-  docs/                              # wafer.md (source) + this spec + threat-model.md + store/ artifacts
+bokal/
+  docs/                              # bokal.md (source) + this spec + threat-model.md + store/ artifacts
   pnpm-workspace.yaml
   package.json                       # workspace root scripts (build, test, e2e, zip)
   .github/workflows/ci.yml
@@ -71,7 +71,7 @@ Each unit has one clear purpose and a defined interface: `packages/pay` exposes 
 
 ## 3. Manifest & permissions
 
-MV3, `minimum_chrome_version: 114`, name **Wafer**, background service worker (`type: "module"`), `side_panel.default_path`, CSP `script-src 'self'; object-src 'self'`.
+MV3, `minimum_chrome_version: 114`, name **Bokal**, background service worker (`type: "module"`), `side_panel.default_path`, CSP `script-src 'self'; object-src 'self'`.
 
 - **Install-time permissions:** `["cookies","storage","sidePanel"]` + `unlimitedStorage`. No `tabs`.
 - **`optional_host_permissions: ["<all_urls>"]`**, requested at runtime via `chrome.permissions.request()` **synchronously inside a user gesture** (no `await` before the call, or the gesture is lost).
@@ -173,7 +173,7 @@ GitHub Actions matrix: build → Vitest → Playwright (headless chromium, xvfb 
 
 ## 12. Store-prep deliverables + CWS/trader realities
 
-Wafer produces (user submits):
+Bokal produces (user submits):
 - Privacy policy + **Limited Use** statement (host URL is user's).
 - Data-use disclosure answers: **Authentication information** + **Website content** (and scope to **web browsing activity** only if cookie storage implicates it); certify no sale/transfer, no collection/transmission (no sync in MVP).
 - Per-permission justifications (`cookies`, `storage`, `sidePanel`, host permission).

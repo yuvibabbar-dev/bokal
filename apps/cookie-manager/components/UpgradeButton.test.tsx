@@ -6,7 +6,7 @@ vi.hoisted(() => {
   (globalThis as unknown as { chrome: unknown }).chrome = {
     // runtime.id satisfies webextension-polyfill's "am I in an extension?" load check
     // (pulled in transitively via lib/pay/billing → extpay).
-    runtime: { id: 'wafer-test-suite' },
+    runtime: { id: 'bokal-test-suite' },
     storage: {
       local: { get: async () => ({}), set: async () => {} },
       onChanged: { addListener: () => {} },

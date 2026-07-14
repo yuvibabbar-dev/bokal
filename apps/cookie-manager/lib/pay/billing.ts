@@ -6,7 +6,7 @@ export interface Billing {
   openUpgrade(): Promise<void>;
 }
 
-const MOCK_KEY = 'wafer:mockPaid';
+const MOCK_KEY = 'bokal:mockPaid';
 
 // Dev/QA/E2E entitlement: a local flag. openUpgrade() simulates a successful purchase so the
 // whole Pro flow is exercisable without ExtPay. Selected when USE_MOCK_BILLING is true.

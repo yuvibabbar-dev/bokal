@@ -1,8 +1,8 @@
-# Wafer — Milestone 7: Pre-launch Parity + Bug Fixes — Plan
+# Bokal — Milestone 7: Pre-launch Parity + Bug Fixes — Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Steps use checkbox (`- [ ]`).
 
-**Goal:** Close the below-parity feature gaps and fix the verified correctness bugs found in the post-build market/code review, so Wafer meets (and, on trust, beats) Cookie-Editor at launch.
+**Goal:** Close the below-parity feature gaps and fix the verified correctness bugs found in the post-build market/code review, so Bokal meets (and, on trust, beats) Cookie-Editor at launch.
 
 **Scope (all directed by the user):** bulk delete-all, copy-value + copy-as-header + clipboard export, header-string import, profile apply-as-**replace** (not merge) + in-panel passphrase, all-cookies view, attribute-length validation (wire the dead constant) + a domain-count soft warning, and the bugs: daily-alarm reset, stale panel on same-tab navigation, entitlement-store missing seq-guard, profiles-store missing try/catch, and the CHIPS site-derivation + cross-panel theme sync deferrals.
 
@@ -44,8 +44,8 @@ apps/cookie-manager/
 
 - [ ] **Step 1: Alarm-reset guard.** In `entrypoints/background.ts`, `chrome.alarms.create(...)` runs on every SW wake, which resets the 24h timer so the daily re-check never fires for active users. Replace the bare create (line 17) with a guarded create:
 ```ts
-  void chrome.alarms.get('wafer:entitlement').then((existing) => {
-    if (!existing) chrome.alarms.create('wafer:entitlement', { periodInMinutes: 60 * 24 });
+  void chrome.alarms.get('bokal:entitlement').then((existing) => {
+    if (!existing) chrome.alarms.create('bokal:entitlement', { periodInMinutes: 60 * 24 });
   });
 ```
 (Keep the `onAlarm` listener registration synchronous at top level, exactly as-is on lines 18-20.)
@@ -295,7 +295,7 @@ import { getCookiesForUrl } from '../lib/cookies/read';
   }
 ```
   (Add a `const [notice, setNotice] = useState<string | null>(null);` and render it near `error`. Note the `res.replace` reference above is illustrative — do NOT reference a non-existent field; the actual message should read: `Applied ${res.applied}${res.removed ? `, replaced ${res.removed}` : ''}${res.failed ? `, ${res.failed} failed` : ''}.`)
-  - Add a global "Replace (clear site cookies first)" checkbox near the top: `<label style={{ fontSize: 11, color: 'var(--wafer-muted)' }}><input type="checkbox" checked={applyReplace} onChange={(e) => setApplyReplace(e.target.checked)} /> Apply replaces (clears the site's current cookies first)</label>`
+  - Add a global "Replace (clear site cookies first)" checkbox near the top: `<label style={{ fontSize: 11, color: 'var(--bokal-muted)' }}><input type="checkbox" checked={applyReplace} onChange={(e) => setApplyReplace(e.target.checked)} /> Apply replaces (clears the site's current cookies first)</label>`
   - In each list `<li>`, replace the single Apply button so encrypted profiles first expand an inline `<input type="password">`: when `applyingId === p.id`, show the password input + a confirm "Apply" that calls `doApply(p.id, true)`; otherwise the Apply button either calls `doApply(p.id, false)` (unencrypted) or `setApplyingId(p.id)` (encrypted, to reveal the field).
 - [ ] **Step 3: Verify** `tsc --noEmit` exit 0; `test` green (60); `build` ok — confirm ProfilesPanel is still a SEPARATE chunk (dynamic import intact). No `prompt`/`alert` remain in ProfilesPanel. **Commit** `git add -A apps/cookie-manager && git commit -m "feat: profile apply-as-replace (true restore) + in-panel passphrase"`
 
@@ -343,7 +343,7 @@ export async function getAllCookies(): Promise<CookieAttrs[]> {
   - Import `SOFT_DOMAIN_COOKIE_WARN` from `../../lib/cookies/validation` and, when `scope === 'site' && cookies.length >= SOFT_DOMAIN_COOKIE_WARN`, render a soft warning line above the list:
 ```tsx
       {scope === 'site' && cookies.length >= SOFT_DOMAIN_COOKIE_WARN && (
-        <div style={{ fontSize: 11, color: 'var(--wafer-muted)', marginBottom: 6 }}>⚠ {cookies.length} cookies — near Chrome's ~180-per-domain limit.</div>
+        <div style={{ fontSize: 11, color: 'var(--bokal-muted)', marginBottom: 6 }}>⚠ {cookies.length} cookies — near Chrome's ~180-per-domain limit.</div>
       )}
 ```
 - [ ] **Step 4: Verify** `tsc --noEmit` exit 0; `test` green (60); `build` ok. E2E smoke still green. **Commit** `git add -A apps/cookie-manager && git commit -m "feat: all-cookies view toggle + domain-count soft warning"`

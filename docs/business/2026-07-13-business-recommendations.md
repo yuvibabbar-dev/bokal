@@ -1,10 +1,10 @@
-# Wafer — Business Recommendations
+# Bokal — Business Recommendations
 
 **Date:** 2026-07-13
 **Author:** Strategy Lead
 **Status:** DECISIONS — locked for launch. This is a decision document, not a menu. Each choice below is the version we ship.
 
-**Product in one line:** Wafer is a Manifest V3 Chrome/Edge cookie manager positioned as the trustworthy, open-source successor to the delisted EditThisCookie — minimal permissions, no remote code, no telemetry, local-first.
+**Product in one line:** Bokal is a Manifest V3 Chrome/Edge cookie manager positioned as the trustworthy, open-source successor to the delisted EditThisCookie — minimal permissions, no remote code, no telemetry, local-first.
 
 ---
 
@@ -13,7 +13,7 @@
 **Value prop (one line):** The cookie editor you can actually trust — full cookie control (including HttpOnly), open source, no tracking, and it never phones home.
 
 **Tagline:** **"Every cookie, under your control. Nothing leaves your device."**
-- Backup tagline for the store icon / promo tile: **"Wafer — the trustworthy cookie editor."**
+- Backup tagline for the store icon / promo tile: **"Bokal — the trustworthy cookie editor."**
 
 **Lead differentiators (in priority order):**
 1. **Minimal permissions.** No `tabs` permission. Host access is requested only at runtime for the specific site you choose (`optional_host_permissions`), never `<all_urls>` up front. Near-zero install warning.
@@ -23,7 +23,7 @@
 5. **Migration-friendly.** Imports Cookie-Editor / EditThisCookie JSON, so switching costs nothing.
 
 **Sharpest "why switch from Cookie-Editor" line:**
-> **"Cookie-Editor asks for the `tabs` permission and is closed to the average user; Wafer drops `tabs`, requests site access only when you grant it, and publishes every line of source. Same power, less trust required."**
+> **"Cookie-Editor asks for the `tabs` permission and is closed to the average user; Bokal drops `tabs`, requests site access only when you grant it, and publishes every line of source. Same power, less trust required."**
 
 *Rationale (research):* EditThisCookie's 3M-user delisting plus the credential-stealing copycat (50k+ users) created a live trust vacuum, and the ASO research shows unexplained broad permissions measurably depress installs — trust is both the moat and the highest-leverage conversion lever, so we lead with it everywhere.
 
@@ -83,9 +83,9 @@ Stripe's flat **$0.30** dominates the ~7–8% ExtPay(5%)+Stripe(2.9%+$0.30) take
 
 ### TITLE (name field — 58 / 75 chars)
 ```
-Wafer - Cookie Editor & Manager (Open Source, No Tracking)
+Bokal - Cookie Editor & Manager (Open Source, No Tracking)
 ```
-Front-loads the descriptor because nobody searches "Wafer" yet; the ~35-char search truncation still reads **"Wafer - Cookie Editor & Manager"**, capturing the two highest-intent queries, while the trust tail shows on the detail page. **Do NOT** put "EditThisCookie" or "Cookie-Editor" in the title/summary (impersonation/trademark = suspension risk).
+Front-loads the descriptor because nobody searches "Bokal" yet; the ~35-char search truncation still reads **"Bokal - Cookie Editor & Manager"**, capturing the two highest-intent queries, while the trust tail shows on the detail page. **Do NOT** put "EditThisCookie" or "Cookie-Editor" in the title/summary (impersonation/trademark = suspension risk).
 
 ### SUMMARY (126 / 132 chars — plain text, real search terms, no stuffing)
 ```
@@ -94,18 +94,18 @@ Edit, add, view & delete cookies incl. HttpOnly. JSON/Netscape export, JSON impo
 
 ### DESCRIPTION (paste-ready)
 ```
-Wafer is an open-source cookie editor and cookie manager for developers, QA
+Bokal is an open-source cookie editor and cookie manager for developers, QA
 engineers, and privacy-minded users. View, edit, add, and delete cookies —
 including HttpOnly cookies — search and filter them, and import or export in
-JSON and Netscape formats. Wafer is the trustworthy, open-source successor for
+JSON and Netscape formats. Bokal is the trustworthy, open-source successor for
 anyone left stranded by the EditThisCookie takedown and the copycat that
 replaced it.
 
-WHY WAFER IS SAFE
-Trust is the whole point of Wafer:
-• Minimal permissions — no "tabs" permission at all. Wafer asks for access to a
+WHY BOKAL IS SAFE
+Trust is the whole point of Bokal:
+• Minimal permissions — no "tabs" permission at all. Bokal asks for access to a
   site only at the moment you choose to manage it, never to all sites up front.
-• No remote code — everything Wafer runs is in the published package.
+• No remote code — everything Bokal runs is in the published package.
 • No telemetry, no analytics, no ads, no tracking of any kind.
 • Local-first — there is no server, no cloud, and no account. Nothing you do
   leaves your device.
@@ -131,19 +131,19 @@ PERMISSIONS, IN PLAIN ENGLISH
 • cookies — the core function: read, create, edit, and delete cookies for the
   site you're managing.
 • storage — saves your local preferences (dark mode, filters) on your device.
-• sidePanel — renders Wafer's side-panel interface next to the page.
+• sidePanel — renders Bokal's side-panel interface next to the page.
 • Host access — required by Chrome's cookies API to read/write cookies for a
-  domain. Wafer requests it only at runtime for the specific site you choose,
+  domain. Bokal requests it only at runtime for the specific site you choose,
   never for all sites up front.
 
 COMPATIBILITY
-Wafer imports Cookie-Editor and EditThisCookie JSON exports, so switching over
+Bokal imports Cookie-Editor and EditThisCookie JSON exports, so switching over
 takes seconds.
 
-COMING SOON (WAFER PRO)
+COMING SOON (BOKAL PRO)
 Named local cookie profiles — snapshot a site's cookies and switch between saved
 sets (for example, different test accounts) in one click, with optional
-passphrase encryption. Fully local, like everything else in Wafer.
+passphrase encryption. Fully local, like everything else in Bokal.
 ```
 
 ### FEATURE-BULLET LIST (for the compact card / repo README reuse)
@@ -169,7 +169,7 @@ Ordered by conversion weight (first three carry ~70%). Each is a real capture of
 4. **IMPORT / EXPORT.** Showing JSON + Netscape side by side. **Caption:** "Import & export in JSON and Netscape — no downloads permission, compatible with Cookie-Editor/EditThisCookie."
 5. **CHIPS inspector (dark mode).** Partition inspector for power-user credibility. **Caption:** "Inspect partitioned (CHIPS) cookies — in full dark mode."
 
-Store icon stays a simple wafer/cookie mark — **no UI, no text**. Add an in-app review prompt after the user's **3rd successful cookie action** to build the review velocity the ranking algorithm rewards.
+Store icon stays a simple bokal/cookie mark — **no UI, no text**. Add an in-app review prompt after the user's **3rd successful cookie action** to build the review velocity the ranking algorithm rewards.
 
 ---
 
@@ -178,18 +178,18 @@ Store icon stays a simple wafer/cookie mark — **no UI, no text**. Add an in-ap
 ### 6a. FULL PRIVACY POLICY (host at a public URL; paste the URL into the CWS dashboard privacy field)
 
 ```
-Privacy Policy — Wafer (last updated 2026-07-13)
+Privacy Policy — Bokal (last updated 2026-07-13)
 
-Wafer is a local-first cookie manager.
+Bokal is a local-first cookie manager.
 
-What Wafer accesses: to do its job, Wafer reads and writes the cookies of the
+What Bokal accesses: to do its job, Bokal reads and writes the cookies of the
 site you choose to manage, using Chrome's cookies API. This includes
 authentication cookies and other data stored in the site's browser storage.
 
-What Wafer does NOT do: Wafer collects no personal information, tracks no
+What Bokal does NOT do: Bokal collects no personal information, tracks no
 browsing history, and contains no analytics, telemetry, ads, or remote code.
 
-Where your data goes: nowhere. Wafer transmits no data off your device. There is
+Where your data goes: nowhere. Bokal transmits no data off your device. There is
 no server, no cloud, and no account.
 
 Local storage: your UI preferences and, if you use Pro cookie profiles, your
@@ -198,7 +198,7 @@ Pro profiles can be encrypted at rest with a passphrase you set.
 
 Third parties: none. We do not sell, share, or transfer any user data to anyone.
 
-Payments (Pro): purchases are processed by ExtensionPay and Stripe; Wafer never
+Payments (Pro): purchases are processed by ExtensionPay and Stripe; Bokal never
 sees or stores your payment details, and no cookie data is shared with them.
 
 Permissions: 'cookies' and host access are used solely to manage cookies for
@@ -210,26 +210,26 @@ it before the change takes effect.
 
 Contact: yuvisbabbar@gmail.com
 
-Limited Use: Wafer's use of information received from Chrome APIs and any user
+Limited Use: Bokal's use of information received from Chrome APIs and any user
 data adheres to the Chrome Web Store User Data Policy, including the Limited Use
 requirements.
 ```
 
 **Also place this exact sentence visibly on the extension's homepage/landing page** (Google requires the affirmative Limited Use statement on the site, one click from home):
-> *"Wafer's use of information received from Chrome APIs and any user data adheres to the Chrome Web Store User Data Policy, including the Limited Use requirements."*
+> *"Bokal's use of information received from Chrome APIs and any user data adheres to the Chrome Web Store User Data Policy, including the Limited Use requirements."*
 
 ### 6b. CWS "Data collected" checkboxes — check EXACTLY TWO
 | Category | Check? | Reason |
 |---|---|---|
-| **Authentication information** | ✅ **YES** | Google's definition = "logins, passwords, and authentication cookies"; Wafer reads/edits auth cookies |
+| **Authentication information** | ✅ **YES** | Google's definition = "logins, passwords, and authentication cookies"; Bokal reads/edits auth cookies |
 | **Website content** | ✅ **YES** | Google's definition literally lists "cookies" as website content |
-| Personally identifiable information | ❌ No | Wafer touches no name/email/ID |
+| Personally identifiable information | ❌ No | Bokal touches no name/email/ID |
 | Health information | ❌ No | — |
-| Financial and payment information | ❌ No | Handled by ExtPay/Stripe as processors, not by Wafer |
+| Financial and payment information | ❌ No | Handled by ExtPay/Stripe as processors, not by Bokal |
 | Personal communications | ❌ No | — |
 | Location | ❌ No | — |
-| **Web history** | ❌ **No** | Wafer logs no domains visited — do NOT check even though reviewers associate cookies with tracking |
-| **User activity** | ❌ **No** | Wafer logs no clicks/keystrokes/actions |
+| **Web history** | ❌ **No** | Bokal logs no domains visited — do NOT check even though reviewers associate cookies with tracking |
+| **User activity** | ❌ **No** | Bokal logs no clicks/keystrokes/actions |
 
 ### 6c. Collected / Transmitted (yes/no)
 - **Collected (handled locally):** YES for Authentication information + Website content only — because "handle" includes local-only storage (login/auth functionality requires the disclosure even when nothing leaves the device).
@@ -241,16 +241,16 @@ requirements.
 - ✅ "I do not use or transfer user data to determine creditworthiness or for lending purposes."
 
 ### 6e. Single-purpose statement
-> "Wafer is a cookie manager: it lets users view, add, edit, delete, search, import and export the cookies of the site they are working on. All data stays on the user's device."
+> "Bokal is a cookie manager: it lets users view, add, edit, delete, search, import and export the cookies of the site they are working on. All data stays on the user's device."
 
 ### 6f. Per-permission justifications (paste verbatim)
 - **`cookies`** — "Core and only function: read, create, edit and delete cookies for the site the user is managing. Without it the extension cannot work."
 - **`storage`** — "Stores local UI preferences (dark mode, filters) and, for Pro users, named cookie profiles/snapshots. All data is kept on the device via chrome.storage.local; nothing is transmitted."
 - **`sidePanel`** — "Provides the side-panel view so users can inspect and edit cookies next to the page they are working on."
 - **`unlimitedStorage`** — "Lets Pro users keep more than a handful of local cookie profiles/snapshots without hitting the default 10 MB quota. Everything stays on the device; nothing is transmitted."
-- **Host permissions (`optional_host_permissions: ["<all_urls>"]`)** — "The chrome.cookies API requires host access to read and write cookies for a domain. Wafer requests host access only at runtime for the specific site the user chooses to manage, never `<all_urls>` up front."
+- **Host permissions (`optional_host_permissions: ["<all_urls>"]`)** — "The chrome.cookies API requires host access to read and write cookies for a domain. Bokal requests host access only at runtime for the specific site the user chooses to manage, never `<all_urls>` up front."
 
-*Rationale (research):* The Aug-1-2026 "strictly-necessary" rule is a tailwind — cookies ARE Wafer's single purpose and nothing is transmitted, so Wafer is trivially compliant and turns the disclosure into a marketing asset. Re-affirm the policy + Limited Use statement on every publish, since certification is re-required each time.
+*Rationale (research):* The Aug-1-2026 "strictly-necessary" rule is a tailwind — cookies ARE Bokal's single purpose and nothing is transmitted, so Bokal is trivially compliant and turns the disclosure into a marketing asset. Re-affirm the policy + Limited Use statement on every publish, since certification is re-required each time.
 
 ---
 
@@ -270,5 +270,5 @@ requirements.
 - **Tagline:** "Every cookie, under your control. Nothing leaves your device."
 - **Pricing:** Monthly **$4.99** · Annual **$19** · **Lifetime $39** (launch **$29** for ~60 days) — **lifetime is the default-selected, featured offer**; 7-day full-Pro reverse trial triggered on saving/applying a second profile.
 - **Free vs Pro:** Free keeps all CRUD/search/import-export/CHIPS/dark-mode (wins installs + trust); Pro gates only named local cookie profiles + optional passphrase encryption (converts the QA/dev ~1%).
-- **Store title:** `Wafer - Cookie Editor & Manager (Open Source, No Tracking)`
+- **Store title:** `Bokal - Cookie Editor & Manager (Open Source, No Tracking)`
 - **Store summary (126 chars):** `Edit, add, view & delete cookies incl. HttpOnly. JSON/Netscape export, JSON import, CHIPS inspector. Open source, no tracking.`

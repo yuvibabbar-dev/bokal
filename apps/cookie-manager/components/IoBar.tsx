@@ -82,7 +82,7 @@ export function IoBar({ cookies, scope }: { cookies: CookieAttrs[]; scope: 'site
       <button type="button" onClick={() => fileRef.current?.click()}>Import</button>
       <input ref={fileRef} type="file" accept="application/json,.json,.txt,text/plain" onChange={onImportFile} style={{ display: 'none' }} />
       <button type="button" onClick={() => { if (cookies.length && confirm(scope === 'all' ? `Delete all ${cookies.length} cookies across ALL sites? This cannot be undone.` : `Delete all ${cookies.length} cookies shown?`)) void cookiesStore.getState().deleteAllForSite(cookies).then((r) => setStatus(`Deleted ${r.removed}${r.skipped ? `, skipped ${r.skipped} protected` : ''}${r.failed ? `, ${r.failed} failed` : ''}`)); }}>Delete all</button>
-      {status && <span style={{ fontSize: 11, color: 'var(--wafer-muted)' }}>{status}</span>}
+      {status && <span style={{ fontSize: 11, color: 'var(--bokal-muted)' }}>{status}</span>}
     </div>
   );
 }

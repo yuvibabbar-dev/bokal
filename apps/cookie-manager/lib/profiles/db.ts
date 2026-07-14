@@ -1,6 +1,6 @@
 import type { Profile } from './types';
 
-const DB_NAME = 'wafer';
+const DB_NAME = 'bokal';
 const STORE = 'profiles';
 const VERSION = 1;
 

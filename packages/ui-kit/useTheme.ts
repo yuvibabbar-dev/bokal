@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export type ThemeMode = 'system' | 'light' | 'dark';
-const KEY = 'wafer:theme';
+const KEY = 'bokal:theme';
 
 export function applyTheme(mode: ThemeMode): void {
   const root = document.documentElement;

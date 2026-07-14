@@ -1,4 +1,4 @@
-import '@wafer/ui-kit/theme.css';
+import '@bokal/ui-kit/theme.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';

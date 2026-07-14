@@ -8,7 +8,7 @@ function base(o: Partial<CookieAttrs> = {}): CookieAttrs {
 }
 
 describe('parseCookiesJson', () => {
-  it('round-trips a Wafer export', () => {
+  it('round-trips a Bokal export', () => {
     const original = [base({ expirationDate: 1893456000 }), base({ name: 'other', hostOnly: true })];
     const res = parseCookiesJson(toJson(original));
     expect(res.errors).toEqual([]);

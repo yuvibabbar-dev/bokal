@@ -27,8 +27,8 @@ const SAME_SITE_IN: Record<PwSameSite, SameSite> = {
 };
 
 // NOTE: partitionKey (CHIPS) is intentionally not represented — the Playwright/Puppeteer cookie
-// schemas have no field for it. A partitioned cookie exported here and re-imported into Wafer would
-// come back unpartitioned (wider scope); use the native JSON export (toJson) for lossless Wafer↔Wafer
+// schemas have no field for it. A partitioned cookie exported here and re-imported into Bokal would
+// come back unpartitioned (wider scope); use the native JSON export (toJson) for lossless Bokal↔Bokal
 // round-trips of partitioned cookies. Do not "add" partitionKey here without a target-format field.
 function toAutomationCookie(c: CookieAttrs): AutomationCookie {
   const out: AutomationCookie = {
@@ -82,7 +82,7 @@ function automationToAttrs(raw: unknown): CookieAttrs | null {
 
 function looksLikeAutomationCookie(item: unknown): boolean {
   // Puppeteer/Playwright cookies carry `expires` (a number) and never `expirationDate`
-  // (which is the Cookie-Editor / wafer field). This disambiguates a bare array.
+  // (which is the Cookie-Editor / bokal field). This disambiguates a bare array.
   if (typeof item !== 'object' || item === null) return false;
   const o = item as Record<string, unknown>;
   return typeof o.expires === 'number' && !('expirationDate' in o);
@@ -91,7 +91,7 @@ function looksLikeAutomationCookie(item: unknown): boolean {
 /**
  * Recognize Playwright storageState objects and Puppeteer/Playwright cookie arrays.
  * Returns mapped cookies, or null if `data` is not an automation format (so the caller
- * falls through to the normal JSON path — Cookie-Editor arrays, wafer objects, etc.).
+ * falls through to the normal JSON path — Cookie-Editor arrays, bokal objects, etc.).
  */
 export function fromAutomationJson(data: unknown): CookieAttrs[] | null {
   // storageState: { cookies: [...], origins: [...] }

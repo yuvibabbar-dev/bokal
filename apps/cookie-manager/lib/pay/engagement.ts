@@ -3,8 +3,8 @@ import { GRACE_MS } from './config';
 
 // Whether the user has ever engaged with Pro (opened the upgrade/payment page). Free users who
 // never engage should never trigger a network call to the billing server — that's what preserves
-// Wafer's "nothing leaves your device" claim for the people who care about it most.
-const ENGAGED_KEY = 'wafer:proEngaged';
+// Bokal's "nothing leaves your device" claim for the people who care about it most.
+const ENGAGED_KEY = 'bokal:proEngaged';
 
 export async function hasEngagedPro(): Promise<boolean> {
   const r = await chrome.storage.local.get(ENGAGED_KEY);
@@ -17,7 +17,7 @@ export async function setEngagedPro(): Promise<void> {
 
 /**
  * Contact the billing server ONLY if the user has engaged Pro or is within a paid grace window.
- * A brand-new free user (no engagement, no paid cache) returns false, so Wafer never phones home
+ * A brand-new free user (no engagement, no paid cache) returns false, so Bokal never phones home
  * for them. The daily alarm re-check and the panel refresh both route through here.
  */
 export async function shouldContactBilling(): Promise<boolean> {
