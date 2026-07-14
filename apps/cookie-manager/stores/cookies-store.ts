@@ -3,7 +3,7 @@ import { useStore } from 'zustand';
 import type { CookieAttrs } from '../lib/cookie-types';
 import { getActiveTabUrl, getAllCookies, getCookiesForUrl, getPartitionedCookiesForUrl } from '../lib/cookies/read';
 import { setCookie, removeCookie } from '../lib/cookies/write';
-import { hasAllUrlsPermission } from '../lib/permissions';
+import { hasAllUrlsPermission, hasSiteAccess } from '../lib/permissions';
 import { cookieId } from '../lib/cookies/keys';
 import { validateForImport } from '../lib/cookies/validation';
 import { recordAction } from '../lib/review';
@@ -49,13 +49,19 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
     const seq = ++refreshSeq;
     set({ loading: true });
     try {
-      const granted = await hasAllUrlsPermission();
-      if (!granted) {
-        if (seq === refreshSeq) set({ granted: false, activeUrl: null, cookies: [], loading: false, ready: true });
-        return;
-      }
       const scope = get().scope;
       const activeUrl = await getActiveTabUrl();
+      // Grant gate: the all-cookies scope genuinely needs <all_urls>; the single-site scope only
+      // needs access to the active origin (per-site host permission, or the broad grant which
+      // contains it).
+      const granted = scope === 'all'
+        ? await hasAllUrlsPermission()
+        : !!activeUrl && (await hasSiteAccess(activeUrl));
+      if (!granted) {
+        // Keep activeUrl (activeTab may surface it pre-grant) so the grant screen can name the site.
+        if (seq === refreshSeq) set({ granted: false, activeUrl, cookies: [], loading: false, ready: true });
+        return;
+      }
       let cookies: CookieAttrs[];
       if (scope === 'all') {
         cookies = await getAllCookies();
