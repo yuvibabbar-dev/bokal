@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wafer — a trustworthy cookie manager for Chrome & Edge</title>
+  <meta name="description" content="Wafer is an open-source Manifest V3 cookie manager. View, edit, add, delete, import and export cookies — with nothing leaving your device.">
+  <link rel="icon" type="image/png" href="../apps/cookie-manager/public/icon/128.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="prelaunch">Pre-launch preview — not yet on the Chrome Web Store.</div>
+
+  <header class="site-header">
+    <span class="brand">
+      <svg width="30" height="30" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#24282C"/><circle cx="64" cy="64" r="45" fill="#E9A83E"/><rect x="18" y="99" width="92" height="16" fill="#24282C"/><g fill="#B67A22"><rect x="40" y="40" width="9" height="9" rx="2"/><rect x="70" y="40" width="9" height="9" rx="2"/><rect x="55" y="58" width="9" height="9" rx="2"/><rect x="80" y="62" width="9" height="9" rx="2"/><rect x="46" y="74" width="9" height="9" rx="2"/><rect x="68" y="80" width="9" height="9" rx="2"/></g></svg>
+      Wafer
+    </span>
+    <nav class="nav">
+      <a href="#features">Features</a>
+      <a href="#privacy">Privacy</a>
+      <a href="privacy.html">Privacy policy</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <svg class="hero-logo" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#24282C"/><circle cx="64" cy="64" r="45" fill="#E9A83E"/><rect x="18" y="99" width="92" height="16" fill="#24282C"/><g fill="#B67A22"><rect x="40" y="40" width="9" height="9" rx="2"/><rect x="70" y="40" width="9" height="9" rx="2"/><rect x="55" y="58" width="9" height="9" rx="2"/><rect x="80" y="62" width="9" height="9" rx="2"/><rect x="46" y="74" width="9" height="9" rx="2"/><rect x="68" y="80" width="9" height="9" rx="2"/></g></svg>
+      <h1>Every cookie, under your control.</h1>
+      <p class="lede">Wafer is an open-source cookie manager for Chrome and Edge. View, edit, add, delete, import and export cookies — with nothing leaving your device.</p>
+      <div class="cta-row">
+        <span class="btn btn-primary" aria-disabled="true">Coming soon to Chrome</span>
+        <a class="btn btn-ghost" href="#source-pending">View source</a>
+      </div>
+      <span class="cta-note">Store &amp; source links are added at launch.</span>
+
+      <div class="badges">
+        <span class="badge">No <b>tabs</b> permission</span>
+        <span class="badge">No telemetry</span>
+        <span class="badge">No remote code</span>
+        <span class="badge">No account</span>
+        <span class="badge"><b>Local-first</b></span>
+        <span class="badge">Open source</span>
+      </div>
+    </section>
+
+    <section id="features" class="wrap">
+      <h2>Everything you need to manage cookies</h2>
+      <p class="sub">Full control, including the cookies UI-only tools can't touch — all free.</p>
+      <div class="grid">
+        <div class="card"><h3>Full cookie control</h3><p>View, add, edit and delete cookies, including HttpOnly cookies, with search and filter.</p></div>
+        <div class="card"><h3>Import &amp; export</h3><p>JSON, Netscape and cookie-header formats, plus Playwright and Puppeteer for test automation. No downloads permission.</p></div>
+        <div class="card"><h3>Rules &amp; cleanup</h3><p>Protect, pin and block cookies; keep a site whitelist and clear the rest with one click or a daily sweep.</p></div>
+        <div class="card"><h3>Audit hints</h3><p>Inline flags for missing SameSite, unpartitioned cross-site cookies, and oversized cookies.</p></div>
+        <div class="card"><h3>CHIPS &amp; DevTools</h3><p>A partition inspector for modern CHIPS cookies, and a DevTools panel for the current tab.</p></div>
+        <div class="card"><h3>Fast &amp; dark</h3><p>Virtualized lists that stay fast across thousands of cookies, with a built-in dark mode.</p></div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <h2>Free, with an optional Pro</h2>
+      <p class="sub">Every cookie feature above is free. Pro adds local, encrypted cookie profiles.</p>
+      <div class="tiers">
+        <div class="tier">
+          <h3>Free</h3>
+          <span class="tag">The whole cookie manager</span>
+          <ul>
+            <li>View, add, edit, delete — including HttpOnly</li>
+            <li>Import &amp; export (JSON, Netscape, headers, automation)</li>
+            <li>Rules, cleanup, audit hints, CHIPS, DevTools</li>
+            <li>No account, no tracking, no network calls</li>
+          </ul>
+        </div>
+        <div class="tier pro">
+          <h3>Pro</h3>
+          <span class="tag">Named cookie profiles</span>
+          <ul>
+            <li>Snapshot a site's cookies and switch between saved sets in one click</li>
+            <li>Perfect for juggling test accounts and login states</li>
+            <li>Optional passphrase encryption at rest (AES-GCM)</li>
+            <li>Still 100% local — profiles never leave your device</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="privacy" class="wrap">
+      <h2>Your cookies never leave your device</h2>
+      <p class="sub">Trust isn't a feature bolted on — it's the whole design.</p>
+      <div class="privacy-callout">
+        <p>There is no Wafer server and no account. Wafer reads and writes cookies locally through Chrome's API and transmits nothing. The only time it contacts a network service is the optional Pro license check (via ExtensionPay and Stripe) — and only if you open the upgrade page. Free users are never contacted.</p>
+        <p>Wafer asks for no <code>tabs</code> permission and no site access at install; it requests access to the specific site you choose, only when you choose it. <a href="privacy.html">Read the full privacy policy →</a></p>
+        <p class="limited-use">Wafer's use of information received from Chrome APIs and any user data adheres to the Chrome Web Store User Data Policy, including the Limited Use requirements.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© Wafer. A local-first cookie manager.</span>
+      <span>
+        <a href="privacy.html">Privacy policy</a> ·
+        <a href="mailto:yuvisbabbar@gmail.com">Contact</a>
+      </span>
+    </div>
+  </footer>
+</body>
+</html>

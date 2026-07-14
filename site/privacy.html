@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy — Wafer</title>
+  <meta name="description" content="Wafer's privacy policy: a local-first cookie manager. Your cookies never leave your device.">
+  <link rel="icon" type="image/png" href="../apps/cookie-manager/public/icon/128.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" style="color:var(--fg);">
+      <svg width="30" height="30" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#24282C"/><circle cx="64" cy="64" r="45" fill="#E9A83E"/><rect x="18" y="99" width="92" height="16" fill="#24282C"/><g fill="#B67A22"><rect x="40" y="40" width="9" height="9" rx="2"/><rect x="70" y="40" width="9" height="9" rx="2"/><rect x="55" y="58" width="9" height="9" rx="2"/><rect x="80" y="62" width="9" height="9" rx="2"/><rect x="46" y="74" width="9" height="9" rx="2"/><rect x="68" y="80" width="9" height="9" rx="2"/></g></svg>
+      Wafer
+    </a>
+    <nav class="nav"><a href="index.html">← Home</a></nav>
+  </header>
+
+  <main class="wrap policy">
+    <h1>Privacy Policy</h1>
+    <p class="updated">Wafer — last updated 2026-07-13</p>
+
+    <p>Wafer is a local-first cookie manager.</p>
+
+    <h2>What Wafer accesses</h2>
+    <p>To do its job, Wafer reads and writes the cookies of the site you choose to manage, using Chrome's cookies API. This includes authentication cookies and other data stored in the site's browser storage.</p>
+
+    <h2>What Wafer does NOT do</h2>
+    <p>Wafer collects no personal information, tracks no browsing history, and contains no analytics, telemetry, ads, or remote code.</p>
+
+    <h2>Where your cookie data goes</h2>
+    <p>Nowhere. Wafer never transmits your cookies — or any browsing data — off your device. There is no Wafer server and no account. The ONLY time Wafer contacts a network service is if you choose to buy Wafer Pro: it then verifies your license with ExtensionPay and processes payment through Stripe (see Payments below). If you never open the upgrade page, Wafer contacts no server at all.</p>
+
+    <h2>Local storage</h2>
+    <p>Everything Wafer stores lives only on your device and is never synced. Your theme preference, cookie rules, and Pro entitlement status are stored via chrome.storage.local; the current cookie list is cached temporarily via chrome.storage.session so re-opening the panel is instant; if you use Pro cookie profiles, your saved profiles/snapshots are stored only on your device in IndexedDB (not chrome.storage.local), and can be encrypted at rest with a passphrase you set. (If you purchase Pro, the ExtensionPay library stores its own license markers in browser storage, which your browser may sync — this concerns your license only, never your cookies or browsing data, and never happens for free users.)</p>
+
+    <h2>Third parties</h2>
+    <p>None. We do not sell, share, or transfer any user data to anyone.</p>
+
+    <h2>Payments (Pro)</h2>
+    <p>If you buy Pro, purchases are processed by ExtensionPay and Stripe, and Wafer verifies your license status with ExtensionPay. Wafer never sees or stores your payment details, and no cookie or browsing data is ever shared with them — only your license status is checked. These checks happen only after you choose to purchase (or open the upgrade page); free users are never contacted.</p>
+
+    <h2>Permissions</h2>
+    <p>'cookies' and host access are used solely to manage cookies for sites you choose; 'storage' persists your local preferences, entitlement status, and cookie snapshot on your device; 'unlimitedStorage' lifts the default IndexedDB quota so your Pro cookie-profile library isn't capped; 'sidePanel' renders the optional side-panel UI; 'activeTab' reads the current tab's address (only when you open Wafer) so it can request access to just that site; 'alarms' schedules a periodic local re-check of your Pro license.</p>
+
+    <h2>Changes</h2>
+    <p>If data practices ever change, we will update this policy and disclose it before the change takes effect.</p>
+
+    <h2>Contact</h2>
+    <p class="contact">yuvisbabbar@gmail.com</p>
+
+    <h2>Limited Use</h2>
+    <p class="limited-use">Wafer's use of information received from Chrome APIs and any user data adheres to the Chrome Web Store User Data Policy, including the Limited Use requirements.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© Wafer. A local-first cookie manager.</span>
+      <span><a href="index.html">Home</a> · <a href="mailto:yuvisbabbar@gmail.com">Contact</a></span>
+    </div>
+  </footer>
+</body>
+</html>
