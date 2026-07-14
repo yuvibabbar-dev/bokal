@@ -9,7 +9,10 @@ export default defineConfig({
     description: 'View, edit, add, delete, import, and export browser cookies.',
     minimum_chrome_version: '114',
     icons: { '16': 'icon/16.png', '32': 'icon/32.png', '48': 'icon/48.png', '128': 'icon/128.png' },
-    permissions: ['cookies', 'storage', 'sidePanel', 'unlimitedStorage', 'alarms'],
+    // activeTab lets the panel read the active tab's URL after the toolbar-click that opens it, so
+    // Wafer can request host access for JUST that site — without the `tabs` permission and with no
+    // install warning. It does NOT grant chrome.cookies access; per-site host permission does that.
+    permissions: ['cookies', 'storage', 'sidePanel', 'unlimitedStorage', 'alarms', 'activeTab'],
     optional_host_permissions: ['<all_urls>'],
     action: { default_title: 'Wafer' },
     side_panel: { default_path: 'sidepanel.html' },
