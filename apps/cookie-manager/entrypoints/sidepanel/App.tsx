@@ -84,7 +84,7 @@ export function App() {
     return <main style={{ font: '13px system-ui', padding: 12, color: 'var(--wafer-muted)' }}>Loading…</main>;
   }
 
-  if (!granted) return <GrantAccess onGrant={() => void cookiesStore.getState().refresh()} />;
+  if (!granted) return <GrantAccess activeUrl={activeUrl} scope={scope} onGrant={() => void cookiesStore.getState().refresh()} />;
 
   if (granted && editing) {
     return <CookieEditor initial={editing.draft} original={editing.original} activeUrl={activeUrl} onDone={() => setEditing(null)} />;

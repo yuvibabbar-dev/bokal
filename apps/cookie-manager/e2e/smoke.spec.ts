@@ -20,5 +20,5 @@ test('without host access, the panel shows the grant gate', async ({ context, ex
   test.skip(!!process.env.WAFER_E2E, 'normal (non-e2e) build only');
   const page = await context.newPage();
   await page.goto(`chrome-extension://${extensionId}/sidepanel.html`);
-  await expect(page.getByRole('button', { name: /grant access/i })).toBeVisible();
+  await expect(page.getByRole('button', { name: /allow/i })).toBeVisible();
 });
