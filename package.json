@@ -1,6 +1,7 @@
 {
   "name": "wafer-monorepo",
   "private": true,
+  "license": "GPL-3.0-or-later",
   "packageManager": "pnpm@9.9.0",
   "engines": { "node": ">=24" },
   "scripts": {

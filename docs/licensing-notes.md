@@ -1,10 +1,11 @@
-# Licensing notes — READ BEFORE PUBLISHING THE REPO
+# Licensing notes
 
-**Status: OPEN DECISION (founder). No `LICENSE` file has been committed yet, on purpose.**
+**Status: DECIDED (founder approved 2026-07-14) — Wafer is licensed `GPL-3.0-or-later`.**
+`LICENSE` (canonical FSF GPL-3.0 text) is committed; `license` is set in every `package.json`;
+dependency licenses are inventoried in [`THIRD-PARTY-NOTICES.md`](../THIRD-PARTY-NOTICES.md).
+This closes the "open source, every line published" launch blocker.
 
-The store copy claims Wafer is "open source, every line published," so a real license is a launch
-blocker. But the choice is constrained by a dependency, and picking wrong has legal consequences —
-so this is your call, not one to default into.
+The record of *why* follows, because the choice was constrained by a dependency rather than free.
 
 ## The constraint: ExtPay is copyleft
 
@@ -60,13 +61,20 @@ cannot sublicense the AGPL portion under MIT.
   a *name/trademark* question, separate from the copyright license above — see the naming note in
   the session report).
 
-## To adopt GPL-3.0 (if you agree)
+## What was done (2026-07-14)
 
-```bash
-# from repo root
-curl -sSL https://www.gnu.org/licenses/gpl-3.0.txt -o LICENSE
-# then set "license": "GPL-3.0-or-later" in package.json (root) and apps/cookie-manager/package.json
-```
+Option 1 was adopted:
 
-(Or ask me to do it next session — I left it out precisely because it's a legal commitment I
-shouldn't make unilaterally.)
+- `LICENSE` = canonical GPL-3.0 text from gnu.org (35,149 bytes).
+- `"license": "GPL-3.0-or-later"` set in the root, `apps/cookie-manager`, `packages/ui-kit`, and
+  `packages/tsconfig` `package.json` files.
+- `THIRD-PARTY-NOTICES.md` added, crediting ExtPay and recording its AGPL/LGPL discrepancy.
+- README states the license and the ExtPay constraint.
+
+**Two things GPL does NOT do**, for the record: it does not stop you selling Wafer Pro (the GPL
+explicitly permits charging), and it is not *less* protective than MIT against a paywall-stripping
+fork — every open-source license permits forking, and GPL at least forces a forker to publish their
+changes, where MIT would let them close theirs.
+
+**Still open (a separate, non-copyright question):** the *name*. Trademark clearance for whatever
+name ships is unrelated to this copyright license — see the naming research in the session notes.
