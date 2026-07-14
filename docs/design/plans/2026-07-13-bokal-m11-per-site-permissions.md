@@ -1,6 +1,5 @@
 # Bokal M11 — Per-Site Permission Model Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: superpowers:executing-plans. Steps use `- [ ]`.
 
 **Goal:** Make Bokal's runtime host-access grant **per-site** (the active origin only) instead of a single broad `<all_urls>` grant, so the store claim "access to the specific site you choose" becomes literally true — while keeping "no `tabs` permission, no install-time host permissions." Reserve `<all_urls>` as an explicit opt-in for the genuinely broad features (all-cookies view, all-sites export/import, cleanup sweep).
 

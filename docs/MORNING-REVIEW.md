@@ -8,7 +8,7 @@ You said "build everything, I'll review; for things that need my input, research
 - **All 6 milestones built, reviewed, and merged to `master`** — a complete, monetization-ready MV3 cookie manager. **65 commits, 6 milestone merges, 54 unit tests green, `tsc` clean, build + zip succeed, E2E passes in real Chromium.**
 - **Every business decision you'd normally make is researched and decided** → [`docs/business/2026-07-13-business-recommendations.md`](business/2026-07-13-business-recommendations.md), with paste-ready store artifacts in [`docs/store/`](store/).
 - **Nothing outward-facing was done** — no store submission, no payments, no published content, no accounts. Those are your account-bound steps (§ *Your turn*).
-- **Every milestone got: TDD → per-task review → an opus whole-branch review → fixes → merge.** The reviews caught and fixed real issues (edit-duplicates-cookie, CHIPS site bug, mock-billing guard, an E2E false-green race, and a privacy-claim inaccuracy — details below).
+- **Every milestone got: TDD → per-task review → a whole-branch review → fixes → merge.** The reviews caught and fixed real issues (edit-duplicates-cookie, CHIPS site bug, mock-billing guard, an E2E false-green race, and a privacy-claim inaccuracy — details below).
 
 ## What's built (verify it yourself)
 ```bash
@@ -30,7 +30,7 @@ pnpm --filter @bokal/cookie-manager build && pnpm --filter @bokal/cookie-manager
 | **M5** Hardening | integration round-trips, a **redaction guard** (fails CI on value/passphrase logging), **Playwright E2E** (verified in real Chromium), GitHub Actions CI, threat model | 54 | `97c165f` |
 | **M6** Store-prep | privacy policy + listing + permission justifications + data-use answers + trader checklist + submission guide, **generated icons + real screenshots**, flash fix, publishable zip | 54 | `40847ca` |
 
-~1,220 lines of source. Design spec + all six milestone plans + the durable execution ledger are in [`docs/superpowers/`](superpowers/) and `.superpowers/sdd/progress.md`.
+~1,220 lines of source. Design spec + all six milestone plans + the durable execution ledger are in [`docs/design/`](design/).
 
 ## Business decisions I made for you (research-backed — change any you dislike)
 Full detail + paste-ready copy: [`docs/business/2026-07-13-business-recommendations.md`](business/2026-07-13-business-recommendations.md) and [`docs/store/`](store/). Headlines:

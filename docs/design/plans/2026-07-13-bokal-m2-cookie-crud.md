@@ -1,6 +1,5 @@
 # Bokal — Milestone 2: Cookie CRUD — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Steps use checkbox (`- [ ]`).
 
 **Goal:** Turn the read-only viewer into full create/edit/delete of cookies, with the M1 validation rules wired into the form and safe writes through the `chrome.cookies` API.
 

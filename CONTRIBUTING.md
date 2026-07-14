@@ -58,7 +58,7 @@ change that makes Bokal's marketing a lie, so it will not be merged.
 Each milestone has been built the same way (see [`docs/build-log.md`](docs/build-log.md)):
 
 1. Branch per topic: `git checkout -b feat/<topic>` off `master`.
-2. Plan under `docs/superpowers/plans/` when the change is non-trivial.
+2. Plan under `docs/design/plans/` when the change is non-trivial.
 3. TDD each task; keep the suite green.
 4. A whole-branch review before merging; fix Important/Critical findings.
 5. Merge `--no-ff`, delete the branch.

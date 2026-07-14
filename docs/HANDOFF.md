@@ -1,6 +1,6 @@
 # Bokal — Session Handoff / Resume Point
 
-**This is the single self-contained entry point for the next session.** Everything below is committed to git (unlike the `.superpowers/sdd/progress.md` scratch ledger, which is git-ignored and may be gone). Last updated: 2026-07-13 (post v1.1 roadmap: M8–M10).
+**This is the single self-contained entry point for the next session.** Everything below is committed to git. Last updated: 2026-07-13 (post v1.1 roadmap: M8–M10).
 
 ---
 
@@ -8,7 +8,7 @@
 - **Repo:** `/Users/yuvibabbar/Desktop/Projects/chrome_extensions/bokal` (own git repo; pnpm monorepo).
 - **Branch/HEAD:** `master` @ `ac8a22c` — clean working tree, **116 commits, 11 milestone merges** (M1–M11).
 - **State:** `tsc` clean · **104 unit tests pass** · build + zip succeed · Playwright E2E passes in real Chromium (both build variants) · published manifest has **no `host_permissions`**, **no `tabs`** (adds `activeTab`, `devtools_page`).
-- **v1.1 (M8–M11) added:** CHIPS all-view fix; validated imports + detailed errors; Playwright/Puppeteer automation-format I/O; all-sites export; one-time review prompt; protect/pin/block cookies; DevTools panel; whitelist auto-cleanup (Clean now + optional daily sweep); cookie audit badges; **per-site permission model** (requests just the active site; `<all_urls>` opt-in only for all-sites features). All Free. Research + program spec: `docs/business/2026-07-13-feature-roadmap-research.md`, `docs/superpowers/specs/2026-07-13-bokal-v1.1-roadmap-design.md`.
+- **v1.1 (M8–M11) added:** CHIPS all-view fix; validated imports + detailed errors; Playwright/Puppeteer automation-format I/O; all-sites export; one-time review prompt; protect/pin/block cookies; DevTools panel; whitelist auto-cleanup (Clean now + optional daily sweep); cookie audit badges; **per-site permission model** (requests just the active site; `<all_urls>` opt-in only for all-sites features). All Free. Research + program spec: `docs/business/2026-07-13-feature-roadmap-research.md`, `docs/design/specs/2026-07-13-bokal-v1.1-roadmap-design.md`.
 - **What it is:** a complete, monetization-ready MV3 Chrome/Edge **cookie manager** ("Bokal"), positioned as the trustworthy, open-source successor to the delisted EditThisCookie. Business 4 for this solo founder.
 - **One-command verify:**
   ```bash
@@ -20,13 +20,13 @@
 ## 2. How to resume (do this first)
 1. Read this file, then `docs/MORNING-REVIEW.md` (narrative status) and `docs/build-log.md` (per-task/review history).
 2. The persistent memory already carries the project summary (`project_bokal.md`); trust git history + these docs over any stale recollection.
-3. If `.superpowers/sdd/progress.md` is missing, that's fine — it's git-ignored scratch; `docs/build-log.md` is the committed copy, and `git log` is authoritative.
+3. `docs/build-log.md` holds the per-milestone execution and review history; `git log` is authoritative.
 4. Confirm state with the verify command above before changing anything.
 
 **Likely next requests and where to start:**
 - **"Wire real ExtPay / I made the accounts"** → follow `docs/pro-monetization.md` exactly (steps in §5 below). This is the #1 pre-launch item.
 - **"Submit to the store"** → `docs/store/submission-guide.md` + the paste-ready copy in `docs/store/`. (User does the actual upload/verification.)
-- **"Build the v1.1 features / fix X"** → use the same dev workflow (§6) — write a plan under `docs/superpowers/plans/`, branch `feat/mN-*`, subagent-driven tasks with review, opus whole-branch review, merge. Deferred list in §4.
+- **"Build the v1.1 features / fix X"** → use the same dev workflow (§6) — write a plan under `docs/design/plans/`, branch `feat/mN-*`, TDD each task, whole-branch review, merge. Deferred list in §4.
 - **"Does it work / show me"** → `pnpm --filter @bokal/cookie-manager build`, then load `apps/cookie-manager/.output/chrome-mv3` unpacked at `chrome://extensions`. Or run `pnpm --filter @bokal/cookie-manager exec playwright test`.
 
 ## 3. What's DONE (M1–M7, all merged to master)
@@ -40,7 +40,7 @@
 | **M6** Store-prep | privacy policy + listing + justifications + data-use + trader checklist + submission guide, generated icons + real screenshots, grant-gate flash fix, publishable zip | `40847ca` |
 | **M7** Parity + fixes | bulk delete-all (scope-honest), copy-value/copy-as-header/clipboard, header-string import, profile apply-as-**replace** + in-panel passphrase, all-cookies view, attr-length validation + domain-count warning; bugs: alarm-reset, same-tab-nav, entitlement seq-guard, profiles try/catch, accurate CHIPS via `getPartitionKey`, cross-panel theme sync | `45ba0df` |
 
-Each milestone: TDD per task → two-stage per-task review → an **opus whole-branch review** → fixes → merge. (M8–M10 whole-branch reviews were run via an adversarial general-purpose subagent; each found real issues that were fixed pre-merge — notably M9's Critical where the Pro profile "apply-replace" wiped protected cookies, now enforced at the data layer.)
+Each milestone: TDD per task → two-stage per-task review → a whole-branch review → fixes → merge. (M8–M10 whole-branch reviews were run via an independent adversarial review; each found real issues that were fixed pre-merge — notably M9's Critical where the Pro profile "apply-replace" wiped protected cookies, now enforced at the data layer.)
 
 ## 4. What's NEXT
 **Both pre-submission decisions from the v1.1 build are now RESOLVED (M11, deep-research-backed):**
@@ -83,11 +83,10 @@ Currently `lib/pay/billing.ts` `getBilling()` returns `MockBilling` (entitlement
 
 ## 6. Dev workflow to CONTINUE (how every milestone was built)
 - **Branch per milestone:** `git checkout -b feat/mN-<topic>` off `master`.
-- **Plan first:** write `docs/superpowers/plans/YYYY-MM-DD-bokal-mN-<topic>.md` with complete code per task (see the 7 existing plans as templates).
-- **Subagent-driven execution** (skill: `superpowers:subagent-driven-development`): per task → `scripts/task-brief` → dispatch an implementer subagent (haiku for transcription, sonnet for integration) → `scripts/review-package BASE HEAD` → dispatch a task reviewer (sonnet) → fix loop → mark complete in the ledger.
-- **Whole-branch review** on **opus** at the end of each milestone (template: `superpowers/skills/requesting-code-review/code-reviewer.md`) → fix Important/Critical → merge `--no-ff` → delete branch.
-- Helper scripts live at `~/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/` (`task-brief`, `review-package`).
-- Ledger: `.superpowers/sdd/progress.md` (git-ignored; the committed copy is `docs/build-log.md`).
+- **Plan first:** write `docs/design/plans/YYYY-MM-DD-bokal-mN-<topic>.md` with complete code per task (see the 7 existing plans as templates).
+- **Test-driven execution:** per task → write the failing test first → watch it fail → implement the minimum to pass → keep the whole suite green.
+- **Whole-branch review** at the end of each milestone: re-read the full diff adversarially against the §7 invariants, fix everything Critical/Important, then merge `--no-ff` and delete the branch.
+- **Log it:** record each milestone's tasks, review findings, and fixes in `docs/build-log.md`.
 
 ## 7. Critical invariants the next session MUST preserve (do not regress)
 - **Trust posture is the whole product.** Every privacy/permission claim in `docs/store/` and `docs/threat-model.md` must stay literally true against the code.
@@ -113,7 +112,7 @@ packages/tsconfig, packages/ui-kit   # shared TS config; theme.css + useTheme
 docs/                     # HANDOFF.md (this), MORNING-REVIEW.md, build-log.md, threat-model.md, pro-monetization.md
 docs/business/            # business-recommendations (pricing/positioning/copy)
 docs/store/               # paste-ready: privacy-policy, listing, permission-justifications, data-use-answers, trader-verification-checklist, submission-guide, screenshots/
-docs/superpowers/specs/   # design spec ; docs/superpowers/plans/ = the 7 milestone plans
+docs/design/specs/   # design spec ; docs/design/plans/ = the 7 milestone plans
 .github/workflows/ci.yml  # tsc + vitest + build + Playwright E2E (both builds under xvfb)
 ```
 

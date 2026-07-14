@@ -1,6 +1,5 @@
 # Bokal M10 — Auto-delete + Audit Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: superpowers:executing-plans. Steps use `- [ ]` syntax.
 
 **Goal:** Ship whitelist-based cookie cleanup (manual "Clean now" + optional daily sweep) to capture Cookie AutoDelete's orphaned base, plus lightweight cookie-audit flags for the dev segment.
 

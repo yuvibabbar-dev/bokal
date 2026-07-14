@@ -1,6 +1,5 @@
 # Bokal — Milestone 3: Import/Export · Dark Mode · CHIPS — Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Steps use checkbox (`- [ ]`).
 
 **Goal:** Add JSON + Netscape export and JSON import (no `downloads` permission), a shared `@bokal/ui-kit` theme with light/dark, and a CHIPS partition inspector.
 

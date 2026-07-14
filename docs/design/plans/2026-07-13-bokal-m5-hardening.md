@@ -1,6 +1,5 @@
 # Bokal — Milestone 5: Hardening · E2E harness · CI — Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Steps use checkbox (`- [ ]`).
 
 **Goal:** Lock in correctness with integration tests for the risky cross-module paths, a redaction guard that fails CI if a cookie value could be logged, a threat-model doc, a Playwright E2E harness + specs (authored to run in CI / on a real machine), and a GitHub Actions pipeline.
 

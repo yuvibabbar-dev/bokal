@@ -1,6 +1,5 @@
 # Bokal M9 — Parity + Differentiation Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development or superpowers:executing-plans. Steps use checkbox (`- [ ]`) syntax.
 
 **Goal:** Add the research-backed differentiation feature (protect / pin / block cookies) and a DevTools panel surface, without regressing any trust invariant.
 

@@ -1,6 +1,5 @@
 # Bokal M8 — Quick Wins Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Ship the seven evidence-backed M8 quick wins — the CHIPS all-view bug fix, validated imports with detailed errors, automation-framework export/import, all-domains export/import, a native per-site access chip, and a post-task review prompt.
 

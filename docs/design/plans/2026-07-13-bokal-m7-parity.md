@@ -1,6 +1,5 @@
 # Bokal — Milestone 7: Pre-launch Parity + Bug Fixes — Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Steps use checkbox (`- [ ]`).
 
 **Goal:** Close the below-parity feature gaps and fix the verified correctness bugs found in the post-build market/code review, so Bokal meets (and, on trust, beats) Cookie-Editor at launch.
 

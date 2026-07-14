@@ -1,6 +1,5 @@
 # Bokal — Milestone 6: Store Prep — Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Steps use checkbox (`- [ ]`).
 
 **Goal:** Produce every submission-ready artifact (privacy policy, listing copy, permission justifications, data-use answers, trader checklist, submission guide), generate real icons + screenshots from the running extension, fix the grant-gate render flash (M5 carry-forward), and package the zip.
 

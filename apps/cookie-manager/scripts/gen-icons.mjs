@@ -6,7 +6,7 @@ import { dirname, join } from 'node:path';
 const outDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'icon');
 mkdirSync(outDir, { recursive: true });
 
-// Bokal brand mark (see docs/superpowers/specs/2026-07-13-bokal-brand-design.md): an amber cookie
+// Bokal brand mark (see docs/design/specs/2026-07-13-bokal-brand-design.md): an amber cookie
 // disc on graphite with one flat edge and chip squares. The flat edge is what keeps the icon from
 // collapsing into a generic amber blob at 16px — a plain circle has no silhouette.
 // Fixed colors — a logo does NOT invert for dark mode.

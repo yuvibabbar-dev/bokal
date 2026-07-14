@@ -1,6 +1,5 @@
 # Bokal — Milestone 1: Foundation & Cookie Listing — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Stand up the Bokal monorepo + WXT extension and ship a read-only, XSS-safe, searchable cookie viewer for the active tab's domain, gated behind a runtime `<all_urls>` permission grant.
 

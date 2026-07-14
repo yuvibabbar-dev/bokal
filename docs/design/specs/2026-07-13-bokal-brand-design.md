@@ -13,7 +13,7 @@ meaning is a free gift, not a dependency.
 Market research (adversarially verified) found "Wafer" was a genuine liability:
 
 - A **funded YC S2025 startup is named exactly "Wafer"** ($4M seed), targets **developers**, and
-  integrates with Claude Code — a direct namespace + SEO collision in our exact audience.
+  sells to the same developer-tooling audience — a direct namespace + SEO collision in our exact market.
 - "Wafer" is otherwise crowded in tech (wafer.ee, Waferlabs, Keysight WaferPro, Synopsys), with
   live US software marks WAFERWALLET (Reg. 5952834) and WAFERKEY (Reg. 6580587).
 - A solo founder would lose that search race.
