@@ -81,6 +81,26 @@ is `main` — fixed, now green), per-site permission model, bundle-split CI guar
 5. Start the ~60-day clock to raise lifetime $29.99 → $39 (ExtPay dashboard).
 6. Announce ONLY after the namespaces are locked (see §5 item 1).
 
+## 4b. ⚠ CWS policy update (researched 2026-07-14) — ARE WE COMPLIANT? Yes, with one watch-item
+
+Google announced new CWS policies **2026-07-01, enforced from 2026-08-01**
+(developer.chrome.com/blog/cws-policy-updates-2026). Bokal already aligns — **do NOT change the
+submitted zip** (that can reset the review). The changes and our status:
+
+- **Stricter Limited Use / data minimization** ("data must be strictly necessary for the disclosed
+  single purpose") — ✅ cookies are core; theme/rules are local. **WATCH-ITEM:** the Pro-buyer email
+  (handled by ExtPay/Stripe, not by Bokal) is for the *optional paid feature*, not the cookie-manager
+  single purpose. Framing is already defensible (privacy policy + data-use scope it to "Pro buyers
+  only, via the payment processor, to provide the feature they bought"). If a reviewer questions it,
+  answer with that framing; do NOT claim the email is part of the core purpose.
+- **Prominent disclosure of all data collection** — ✅ dedicated hosted privacy policy, linked from
+  listing + homepage, Limited Use statement present.
+- **Proactively disclose post-install data-handling changes** — ✅ privacy policy "Changes" clause.
+- **Manifest ↔ dashboard data categories ↔ privacy policy must MATCH** (the #1 rejection cause) — ✅
+  aligned this session: permissions justified 1:1; dashboard ticks = Auth info + Website content +
+  PII(email); policy discloses exactly those. Keep them in lockstep on any future change.
+- Bans on real-money-prediction + AI-guardrail-circumvention extensions — N/A.
+
 ## 5. Open items (owner: FOUNDER unless marked AGENT)
 
 1. **Namespaces:** `bokal.dev` **PURCHASED** (Porkbun, 2026-07-14, exp 2027-07-14). Code/docs already
