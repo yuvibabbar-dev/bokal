@@ -6,7 +6,8 @@ export interface AuditFlag {
   message: string;
 }
 
-const byteLen = (s: string): number => new TextEncoder().encode(s).length;
+const encoder = new TextEncoder();
+const byteLen = (s: string): number => encoder.encode(s).length;
 
 // Attribute-only hints derived from the cookie itself (no network knowledge). A lightweight
 // "what might bite you" aid for developers, not a security verdict.

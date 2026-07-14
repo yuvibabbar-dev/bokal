@@ -59,6 +59,9 @@ export function CleanupRules() {
           </label>
           {status && <span style={{ color: 'var(--wafer-muted)' }}>{status}</span>}
         </div>
+        {autoSweep && keep.length === 0 && (
+          <div style={{ color: 'var(--wafer-accent)', marginTop: 4 }}>Add at least one keep-domain — auto-sweep won't run with an empty keep-list (it would wipe everything).</div>
+        )}
       </div>
     </details>
   );
