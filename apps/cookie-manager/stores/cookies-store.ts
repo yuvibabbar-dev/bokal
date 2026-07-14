@@ -51,12 +51,13 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
     try {
       const scope = get().scope;
       const activeUrl = await getActiveTabUrl();
-      // Grant gate: the all-cookies scope genuinely needs <all_urls>; the single-site scope only
-      // needs access to the active origin (per-site host permission, or the broad grant which
-      // contains it).
+      // Grant gate: the all-cookies scope genuinely needs <all_urls>. The single-site scope is
+      // granted if the user holds the broad grant OR per-site access to the active origin — a
+      // broad-access user is never re-prompted, even on a tab whose URL we can't read.
+      const broad = await hasAllUrlsPermission();
       const granted = scope === 'all'
-        ? await hasAllUrlsPermission()
-        : !!activeUrl && (await hasSiteAccess(activeUrl));
+        ? broad
+        : broad || (!!activeUrl && (await hasSiteAccess(activeUrl)));
       if (!granted) {
         // Keep activeUrl (activeTab may surface it pre-grant) so the grant screen can name the site.
         if (seq === refreshSeq) set({ granted: false, activeUrl, cookies: [], loading: false, ready: true });
