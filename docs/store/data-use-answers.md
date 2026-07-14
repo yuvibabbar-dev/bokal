@@ -11,7 +11,7 @@
 > certification and grounds for rejection or takedown.** The answers below are scoped to what the
 > code actually does.
 
-## Data collected — check EXACTLY TWO categories
+## Data collected — check THESE THREE categories
 
 | Category | Check? | Reason |
 |---|---|---|

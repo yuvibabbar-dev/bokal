@@ -31,8 +31,10 @@ export class MockBilling implements Billing {
   }
 }
 
-// Live billing via ExtPay (extensionpay.com → your Stripe). getUser()/openPaymentPage() message
-// the background, which must call extpay.startBackground(). The ExtPay instance is memoized.
+// Live billing via ExtPay (extensionpay.com → your Stripe). getUser() fetches the license and
+// openPaymentPage()/openLoginPage() open a tab — all self-contained, so we deliberately do NOT call
+// extpay.startBackground() (that only relays messages from an extensionpay.com content script, which
+// Bokal doesn't ship). The ExtPay instance is memoized.
 let extpayInstance: ReturnType<typeof ExtPay> | null = null;
 function extpay(): ReturnType<typeof ExtPay> {
   if (!extpayInstance) extpayInstance = ExtPay(EXTPAY_APP_ID);

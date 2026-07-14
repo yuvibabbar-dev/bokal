@@ -35,7 +35,7 @@ pnpm --filter @bokal/cookie-manager build && pnpm --filter @bokal/cookie-manager
 ## Business decisions I made for you (research-backed — change any you dislike)
 Full detail + paste-ready copy: [`docs/business/2026-07-13-business-recommendations.md`](business/2026-07-13-business-recommendations.md) and [`docs/store/`](store/). Headlines:
 - **Tagline:** "Every cookie, under your control. Nothing leaves your device." *(now literally true — see the M6 fix below)*
-- **Pricing:** **$4.99/mo · $19/yr · $39 lifetime** ($29 launch), lifetime featured; 7-day reverse trial on the 2nd profile.
+- **Pricing (live):** **$4.99/mo · $19.99/yr · $29.99 lifetime** (launch price; raise to ~$39 after ~60 days), lifetime featured; 7-day reverse trial on the 2nd profile is deferred (see HANDOFF §5).
 - **Free vs Pro:** free keeps everything already built (CRUD incl. HttpOnly, search, JSON/Netscape export + import, CHIPS, dark mode); **Pro = local cookie profiles + optional encryption**.
 - **Store title (58/75):** `Bokal - Cookie Editor & Manager (Open Source, No Tracking)`; **summary (126/132)** and full description, permission justifications, data-use answers, and a hostable **privacy policy** are all paste-ready in `docs/store/`.
 

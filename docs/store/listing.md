@@ -75,8 +75,10 @@ PERMISSIONS, IN PLAIN ENGLISH
 • sidePanel — renders Bokal's side-panel interface next to the page.
 • unlimitedStorage — lets Pro cookie profiles grow past the default quota;
   everything stays on your device.
-• alarms — schedules local periodic tasks: a re-check of your Pro license, and (only if you
-  turn it on) the daily cookie-cleanup sweep; nothing is transmitted.
+• alarms — schedules two periodic tasks: a re-check of your Pro license (which contacts
+  ExtensionPay to verify your license, and only if you've bought Pro — free users make no such
+  request), and the optional daily cookie-cleanup sweep (fully local). No cookies or browsing
+  data are ever sent.
 • activeTab — reads the current tab's address (only when you open Bokal) so it
   can request access to just that one site. Not the "tabs" permission.
 • Host access — required by Chrome's cookies API to read/write cookies for a

@@ -1,37 +1,33 @@
 # Third-party notices
 
-Bokal is licensed under **GPL-3.0-or-later** (see [`LICENSE`](LICENSE)). It bundles or depends on
-the third-party software below, each under its own license.
+Bokal is licensed under GPL-3.0-or-later — see LICENSE.txt (bundled alongside this file in the
+extension package). Full project source, including this notices file and the licensing rationale, is
+at https://github.com/yuvibabbar-dev/bokal. Bokal bundles or depends on the third-party software
+below, each under its own license.
 
 ## Bundled into the shipped extension
 
-| Package | License | Notes |
-|---|---|---|
-| [`extpay`](https://github.com/Glench/ExtPay) | **AGPL-3.0-or-later** (see note) | Payments/licensing. Bundled into the extension. **This is the copyleft dependency that determines Bokal's own license** — see [`docs/licensing-notes.md`](docs/licensing-notes.md). |
-| [`react`](https://github.com/facebook/react), `react-dom` | MIT | UI runtime. |
-| [`zustand`](https://github.com/pmndrs/zustand) | MIT | State stores. |
-| [`@tanstack/react-virtual`](https://github.com/TanStack/virtual) | MIT | List virtualization. |
+- extpay (https://github.com/Glench/ExtPay) — AGPL-3.0-or-later (see note). Payments/licensing.
+  Bundled into the extension. This is the copyleft dependency that determines Bokal's own license.
+- webextension-polyfill (https://github.com/mozilla/webextension-polyfill) — MPL-2.0. Pulled in
+  transitively by ExtPay; compiled into the shipped bundle. MPL-2.0 is file-level copyleft — its
+  source is available at the linked repository.
+- react, react-dom (https://github.com/facebook/react) — MIT. UI runtime.
+- zustand (https://github.com/pmndrs/zustand) — MIT. State stores.
+- @tanstack/react-virtual (https://github.com/TanStack/virtual) — MIT. List virtualization.
 
-### Note on ExtPay's license
+## Note on ExtPay's license
 
-ExtPay declares its license inconsistently:
-
-- `package.json` → `AGPL-3.0-or-later` (this is what tooling reads)
-- its bundled `LICENSE` file → first line reads `LGPL-3.0`
-- its source header comment → "AGPLv3 licensed"
-
-Bokal treats it as **AGPL-3.0-or-later** (the strictest of the three, and the one declared in
-`package.json`). Because AGPL code is compiled into the distributed extension, the combined work is
-conveyed under GPL-compatible copyleft terms — which is why Bokal is GPL-3.0-or-later rather than a
-permissive license. If the ExtPay author clarifies that it is genuinely LGPL-3.0, Bokal would regain
-the option of a permissive license.
+ExtPay declares its license inconsistently: package.json says AGPL-3.0-or-later (what tooling reads),
+its bundled LICENSE file's first line says LGPL-3.0, and its source header comment says "AGPLv3
+licensed". Bokal treats it as AGPL-3.0-or-later (the strictest, and the one in package.json). Because
+AGPL code is compiled into the distributed extension, the combined work is conveyed under
+GPL-compatible copyleft terms — which is why Bokal is GPL-3.0-or-later.
 
 ## Build-time only (not shipped in the extension)
 
-`wxt`, `vite`, `typescript`, `vitest`, `@playwright/test`, `jsdom`, `fake-indexeddb`,
-`@testing-library/*` — each under its own license (MIT / Apache-2.0 / BSD). These are development
-dependencies and are not distributed as part of the extension package.
+wxt, vite, typescript, vitest, @playwright/test, jsdom, fake-indexeddb, @testing-library/* — each
+under its own license (MIT / Apache-2.0 / BSD). These are development dependencies and are not
+distributed as part of the extension package.
 
----
-
-Run `pnpm licenses list` for the full, current dependency-license inventory.
+Run `pnpm licenses list` in the source repo for the full, current dependency-license inventory.

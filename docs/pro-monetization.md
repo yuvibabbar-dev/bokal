@@ -30,8 +30,9 @@ to **ExtPay** (`extpay@3.1.2`) and live by default:
 ## To take a Stripe (test-mode) sandbox purchase end-to-end
 
 1. Register the extension id `bokal-test` on extensionpay.com (or change the id in config to your
-   registered one), connect your Stripe account in **test mode**, and create the plans (Monthly
-   $4.99 / Annual $19 / Lifetime $39, Lifetime default).
+   registered one), connect your Stripe account, and create the plans (Monthly $4.99 / Annual
+   $19.99 / Lifetime $29.99 launch price, Lifetime default). **DONE for Bokal** — app + Stripe are
+   live; this section is kept as the generic runbook.
 2. Build + load unpacked (`pnpm --filter @bokal/cookie-manager build`, load `.output/chrome-mv3`).
 3. Grant Bokal access to a site, open the panel, click **★ Unlock Pro** → ExtPay page (test mode
    asks for your ExtPay account password) → Stripe test checkout → pay with `4242 4242 4242 4242`

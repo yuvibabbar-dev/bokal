@@ -34,6 +34,11 @@ test('full cookie CRUD through the real UI, against a real site', async ({ conte
 
   // The flagship privacy claim, asserted in a real browser: a free user never touches the billing
   // server. Recorded across the whole run and checked at the end.
+  // ⚠ context.on('request') sees PAGE traffic, not the extension service worker's fetches. That is
+  // safe here only because the sole SW-side billing path is the 24h 'bokal:entitlement' alarm, which
+  // cannot fire inside this test. If SW-side billing is ever added (e.g. a boot-time sync or
+  // startBackground()), this tripwire would NOT catch a real extensionpay.com call — add an
+  // SW-context assertion (sw.evaluate) at that point.
   const extpayHits: string[] = [];
   context.on('request', (r) => {
     if (r.url().includes('extensionpay.com')) extpayHits.push(r.url());

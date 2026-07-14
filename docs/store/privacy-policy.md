@@ -61,9 +61,11 @@ status, and cookie snapshot on your device; 'unlimitedStorage' lifts the
 default IndexedDB quota so your Pro cookie-profile library isn't capped;
 'sidePanel' renders the optional side-panel UI; 'activeTab' reads the current
 tab's address (only when you open Bokal) so it can request access to just that
-one site — it is not the 'tabs' permission; 'alarms' schedules purely local
-periodic tasks (a re-check of your Pro license, and — only if you enable it —
-the daily cookie-cleanup sweep), and transmits nothing.
+one site — it is not the 'tabs' permission; 'alarms' schedules two periodic
+tasks — a re-check of your Pro license (which contacts ExtensionPay to verify
+the license, and only for users who have bought Pro; free users make no such
+request) and the optional, fully local daily cookie-cleanup sweep. No cookie or
+browsing data is ever transmitted by either.
 
 Changes: if data practices ever change, we will update this policy and disclose
 it before the change takes effect.

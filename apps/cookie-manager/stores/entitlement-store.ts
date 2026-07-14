@@ -26,11 +26,20 @@ async function readCache(): Promise<EntitlementCache | null> {
 // content script), and the payment tab opens in the same window so the global side panel never
 // hides — visibilitychange won't fire either. Polling is the only reliable way to notice. Bounded
 // to ~2 minutes, exits as soon as entitlement lands.
+let polling = false;
 async function pollForEntitlement(): Promise<void> {
-  for (let i = 0; i < 40; i++) {
-    if (entitlementStore.getState().entitled) return;
-    await new Promise((r) => setTimeout(r, 3000));
-    await entitlementStore.getState().refresh();
+  // A second Upgrade/Restore click while a poll is in flight must not stack another 40×3s loop
+  // (each cycle does a real billing fetch). One poll already covers both.
+  if (polling) return;
+  polling = true;
+  try {
+    for (let i = 0; i < 40; i++) {
+      if (entitlementStore.getState().entitled) return;
+      await new Promise((r) => setTimeout(r, 3000));
+      await entitlementStore.getState().refresh();
+    }
+  } finally {
+    polling = false;
   }
 }
 
@@ -87,7 +96,11 @@ export const entitlementStore = createStore<EntitlementState>((set) => ({
 chrome.storage.onChanged?.addListener((changes, area) => {
   if (area === 'local' && changes[CACHE_KEY]) {
     const cache = changes[CACHE_KEY].newValue as EntitlementCache | undefined;
-    entitlementStore.setState({ entitled: isEntitled(cache ?? null, Date.now(), GRACE_MS) });
+    const entitled = isEntitled(cache ?? null, Date.now(), GRACE_MS);
+    // Once Pro lands (e.g. the daily alarm or another panel confirms payment), any prior
+    // billing-error message is stale — clear it so it can't surface on the now-Pro ManageBilling
+    // surface, which shares this upgradeError state.
+    entitlementStore.setState(entitled ? { entitled, upgradeError: null } : { entitled });
   }
 });
 

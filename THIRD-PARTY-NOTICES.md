@@ -8,6 +8,7 @@ the third-party software below, each under its own license.
 | Package | License | Notes |
 |---|---|---|
 | [`extpay`](https://github.com/Glench/ExtPay) | **AGPL-3.0-or-later** (see note) | Payments/licensing. Bundled into the extension. **This is the copyleft dependency that determines Bokal's own license** — see [`docs/licensing-notes.md`](docs/licensing-notes.md). |
+| [`webextension-polyfill`](https://github.com/mozilla/webextension-polyfill) | **MPL-2.0** | Pulled in transitively by ExtPay; compiled into the shipped bundle. MPL-2.0 is file-level copyleft — its source is available at the linked repo. |
 | [`react`](https://github.com/facebook/react), `react-dom` | MIT | UI runtime. |
 | [`zustand`](https://github.com/pmndrs/zustand) | MIT | State stores. |
 | [`@tanstack/react-virtual`](https://github.com/TanStack/virtual) | MIT | List virtualization. |
