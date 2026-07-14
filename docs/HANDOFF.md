@@ -48,7 +48,7 @@ Each milestone: TDD per task → two-stage per-task review → an **opus whole-b
 2. ~~Popup surface direction~~ → **kept side-panel-primary** (no `action.default_popup` — it would kill side-panel-on-click; evidence to switch was thin, n=1). Added first-run onboarding to ease Cookie-Editor-migrant friction. Popup-primary remains a deliberate future option if user testing shows severe friction.
 
 **Account-bound (only the USER can do — see `docs/MORNING-REVIEW.md` §Your turn):**
-1. **Wire real ExtPay before selling** (see §5) — mock mode currently unlocks Pro locally; it MUST NOT ship as the paid build.
+1. ~~Wire real ExtPay~~ → **WIRED (M12).** `ExtPayBilling` live (`USE_MOCK_BILLING=false`, app id `wafer-test`), free users make zero ExtPay contact, no new permissions. **Remaining (your side):** register `wafer-test` on ExtPay + connect Stripe (test mode done) + create plans, then run the sandbox test purchase (card 4242…) per `docs/pro-monetization.md`; at launch swap `wafer-test`→prod app id and Stripe test→live.
 2. Decide default-on profile encryption (currently opt-in + warning; plaintext-at-rest otherwise).
 3. Chrome Web Store + Edge Partner Center accounts; upload the zip; host the privacy policy at a URL.
 4. EU-DSA trader verification (legal name + business address + SMS phone — public; use a business address). Checklist: `docs/store/trader-verification-checklist.md`.
