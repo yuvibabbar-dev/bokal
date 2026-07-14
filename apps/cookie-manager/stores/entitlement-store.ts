@@ -9,6 +9,8 @@ import { GRACE_MS } from '../lib/pay/config';
 interface EntitlementState {
   entitled: boolean;
   loading: boolean;
+  /** User-visible reason the last "Unlock Pro" click failed (null = no error). */
+  upgradeError: string | null;
   refresh: () => Promise<void>;
   openUpgrade: () => Promise<void>;
 }
@@ -23,6 +25,7 @@ let entSeq = 0;
 export const entitlementStore = createStore<EntitlementState>((set) => ({
   entitled: false,
   loading: false,
+  upgradeError: null,
   refresh: async () => {
     const seq = ++entSeq;
     if (seq === entSeq) set({ loading: true });
@@ -37,7 +40,16 @@ export const entitlementStore = createStore<EntitlementState>((set) => ({
   openUpgrade: async () => {
     // The user is opting into Pro — from now on it's fine to contact the billing server.
     await setEngagedPro();
-    await getBilling().openUpgrade();
+    set({ upgradeError: null });
+    try {
+      await getBilling().openUpgrade();
+    } catch (err) {
+      // Never fail silently: the click must always produce either the payment tab or a message.
+      // No cookie data flows through billing, so logging the error itself is safe.
+      console.error('[wafer] openUpgrade failed', err);
+      set({ upgradeError: 'Couldn’t open the upgrade page — check your connection and try again.' });
+      return;
+    }
     // No onPaid content script: poll for the completed purchase. The payment page opens as a tab in
     // the same window, so the (global) side panel never hides and visibilitychange won't fire —
     // polling is the reliable way to unlock without closing/reopening. Bounded (~2 min), stops early.

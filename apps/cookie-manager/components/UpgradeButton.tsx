@@ -1,14 +1,21 @@
-import { entitlementStore } from '../stores/entitlement-store';
+import { entitlementStore, useEntitlement } from '../stores/entitlement-store';
 
 export function UpgradeButton() {
+  const upgradeError = useEntitlement((s) => s.upgradeError);
   return (
-    <button
-      type="button"
-      onClick={() => void entitlementStore.getState().openUpgrade()}
-      style={{ marginBottom: 8 }}
-      title="Named cookie profiles + encryption"
-    >
-      ★ Unlock Pro — cookie profiles
-    </button>
+    <div style={{ marginBottom: 8 }}>
+      <button
+        type="button"
+        onClick={() => void entitlementStore.getState().openUpgrade()}
+        title="Named cookie profiles + encryption"
+      >
+        ★ Unlock Pro — cookie profiles
+      </button>
+      {upgradeError && (
+        <div role="alert" style={{ color: 'var(--wafer-danger)', fontSize: 12, marginTop: 4 }}>
+          {upgradeError}
+        </div>
+      )}
+    </div>
   );
 }
