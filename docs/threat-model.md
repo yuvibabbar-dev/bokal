@@ -66,22 +66,22 @@ by accident, since WXT wires content scripts explicitly per entry point and none
 **2.2 Extension vs. the browser's cookie jar.** `cookies` is an install-time permission, but
 reading/writing cookies for a specific site additionally requires host permission for that site.
 Wafer ships `optional_host_permissions: ['<all_urls>']` (not `host_permissions`), so the published
-build installs with **zero** host access. The user must explicitly grant `<all_urls>` via
+build installs with **zero** host access. Host access is granted at runtime via
 `chrome.permissions.request` (`apps/cookie-manager/lib/permissions.ts`), which Chrome requires to
-be called synchronously inside a user gesture — Wafer can't silently self-grant this in the
-background. This is the primary consent boundary in the product. This single `<all_urls>` grant
-is persistent and covers every feature, including the all-domains export/import and the
-all-cookies view — there is no separate broad-permission request; nothing is transmitted off the
-device regardless of scope.
+be called synchronously inside a user gesture — Wafer can't silently self-grant this. This is the
+primary consent boundary in the product.
 
-> **Accuracy flag (pre-submission, for the founder):** the grant model is currently
-> **all-or-nothing `<all_urls>`** — `refresh()` gates on `hasAllUrlsPermission()`, so a per-site
-> grant would not satisfy the app. The store copy in `docs/store/permission-justifications.md`
-> and `docs/store/listing.md` says host access is requested "for the specific site you choose,"
-> which does **not** match the code. Resolve before submitting: either (a) implement the per-site
-> permission model the design spec §3 intended (restores the stronger claim and unblocks the
-> deferred native per-site access chip), or (b) correct the copy to describe the runtime
-> all-sites grant. Tracked in the M8 report.
+**Per-site by default (M11).** For the normal single-site view, Wafer requests host access **only
+for the active origin's registrable domain** (`requestSiteAccess` → `chrome.permissions.request`
+with per-site match patterns), not `<all_urls>`. It reads the active tab's URL via the `activeTab`
+permission (granted when the panel is opened from the toolbar) to know which origin to request —
+`activeTab` shows no install warning, is not the `tabs` permission, and does not itself grant
+cookie access. A broad `<all_urls>` grant is requested **only** as an explicit opt-in for the
+features that inherently span every site: the all-cookies view, all-sites export/import, and the
+cleanup sweep. `<all_urls>` is declared *optional* solely because Chrome requires a declared
+pattern before an extension can request any subset of it. The per-site coverage relies on a
+best-effort registrable-domain heuristic (a full Public Suffix List would be exact). Nothing is
+transmitted off the device regardless of scope.
 
 **2.2b Automatic cleanup + block rules.** Block rules (reactive, in the service worker) and the
 optional daily cleanup sweep (`wafer:cleanup` alarm) both *delete* cookies; they never transmit

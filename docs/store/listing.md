@@ -76,9 +76,12 @@ PERMISSIONS, IN PLAIN ENGLISH
   everything stays on your device.
 • alarms — schedules a periodic local re-check of your Pro license; nothing is
   transmitted.
+• activeTab — reads the current tab's address (only when you open Wafer) so it
+  can request access to just that one site. Not the "tabs" permission.
 • Host access — required by Chrome's cookies API to read/write cookies for a
-  domain. Wafer requests it only at runtime for the specific site you choose,
-  never for all sites up front.
+  domain. Wafer requests it at runtime for the specific site you're on, never
+  for all sites up front and nothing at install. It asks for all-sites access
+  only when you open the all-cookies view, export all sites, or run cleanup.
 
 COMPATIBILITY
 Wafer imports Cookie-Editor and EditThisCookie JSON exports, so switching over
