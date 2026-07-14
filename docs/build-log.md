@@ -147,4 +147,16 @@ M9-T5: complete — listing names new free features + adds alarms/unlimitedStora
 M9-T6 (popup): DEFERRED + FLAGGED — a popup requires action.default_popup which overrides openPanelOnActionClick, regressing the side-panel-first flagship UX. Founder product decision (popup-primary like Cookie-Editor vs keep side-panel-primary).
 M9 whole-branch review (general-purpose adversarial): 1 Critical + 2 Important + 3 Minor, ALL FIXED (commit after review). C1: profile apply-as-replace wiped protected cookies (default-on, silent) → now skips protected. I2: SW block-remove ignored protection → protect now beats block. I3: single deleteCookie was UI-deep only → now guarded at the data layer. M1: block matching case-insensitive. M2: guard rules-store onChanged listener. M3: SW rules cache. Loop-safety, permissions, no-value-logging, Pro-isolation all verified clean by review.
 M9: COMPLETE — merged to master (2d2945c). 84 tests, tsc clean, build+zip, E2E both builds green, manifest adds devtools_page with no host_permissions, ProfilesPanel still chunked.
+
+## M10 (feat/m10-autodelete) — Auto-delete + audit (strategic bets). Plan: docs/superpowers/plans/2026-07-13-wafer-m10-autodelete.md
+M10-T1: complete — cleanup model: Rules gains keepDomains + autoSweep (migration-safe); matchesKeep + computeCleanup (removes non-kept, non-protected); shared suffixMatch; 11 rules tests (commit a9b4239)
+M10-T2: complete — cleanupNow + CleanupRules UI (keep-list, Clean now, auto-sweep toggle, honest "no tabs = no on-tab-close" copy) + SW daily wafer:cleanup alarm (commit fe9a6cb)
+M10-T3: complete — lib/audit.ts auditCookie (missing SameSite, SameSite=None w/o partition, insecure, oversized); 6 tests (commit abe80ce)
+M10-T4: complete — per-row ⚠ audit badge (commit 6bbc09e)
+M10-T5: complete — listing + threat-model for cleanup/audit (commit 065d4e7)
+M10 whole-branch review (general-purpose adversarial): NO Critical. 2 Important + 3 Minor in the alarm lifecycle, ALL FIXED (commit after review): I1 alarm reset on every SW wake → never fired (guarded create with alarms.get); I2 auto-sweep + empty keep-list = silent daily wipe-all (only arm with non-empty keep-list + UI warning + fire-time re-check); M3 handler re-checks flags; M5 hoist TextEncoder. Data-loss paths (Clean now confirm-gated; sweep honors protection + keep-list), permissions, no-value-logging, Pro-isolation all verified clean.
+M10: COMPLETE — merged to master (9e5e8da). 93 tests, tsc clean, build+zip, E2E both builds green, no new permissions, ProfilesPanel still chunked.
+
+## v1.1 ROADMAP COMPLETE (M8+M9+M10 merged): 93 tests, no host_permissions, all free features, Pro code still chunked.
+CARRIED FOUNDER DECISIONS (pre-submission): (1) store-copy per-site-vs-<all_urls> accuracy gap (permission-justifications.md:36, listing.md:66) — build per-site permission model OR correct copy; (2) popup surface direction (would take over the action click, regressing side-panel-first UX).
 ```

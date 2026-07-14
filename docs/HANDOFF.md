@@ -1,13 +1,14 @@
 # Wafer — Session Handoff / Resume Point
 
-**This is the single self-contained entry point for the next session.** Everything below is committed to git (unlike the `.superpowers/sdd/progress.md` scratch ledger, which is git-ignored and may be gone). Last updated: 2026-07-13.
+**This is the single self-contained entry point for the next session.** Everything below is committed to git (unlike the `.superpowers/sdd/progress.md` scratch ledger, which is git-ignored and may be gone). Last updated: 2026-07-13 (post v1.1 roadmap: M8–M10).
 
 ---
 
 ## 1. Snapshot (verified, ground truth)
 - **Repo:** `/Users/yuvibabbar/Desktop/Projects/chrome_extensions/wafer` (own git repo; pnpm monorepo).
-- **Branch/HEAD:** `master` @ `45ba0df` — clean working tree, **76 commits, 7 milestone merges**.
-- **State:** `tsc` clean · **60 unit tests pass** · build + zip succeed · Playwright E2E passes in real Chromium (both build variants) · published manifest has **no `host_permissions`**.
+- **Branch/HEAD:** `master` @ `9e5e8da` — clean working tree, **106 commits, 10 milestone merges** (M1–M10).
+- **State:** `tsc` clean · **93 unit tests pass** · build + zip succeed · Playwright E2E passes in real Chromium (both build variants) · published manifest has **no `host_permissions`** (adds `devtools_page`).
+- **v1.1 (M8–M10) added:** CHIPS all-view fix; validated imports + detailed errors; Playwright/Puppeteer automation-format I/O; all-sites export; one-time review prompt; protect/pin/block cookies; DevTools panel; whitelist auto-cleanup (Clean now + optional daily sweep); cookie audit badges. All Free. Research + program spec: `docs/business/2026-07-13-feature-roadmap-research.md`, `docs/superpowers/specs/2026-07-13-wafer-v1.1-roadmap-design.md`.
 - **What it is:** a complete, monetization-ready MV3 Chrome/Edge **cookie manager** ("Wafer"), positioned as the trustworthy, open-source successor to the delisted EditThisCookie. Business 4 for this solo founder.
 - **One-command verify:**
   ```bash
@@ -39,22 +40,25 @@
 | **M6** Store-prep | privacy policy + listing + justifications + data-use + trader checklist + submission guide, generated icons + real screenshots, grant-gate flash fix, publishable zip | `40847ca` |
 | **M7** Parity + fixes | bulk delete-all (scope-honest), copy-value/copy-as-header/clipboard, header-string import, profile apply-as-**replace** + in-panel passphrase, all-cookies view, attr-length validation + domain-count warning; bugs: alarm-reset, same-tab-nav, entitlement seq-guard, profiles try/catch, accurate CHIPS via `getPartitionKey`, cross-panel theme sync | `45ba0df` |
 
-Each milestone: TDD per task → two-stage per-task review → an **opus whole-branch review** → fixes → merge.
+Each milestone: TDD per task → two-stage per-task review → an **opus whole-branch review** → fixes → merge. (M8–M10 whole-branch reviews were run via an adversarial general-purpose subagent; each found real issues that were fixed pre-merge — notably M9's Critical where the Pro profile "apply-replace" wiped protected cookies, now enforced at the data layer.)
 
 ## 4. What's NEXT
+**⚠ TWO PRE-SUBMISSION FOUNDER DECISIONS (surfaced during the v1.1 build):**
+1. **Store-copy permission accuracy.** `docs/store/permission-justifications.md:36` + `docs/store/listing.md:66` say host access is "for the specific site you choose", but the code requests **`<all_urls>`** at runtime (the grant gate is `hasAllUrlsPermission`; a per-site grant would not satisfy the app). Fix before submitting: **(a)** build the per-site permission model the design spec §3 intended (restores the stronger "minimal permissions" claim + unblocks the deferred native per-site access chip), or **(b)** correct the copy to describe the runtime all-sites grant. Flagged in `docs/threat-model.md` §2.2.
+2. **Popup surface direction.** A popup requires `action.default_popup`, which overrides `openPanelOnActionClick` — the toolbar-icon click would open the popup instead of the side panel, regressing the side-panel-first flagship UX. Decide popup-primary (Cookie-Editor-like, eases migration) vs. keep side-panel-primary (deferred in M9 for this reason).
+
 **Account-bound (only the USER can do — see `docs/MORNING-REVIEW.md` §Your turn):**
 1. **Wire real ExtPay before selling** (see §5) — mock mode currently unlocks Pro locally; it MUST NOT ship as the paid build.
 2. Decide default-on profile encryption (currently opt-in + warning; plaintext-at-rest otherwise).
 3. Chrome Web Store + Edge Partner Center accounts; upload the zip; host the privacy policy at a URL.
 4. EU-DSA trader verification (legal name + business address + SMS phone — public; use a business address). Checklist: `docs/store/trader-verification-checklist.md`.
+5. Publish the open-source repo (no git remote / README / LICENSE yet) — the store copy claims "open source, every line published", so this is a launch blocker; also the GitHub Actions CI has never actually run.
 
-**v1.1 deferrals (an AGENT can build; not regressions):**
-- Validate imported cookies through `validateCookie` (both JSON and header import currently call `setCookie` directly and rely on Chrome to reject).
-- Restore richer import error reporting (M7 collapsed it to a generic message — cosmetic).
-- Block/protect cookies (the top EditThisCookie-orphan ask).
+**v1.1 DONE in M8–M10 (previously deferred):** validate imports; detailed import errors; protect/block cookies; DevTools panel; auto-delete/cleanup; audit hints. **Still deferred (an AGENT can build; not regressions):**
+- Popup surface (see decision #2 above).
 - Firefox port (WXT emits it; `sidebar_action` differs from `chrome.sidePanel`).
-- Popup + DevTools surfaces (Cookie-Editor has these; Wafer is side-panel only).
-- Netscape *import* (export exists; import is JSON/header only).
+- Netscape *import* (export exists; import is JSON/header/automation only).
+- Named-automation-profile *suites* (Pro storageState round-trip) — the one-off automation exports shipped Free in M8; the Pro suite lever is unbuilt.
 - Extract `lib/pay` → `packages/pay` when/if the second JSON-viewer app is built.
 - A hero "populated cookie list on a real site" marketing screenshot (manual capture; the standalone-panel harness can't bind an active tab, so full CRUD-through-UI E2E is also not automated).
 
