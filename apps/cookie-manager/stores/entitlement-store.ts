@@ -9,15 +9,29 @@ import { GRACE_MS } from '../lib/pay/config';
 interface EntitlementState {
   entitled: boolean;
   loading: boolean;
-  /** User-visible reason the last "Unlock Pro" click failed (null = no error). */
+  /** User-visible reason the last billing action (upgrade or restore) failed (null = no error). */
   upgradeError: string | null;
   refresh: () => Promise<void>;
   openUpgrade: () => Promise<void>;
+  /** Recover or manage an existing licence (new machine, cleared storage, cancel a subscription). */
+  restore: () => Promise<void>;
 }
 
 async function readCache(): Promise<EntitlementCache | null> {
   const r = await chrome.storage.local.get(CACHE_KEY);
   return (r[CACHE_KEY] as EntitlementCache | undefined) ?? null;
+}
+
+// After sending the user to a billing page we get no callback (we deliberately ship no ExtPay
+// content script), and the payment tab opens in the same window so the global side panel never
+// hides — visibilitychange won't fire either. Polling is the only reliable way to notice. Bounded
+// to ~2 minutes, exits as soon as entitlement lands.
+async function pollForEntitlement(): Promise<void> {
+  for (let i = 0; i < 40; i++) {
+    if (entitlementStore.getState().entitled) return;
+    await new Promise((r) => setTimeout(r, 3000));
+    await entitlementStore.getState().refresh();
+  }
 }
 
 let entSeq = 0;
@@ -50,14 +64,21 @@ export const entitlementStore = createStore<EntitlementState>((set) => ({
       set({ upgradeError: 'Couldn’t open the upgrade page — check your connection and try again.' });
       return;
     }
-    // No onPaid content script: poll for the completed purchase. The payment page opens as a tab in
-    // the same window, so the (global) side panel never hides and visibilitychange won't fire —
-    // polling is the reliable way to unlock without closing/reopening. Bounded (~2 min), stops early.
-    for (let i = 0; i < 40; i++) {
-      if (entitlementStore.getState().entitled) return;
-      await new Promise((r) => setTimeout(r, 3000));
-      await entitlementStore.getState().refresh();
+    await pollForEntitlement();
+  },
+  restore: async () => {
+    // Same engagement gate as a purchase: the user is asking us to talk to billing on their behalf.
+    await setEngagedPro();
+    set({ upgradeError: null });
+    try {
+      await getBilling().openRestore();
+    } catch (err) {
+      console.error('[bokal] openRestore failed', err);
+      set({ upgradeError: 'Couldn’t open your account page — check your connection and try again.' });
+      return;
     }
+    // Once they re-link the licence on that page, the poll picks it up and Pro unlocks in place.
+    await pollForEntitlement();
   },
 }));
 

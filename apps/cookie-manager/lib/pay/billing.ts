@@ -4,6 +4,13 @@ import { EXTPAY_APP_ID, USE_MOCK_BILLING } from './config';
 export interface Billing {
   getEntitlement(): Promise<{ paid: boolean }>;
   openUpgrade(): Promise<void>;
+  /**
+   * Open the billing account page so an EXISTING customer can recover or manage their licence.
+   * ExtPay identifies a payer solely by an API key in browser storage, so without this a lifetime
+   * buyer who reinstalls, switches machines, or clears storage would silently lose Pro with no way
+   * back — and a subscriber would have no way to cancel.
+   */
+  openRestore(): Promise<void>;
 }
 
 const MOCK_KEY = 'bokal:mockPaid';
@@ -16,6 +23,10 @@ export class MockBilling implements Billing {
     return { paid: r[MOCK_KEY] === true };
   }
   async openUpgrade(): Promise<void> {
+    await chrome.storage.local.set({ [MOCK_KEY]: true });
+  }
+  async openRestore(): Promise<void> {
+    // In the mock, "restoring" simply re-grants the local flag.
     await chrome.storage.local.set({ [MOCK_KEY]: true });
   }
 }
@@ -38,6 +49,11 @@ export class ExtPayBilling implements Billing {
   async openUpgrade(): Promise<void> {
     // Opens the ExtPay payment page in a new tab (no window.open, so popup blockers don't apply).
     await extpay().openPaymentPage();
+  }
+  async openRestore(): Promise<void> {
+    // ExtPay's account/login page: the customer enters the email they paid with, and ExtPay
+    // re-links the licence to this install. It is also where a subscriber cancels.
+    await extpay().openLoginPage();
   }
 }
 

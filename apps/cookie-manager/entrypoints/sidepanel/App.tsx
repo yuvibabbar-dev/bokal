@@ -9,6 +9,7 @@ import { BlockRules } from '../../components/BlockRules';
 import { CleanupRules } from '../../components/CleanupRules';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { UpgradeButton } from '../../components/UpgradeButton';
+import { ManageBilling } from '../../components/ManageBilling';
 import { useCookiesStore, cookiesStore, hydrateFromStorage } from '../../stores/cookies-store';
 import { useEntitlement, entitlementStore } from '../../stores/entitlement-store';
 import { useRules, rulesStore } from '../../stores/rules-store';
@@ -132,7 +133,25 @@ export function App() {
       />
       <BlockRules />
       <CleanupRules />
-      {entitled ? (Pro ? <Pro /> : null) : <div style={{ padding: '8px 12px' }}><UpgradeButton /></div>}
+      {entitled ? (
+        <>
+          {Pro ? <Pro /> : null}
+          <ManageBilling />
+        </>
+      ) : (
+        <div style={{ padding: '8px 12px' }}><UpgradeButton /></div>
+      )}
+      {/* GPL-3.0 obliges us to point recipients of the binary at the corresponding source, and the
+          bundle also carries AGPL (ExtPay) and MPL (webextension-polyfill) code whose notices must
+          travel with it. Both files ship inside the extension package. */}
+      <footer style={{ marginTop: 10, paddingTop: 8, borderTop: '1px solid var(--bokal-border)', fontSize: 11, color: 'var(--bokal-muted)' }}>
+        Bokal is free software (GPL-3.0).{' '}
+        <a href="https://github.com/yuvibabbar-dev/bokal" target="_blank" rel="noreferrer">Source</a>
+        {' · '}
+        <a href={chrome.runtime.getURL('LICENSE.txt')} target="_blank" rel="noreferrer">License</a>
+        {' · '}
+        <a href={chrome.runtime.getURL('THIRD-PARTY-NOTICES.txt')} target="_blank" rel="noreferrer">Notices</a>
+      </footer>
     </main>
   );
 }

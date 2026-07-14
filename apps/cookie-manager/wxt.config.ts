@@ -4,9 +4,16 @@ import { defineConfig } from 'wxt';
 export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   manifest: {
-    name: 'Bokal',
+    // The Chrome Web Store takes the listing's TITLE and SUMMARY from the manifest — they are NOT
+    // editable in the dashboard. So the SEO-front-loaded title from docs/store/listing.md has to
+    // live here, or the listing ships as the bare word "Bokal", which nobody searches for.
+    // name: 58/75 chars · description: 126/132 chars.
+    name: 'Bokal - Cookie Editor & Manager (Open Source, No Tracking)',
     version: '1.0.0',
-    description: 'View, edit, add, delete, import, and export browser cookies.',
+    description:
+      'Edit, add, view & delete cookies incl. HttpOnly. JSON/Netscape export, JSON import, CHIPS inspector. Open source, no tracking.',
+    // GPL-3.0 obliges us to point recipients of the binary at the corresponding source.
+    homepage_url: 'https://github.com/yuvibabbar-dev/bokal',
     minimum_chrome_version: '114',
     icons: { '16': 'icon/16.png', '32': 'icon/32.png', '48': 'icon/48.png', '128': 'icon/128.png' },
     // activeTab lets the panel read the active tab's URL after the toolbar-click that opens it, so

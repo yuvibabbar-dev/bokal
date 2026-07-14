@@ -33,7 +33,11 @@ license markers in browser storage, which your browser may sync — this concern
 your license only, never your cookies or browsing data, and never happens for
 free users.)
 
-Third parties: none. We do not sell, share, or transfer any user data to anyone.
+Third parties: we never sell, share, or transfer your cookie or browsing data to
+anyone — it does not leave your device at all. The only third parties involved
+anywhere in Bokal are ExtensionPay and Stripe, and only if you choose to buy Pro,
+and only to verify your license and take payment (see Payments below). A free
+user's data reaches no third party, because a free user contacts no server.
 
 Payments (Pro): if you buy Pro, purchases are processed by ExtensionPay and
 Stripe, and Bokal verifies your license status with ExtensionPay. Bokal never

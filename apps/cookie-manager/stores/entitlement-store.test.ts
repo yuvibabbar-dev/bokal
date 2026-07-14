@@ -13,18 +13,24 @@ const h = vi.hoisted(() => {
   (globalThis as unknown as { chrome: unknown }).chrome = {
     storage: { local, onChanged: { addListener: () => {} } },
   };
-  return { map, openUpgrade: vi.fn(), getEntitlement: vi.fn() };
+  return { map, openUpgrade: vi.fn(), openRestore: vi.fn(), getEntitlement: vi.fn() };
 });
 
 vi.mock('../lib/pay/billing', () => ({
-  getBilling: () => ({ getEntitlement: h.getEntitlement, openUpgrade: h.openUpgrade }),
+  getBilling: () => ({
+    getEntitlement: h.getEntitlement,
+    openUpgrade: h.openUpgrade,
+    openRestore: h.openRestore,
+  }),
 }));
 
 import { entitlementStore } from './entitlement-store';
+import { hasEngagedPro } from '../lib/pay/engagement';
 
 beforeEach(() => {
   h.map.clear();
   h.openUpgrade.mockReset();
+  h.openRestore.mockReset();
   h.getEntitlement.mockReset();
   h.getEntitlement.mockResolvedValue({ paid: false });
   entitlementStore.setState({ entitled: false, loading: false, upgradeError: null });
@@ -54,5 +60,30 @@ describe('entitlement-store openUpgrade error surfacing', () => {
     entitlementStore.setState({ entitled: true });
     await entitlementStore.getState().openUpgrade();
     expect(entitlementStore.getState().upgradeError).toBeNull();
+  });
+});
+
+// Without this, a lifetime buyer who reinstalls, switches machines, or clears storage loses Pro
+// permanently — ExtPay identifies a payer only by an API key held in browser storage.
+describe('entitlement-store restore', () => {
+  it('opens the billing account page so an existing customer can recover their licence', async () => {
+    h.openRestore.mockResolvedValue(undefined);
+    entitlementStore.setState({ entitled: true }); // poll exits immediately
+    await entitlementStore.getState().restore();
+    expect(h.openRestore).toHaveBeenCalledOnce();
+  });
+
+  it('records Pro engagement, so the entitlement re-check is allowed to contact billing', async () => {
+    h.openRestore.mockResolvedValue(undefined);
+    entitlementStore.setState({ entitled: true });
+    expect(await hasEngagedPro()).toBe(false);
+    await entitlementStore.getState().restore();
+    expect(await hasEngagedPro()).toBe(true);
+  });
+
+  it('surfaces an error instead of failing silently when the account page will not open', async () => {
+    h.openRestore.mockRejectedValue(new Error('offline'));
+    await entitlementStore.getState().restore();
+    expect(entitlementStore.getState().upgradeError).toMatch(/couldn.t open/i);
   });
 });

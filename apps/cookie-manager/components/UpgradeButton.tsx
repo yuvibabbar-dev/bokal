@@ -11,6 +11,16 @@ export function UpgradeButton() {
       >
         ★ Unlock Pro — cookie profiles
       </button>
+      {/* Someone who already bought Pro (new machine, reinstall, cleared storage) must be able to
+          get it back without paying twice — ExtPay only knows them by a key held in this browser. */}
+      <button
+        type="button"
+        onClick={() => void entitlementStore.getState().restore()}
+        title="Already bought Pro? Sign in to restore it on this device"
+        style={{ marginLeft: 6, background: 'none', border: 'none', padding: 0, font: 'inherit', fontSize: 12, color: 'var(--bokal-muted)', textDecoration: 'underline', cursor: 'pointer' }}
+      >
+        Restore purchase
+      </button>
       {upgradeError && (
         <div role="alert" style={{ color: 'var(--bokal-danger)', fontSize: 12, marginTop: 4 }}>
           {upgradeError}
