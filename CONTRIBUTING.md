@@ -33,9 +33,10 @@ change that makes Wafer's marketing a lie, so it will not be merged.
    `optional_host_permissions: ['<all_urls>']`, requested at runtime. The `WAFER_E2E=1` build adds
    `host_permissions` **for E2E only** — the published build must never ship it (enforced by the
    `wxt.config.ts` env gate + a manifest check).
-2. **The free build ships zero Pro code.** `ProfilesPanel` loads via dynamic `import()` behind the
-   entitlement gate and must stay a separate chunk. Don't add a static import of it or of `lib/pay`
-   into the free path.
+2. **The Pro UI stays code-split and lazy.** `ProfilesPanel` loads via dynamic `import()` only when
+   entitled and must stay a separate chunk — the always-loaded bundle must contain no Pro logic.
+   Don't add a static import of it or of `lib/pay` into the always-loaded path. (No CI guard
+   enforces this chunk split yet — see the follow-up in the session report.)
 3. **Free users make zero network calls / zero off-device writes.** All ExtPay contact is gated
    behind Pro engagement (`lib/pay/engagement.ts`). Don't construct ExtPay at service-worker top
    level or on a free path.
