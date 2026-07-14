@@ -35,8 +35,11 @@ change that makes Wafer's marketing a lie, so it will not be merged.
    `wxt.config.ts` env gate + a manifest check).
 2. **The Pro UI stays code-split and lazy.** `ProfilesPanel` loads via dynamic `import()` only when
    entitled and must stay a separate chunk — the always-loaded bundle must contain no Pro logic.
-   Don't add a static import of it or of `lib/pay` into the always-loaded path. (No CI guard
-   enforces this chunk split yet — see the follow-up in the session report.)
+   Don't add a static import of it or of `lib/profiles` into the always-loaded path. **Enforced in
+   CI** by `scripts/check-bundle-split.mjs` (`pnpm --filter @wafer/cookie-manager check:bundle`,
+   run after the build); it fails if the Pro chunk disappears or if encryption/IndexedDB code leaks
+   into the main bundle. (`lib/pay` — the entitlement gate — legitimately lives in the main bundle;
+   it must, to decide whether to load Pro.)
 3. **Free users make zero network calls / zero off-device writes.** All ExtPay contact is gated
    behind Pro engagement (`lib/pay/engagement.ts`). Don't construct ExtPay at service-worker top
    level or on a free path.

@@ -15,6 +15,9 @@ jobs:
       - run: pnpm --filter @wafer/cookie-manager exec tsc --noEmit
       - run: pnpm -r test
       - run: pnpm --filter @wafer/cookie-manager build
+      # Trust invariant: the Pro UI must stay a separate lazy chunk so free users never load it.
+      - name: Guard the free/Pro bundle split
+        run: pnpm --filter @wafer/cookie-manager check:bundle
       - uses: actions/upload-artifact@v4
         with:
           name: chrome-mv3
