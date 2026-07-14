@@ -15,9 +15,11 @@
 > suite, but is not yet published to the Chrome Web Store / Edge Add-ons. See
 > [`docs/HANDOFF.md`](docs/HANDOFF.md) for the current state and remaining launch steps.
 >
-> **License:** not yet finalized — a bundled dependency (ExtPay) is copyleft, which constrains the
-> choice. See [`docs/licensing-notes.md`](docs/licensing-notes.md). Until a `LICENSE` file lands,
-> this source is published for transparency and review, not yet under an OSI grant.
+> **License:** [**GPL-3.0-or-later**](LICENSE). Wafer bundles ExtPay, which is copyleft
+> (AGPL-3.0-or-later), so the combined work is conveyed under GPL-compatible terms — a permissive
+> license like MIT would not be compliant. Reasoning in
+> [`docs/licensing-notes.md`](docs/licensing-notes.md); dependency licenses in
+> [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).
 
 ## What Wafer is
 
@@ -128,3 +130,9 @@ Playwright E2E against **both** the normal and E2E builds on every push and PR.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the development workflow and the invariants that keep
 the trust posture true, and [`SECURITY.md`](SECURITY.md) to report a vulnerability.
+
+## License
+
+**GPL-3.0-or-later** — see [`LICENSE`](LICENSE). You are free to use, study, modify, and
+redistribute Wafer; derivative works must remain under the same license. Third-party dependency
+licenses are listed in [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).
