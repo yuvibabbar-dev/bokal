@@ -55,8 +55,10 @@ PBKDF2, 600k iterations). Profiles live only on your device in IndexedDB.
 
 Pro is deliberately minimal on privacy impact:
 
-- The **free build ships zero Pro code** — the profiles UI is loaded via dynamic `import()` behind
-  the entitlement gate and is verified to be a separate chunk.
+- The **Pro UI is code-split into a separate lazy chunk** — it loads via dynamic `import()` only
+  when you're entitled, and the main bundle contains no Pro logic, so a free user never fetches or
+  runs it. (The chunk ships inside the package like any code-split app; it's simply never loaded
+  unless you buy Pro.)
 - **Free users make zero network calls.** Billing (via [ExtPay](https://extensionpay.com) → Stripe)
   is only ever contacted after you open the upgrade page. See
   [`docs/pro-monetization.md`](docs/pro-monetization.md).
