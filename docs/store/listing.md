@@ -95,8 +95,8 @@ passphrase encryption (AES-GCM). Fully local, like everything else in Bokal:
 your profiles never leave your device.
 
 • $4.99 / month
-• $19 / year
-• $39 one-time — pay once, own it forever (launch price $29)
+• $19.99 / year
+• $29.99 one-time — pay once, own it forever (launch price)
 
 Already bought Pro? Open Bokal and click "Restore purchase".
 ```
