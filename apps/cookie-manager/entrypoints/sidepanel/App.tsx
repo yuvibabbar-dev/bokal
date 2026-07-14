@@ -61,11 +61,17 @@ export function App() {
       }
     };
     chrome.runtime.onMessage.addListener(onMessage);
+    // Re-check entitlement when the panel regains focus — catches a completed purchase after the
+    // user returns from the ExtPay payment tab (no onPaid content script needed). The check is
+    // gated internally, so free users still make no network call.
+    const onVisible = (): void => { if (document.visibilityState === 'visible') void entitlementStore.getState().refresh(); };
+    document.addEventListener('visibilitychange', onVisible);
     return () => {
       unsub();
       chrome.tabs.onActivated.removeListener(onActivated);
       chrome.tabs.onUpdated.removeListener(onUpdated);
       chrome.runtime.onMessage.removeListener(onMessage);
+      document.removeEventListener('visibilitychange', onVisible);
     };
   }, []);
 

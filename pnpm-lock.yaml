@@ -16,6 +16,9 @@ importers:
       '@wafer/ui-kit':
         specifier: workspace:*
         version: link:../../packages/ui-kit
+      extpay:
+        specifier: ^3.1.2
+        version: 3.1.2
       react:
         specifier: ^19.0.0
         version: 19.2.7
@@ -1394,6 +1397,9 @@ packages:
   exsolve@1.1.0:
     resolution: {integrity: sha512-D+42+T12DdIlJM3uepa55qGiL3sYdLBOxIl2ifQCzCHz4c7eiolaHsi3BIqEr7JxBzxv2pYZQX9kw16ziMcEmw==}
 
+  extpay@3.1.2:
+    resolution: {integrity: sha512-r3/qE7DyjeVQqllY3NZ7QwWfSYBSbLgrobJJZuNWPMx6Top+WYUpSgSbs0MAMFy8WfV/UUwXfbu8XrQXVLM3zQ==}
+
   fake-indexeddb@6.2.5:
     resolution: {integrity: sha512-CGnyrvbhPlWYMngksqrSSUT1BAVP49dZocrHuK0SvtR0D5TMs5wP0o3j7jexDJW01KSadjBp1M/71o/KR3nD1w==}
     engines: {node: '>=18'}
@@ -2569,6 +2575,9 @@ packages:
   web-ext-run@0.2.4:
     resolution: {integrity: sha512-rQicL7OwuqWdQWI33JkSXKcp7cuv1mJG8u3jRQwx/8aDsmhbTHs9ZRmNYOL+LX0wX8edIEQX8jj4bB60GoXtKA==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
+
+  webextension-polyfill@0.7.0:
+    resolution: {integrity: sha512-su48BkMLxqzTTvPSE1eWxKToPS2Tv5DLGxKexLEVpwFd6Po6N8hhSLIvG6acPAg7qERoEaDL+Y5HQJeJeml5Aw==}
 
   webidl-conversions@7.0.0:
     resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
@@ -3846,6 +3855,10 @@ snapshots:
 
   exsolve@1.1.0: {}
 
+  extpay@3.1.2:
+    dependencies:
+      webextension-polyfill: 0.7.0
+
   fake-indexeddb@6.2.5: {}
 
   fast-redact@3.5.0: {}
@@ -4997,6 +5010,8 @@ snapshots:
       zip-dir: 2.0.0
     transitivePeerDependencies:
       - supports-color
+
+  webextension-polyfill@0.7.0: {}
 
   webidl-conversions@7.0.0: {}
 

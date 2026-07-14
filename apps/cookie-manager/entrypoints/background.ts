@@ -5,6 +5,12 @@ import { removeCookie } from '../lib/cookies/write';
 
 const CLEANUP_ALARM = 'wafer:cleanup';
 
+// NOTE: we deliberately do NOT call ExtPay().startBackground() here. Constructing ExtPay writes an
+// install marker to chrome.storage.sync (which Chrome replicates off-device), and its message
+// listener is inert for Wafer since we ship no extensionpay.com content script. The panel's
+// getUser()/openPaymentPage() are self-contained and work without it, so a free user who never
+// engages Pro triggers no ExtPay construction and no off-device write.
+
 export default defineBackground(() => {
   // Cache rules within the service-worker lifetime to avoid a storage read per cookie change;
   // invalidate whenever the rules are edited.
