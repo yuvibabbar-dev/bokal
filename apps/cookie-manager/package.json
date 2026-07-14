@@ -8,6 +8,7 @@
     "build": "wxt build",
     "build:e2e": "WAFER_E2E=1 wxt build",
     "zip": "wxt zip",
+    "check:bundle": "node scripts/check-bundle-split.mjs",
     "postinstall": "wxt prepare",
     "test": "vitest run",
     "e2e": "playwright test",

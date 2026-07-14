@@ -85,8 +85,12 @@ pnpm --filter @wafer/cookie-manager zip
   runtime via `optional_host_permissions`.
 - Before uploading, spot-check `apps/cookie-manager/.output/chrome-mv3/manifest.json`: no
   `host_permissions` key, `permissions` is exactly `["cookies","storage","sidePanel",
-  "unlimitedStorage","alarms"]`, `optional_host_permissions` is `["<all_urls>"]`, `icons` has all
-  four sizes, and `content_security_policy.extension_pages` is present.
+  "unlimitedStorage","alarms","activeTab"]`, `optional_host_permissions` is `["<all_urls>"]`,
+  `icons` has all four sizes, and `content_security_policy.extension_pages` is present.
+  **⚠ Run a plain `pnpm --filter @wafer/cookie-manager build` first.** If you last ran `build:e2e`
+  (or the E2E suite), `.output/chrome-mv3` holds the E2E build, which *does* declare
+  `host_permissions` — spot-checking that directory would show a false failure. Safest: check the
+  zip you're actually uploading (`unzip -p .output/*.zip manifest.json`).
 
 **Edge:** upload this same zip to Partner Center — no separate Edge build step. Edge accepts
 standard MV3 packages, so the artifact built for Chrome is reused as-is (see the Edge submission

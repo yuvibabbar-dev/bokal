@@ -46,7 +46,11 @@ Permissions: 'cookies' and host access are used solely to manage cookies for
 sites you choose; 'storage' persists your local preferences, entitlement
 status, and cookie snapshot on your device; 'unlimitedStorage' lifts the
 default IndexedDB quota so your Pro cookie-profile library isn't capped;
-'sidePanel' renders the optional side-panel UI.
+'sidePanel' renders the optional side-panel UI; 'activeTab' reads the current
+tab's address (only when you open Wafer) so it can request access to just that
+one site — it is not the 'tabs' permission; 'alarms' schedules purely local
+periodic tasks (a re-check of your Pro license, and — only if you enable it —
+the daily cookie-cleanup sweep), and transmits nothing.
 
 Changes: if data practices ever change, we will update this policy and disclose
 it before the change takes effect.
