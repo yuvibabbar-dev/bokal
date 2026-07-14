@@ -38,9 +38,25 @@ export const entitlementStore = createStore<EntitlementState>((set) => ({
     // The user is opting into Pro — from now on it's fine to contact the billing server.
     await setEngagedPro();
     await getBilling().openUpgrade();
-    await entitlementStore.getState().refresh();
+    // No onPaid content script: poll for the completed purchase. The payment page opens as a tab in
+    // the same window, so the (global) side panel never hides and visibilitychange won't fire —
+    // polling is the reliable way to unlock without closing/reopening. Bounded (~2 min), stops early.
+    for (let i = 0; i < 40; i++) {
+      if (entitlementStore.getState().entitled) return;
+      await new Promise((r) => setTimeout(r, 3000));
+      await entitlementStore.getState().refresh();
+    }
   },
 }));
+
+// Reflect entitlement cache changes from any context (the daily alarm's re-check, another panel)
+// into an open panel immediately. Guarded so a minimal test mock without onChanged doesn't throw.
+chrome.storage.onChanged?.addListener((changes, area) => {
+  if (area === 'local' && changes[CACHE_KEY]) {
+    const cache = changes[CACHE_KEY].newValue as EntitlementCache | undefined;
+    entitlementStore.setState({ entitled: isEntitled(cache ?? null, Date.now(), GRACE_MS) });
+  }
+});
 
 export function useEntitlement<T>(sel: (s: EntitlementState) => T): T {
   return useStore(entitlementStore, sel);

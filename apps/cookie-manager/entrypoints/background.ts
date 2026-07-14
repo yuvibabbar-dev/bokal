@@ -1,19 +1,17 @@
-import ExtPay from 'extpay';
 import { createDebouncer } from '../lib/debounce';
 import { loadRules, matchesBlock, isProtected, computeCleanup, RULES_KEY, type Rules } from '../lib/rules/rules';
 import { fromChrome, getAllCookies } from '../lib/cookies/read';
 import { removeCookie } from '../lib/cookies/write';
-import { EXTPAY_APP_ID, USE_MOCK_BILLING } from '../lib/pay/config';
 
 const CLEANUP_ALARM = 'wafer:cleanup';
 
+// NOTE: we deliberately do NOT call ExtPay().startBackground() here. Constructing ExtPay writes an
+// install marker to chrome.storage.sync (which Chrome replicates off-device), and its message
+// listener is inert for Wafer since we ship no extensionpay.com content script. The panel's
+// getUser()/openPaymentPage() are self-contained and work without it, so a free user who never
+// engages Pro triggers no ExtPay construction and no off-device write.
+
 export default defineBackground(() => {
-  // ExtPay requires startBackground() at the top of the service worker for getUser()/openPaymentPage
-  // (called from the panel) to work. It only registers listeners — the actual network call to
-  // extensionpay.com happens on getUser(), which Wafer gates behind Pro engagement (see engagement.ts).
-  if (!USE_MOCK_BILLING) {
-    try { ExtPay(EXTPAY_APP_ID).startBackground(); } catch (err) { console.error('[wafer] extpay startBackground failed', err); }
-  }
   // Cache rules within the service-worker lifetime to avoid a storage read per cookie change;
   // invalidate whenever the rules are edited.
   let cachedRules: Rules | null = null;

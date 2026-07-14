@@ -22,13 +22,16 @@ it then verifies your license with ExtensionPay and processes payment through
 Stripe (see Payments below). If you never open the upgrade page, Wafer contacts
 no server at all.
 
-Local storage: everything Wafer stores lives only on your device, split across a
-few browser-local mechanisms and never synced anywhere. Your theme preference
-and your Pro entitlement status are stored via chrome.storage.local; the
-current cookie list is cached temporarily via chrome.storage.session so
-re-opening the panel is instant; if you use Pro cookie profiles, your saved
-profiles/snapshots are stored only on your device in IndexedDB (not
-chrome.storage.local), and can be encrypted at rest with a passphrase you set.
+Local storage: everything WAFER stores lives only on your device and is never
+synced. Your theme preference, cookie rules, and Pro entitlement status are
+stored via chrome.storage.local; the current cookie list is cached temporarily
+via chrome.storage.session so re-opening the panel is instant; if you use Pro
+cookie profiles, your saved profiles/snapshots are stored only on your device in
+IndexedDB (not chrome.storage.local), and can be encrypted at rest with a
+passphrase you set. (If you purchase Pro, the ExtensionPay library stores its own
+license markers in browser storage, which your browser may sync — this concerns
+your license only, never your cookies or browsing data, and never happens for
+free users.)
 
 Third parties: none. We do not sell, share, or transfer any user data to anyone.
 
