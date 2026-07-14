@@ -110,9 +110,21 @@ extension-origin storage: isolated from web pages and other extensions by the br
 encrypted by the browser itself. Anything Wafer writes there is as protected as the OS user
 account and disk — no more, no less — unless Wafer adds its own encryption layer (§4.3).
 
+**2.3b Billing network path (ExtPay, M12).** Pro entitlement is checked via ExtPay
+(`extensionpay.com`), the one network path in the product. It is **Pro-gated**: `getUser()` fires
+only after the user opens the upgrade page or holds a paid cache (`shouldContactBilling`), and
+`startBackground()` only registers a listener (no fetch on init) — so free users make zero network
+calls. Only license status is exchanged; no cookie or browsing data is sent. ExtPay's library is
+**bundled** (no remote code), and it needs only the `storage` permission — Wafer adds no
+`host_permissions` and no content script (the `onPaid` content-script path is deliberately not
+used; entitlement is re-checked on panel `visibilitychange` instead). The privacy policy carves
+this out explicitly.
+
 **2.4 Extension vs. network / remote code.** `content_security_policy.extension_pages` is
 `script-src 'self'; object-src 'self'` (`apps/cookie-manager/wxt.config.ts`), and there is no
-`host_permissions` in the published manifest and no code that fetches or `eval`s remote script.
+`host_permissions` in the published manifest and no code that fetches or `eval`s remote script (the
+ExtPay library is bundled; its entitlement fetch to extensionpay.com is data, not remote code —
+see §2.3b).
 Wafer cannot load remotely-hosted JS even if it wanted to.
 
 **2.5 Extension vs. future ExtPay.** Billing is currently mock-only

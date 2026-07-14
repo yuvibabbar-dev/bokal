@@ -37,8 +37,9 @@ Trust is the whole point of Wafer:
   site only at the moment you choose to manage it, never to all sites up front.
 • No remote code — everything Wafer runs is in the published package.
 • No telemetry, no analytics, no ads, no tracking of any kind.
-• Local-first — there is no server, no cloud, and no account. Nothing you do
-  leaves your device.
+• Local-first — your cookies never leave your device: no Wafer server, no cloud,
+  no account. (The only network activity is the optional Pro license check via
+  ExtensionPay/Stripe, and only if you buy Pro.)
 • Open source — every line is published so you (or anyone) can verify these
   claims for yourself.
 

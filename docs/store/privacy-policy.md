@@ -15,8 +15,12 @@ authentication cookies and other data stored in the site's browser storage.
 What Wafer does NOT do: Wafer collects no personal information, tracks no
 browsing history, and contains no analytics, telemetry, ads, or remote code.
 
-Where your data goes: nowhere. Wafer transmits no data off your device. There is
-no server, no cloud, and no account.
+Where your cookie data goes: nowhere. Wafer never transmits your cookies — or any
+browsing data — off your device. There is no Wafer server and no account. The
+ONLY time Wafer contacts a network service is if you choose to buy Wafer Pro:
+it then verifies your license with ExtensionPay and processes payment through
+Stripe (see Payments below). If you never open the upgrade page, Wafer contacts
+no server at all.
 
 Local storage: everything Wafer stores lives only on your device, split across a
 few browser-local mechanisms and never synced anywhere. Your theme preference
@@ -28,8 +32,12 @@ chrome.storage.local), and can be encrypted at rest with a passphrase you set.
 
 Third parties: none. We do not sell, share, or transfer any user data to anyone.
 
-Payments (Pro): purchases are processed by ExtensionPay and Stripe; Wafer never
-sees or stores your payment details, and no cookie data is shared with them.
+Payments (Pro): if you buy Pro, purchases are processed by ExtensionPay and
+Stripe, and Wafer verifies your license status with ExtensionPay. Wafer never
+sees or stores your payment details, and no cookie or browsing data is ever
+shared with them — only your license status is checked. These checks happen only
+after you choose to purchase (or open the upgrade page); free users are never
+contacted.
 
 Permissions: 'cookies' and host access are used solely to manage cookies for
 sites you choose; 'storage' persists your local preferences, entitlement

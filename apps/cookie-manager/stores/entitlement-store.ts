@@ -2,6 +2,7 @@ import { createStore } from 'zustand/vanilla';
 import { useStore } from 'zustand';
 import { getBilling } from '../lib/pay/billing';
 import { syncEntitlementCache } from '../lib/pay/sync';
+import { setEngagedPro } from '../lib/pay/engagement';
 import { isEntitled, CACHE_KEY, type EntitlementCache } from '../lib/pay/entitlement';
 import { GRACE_MS } from '../lib/pay/config';
 
@@ -34,6 +35,8 @@ export const entitlementStore = createStore<EntitlementState>((set) => ({
     set({ loading: false });
   },
   openUpgrade: async () => {
+    // The user is opting into Pro — from now on it's fine to contact the billing server.
+    await setEngagedPro();
     await getBilling().openUpgrade();
     await entitlementStore.getState().refresh();
   },
