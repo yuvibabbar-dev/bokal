@@ -76,6 +76,8 @@ export async function getActiveTabUrl(): Promise<string | null> {
     try { return (await chrome.tabs.get(inspectedTabId)).url ?? null; } catch { return null; }
   }
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-  // tab.url is present only once <all_urls> host permission is granted (we don't declare "tabs").
+  // tab.url is present when Wafer holds host permission for the tab, OR under `activeTab` for the
+  // tab Wafer was invoked on (opening the side panel from the toolbar). We don't declare `tabs`, so
+  // it is null for other tabs until the user grants that site — that's the per-site grant gate.
   return tab?.url ?? null;
 }

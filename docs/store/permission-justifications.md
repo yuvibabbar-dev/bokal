@@ -4,13 +4,15 @@
 > actual shipped manifest (`apps/cookie-manager/.output/chrome-mv3/manifest.json`):
 >
 > ```json
-> "permissions": ["cookies", "storage", "sidePanel", "unlimitedStorage", "alarms"],
+> "permissions": ["cookies", "storage", "sidePanel", "unlimitedStorage", "alarms", "activeTab"],
 > "optional_host_permissions": ["<all_urls>"]
 > ```
 >
 > Note: the manifest has **no `tabs` permission** — that is a deliberate, load-bearing part of
-> the trust positioning (see business doc §1). `alarms` is used by Wafer but is not covered in
-> business doc §6f; its justification below was added for this task to keep the CWS submission
+> the trust positioning (see business doc §1). `activeTab` (added in M11) is NOT `tabs`: it only
+> exposes the current tab's URL after the user opens Wafer, so Wafer can request access to just
+> that one site; it shows no install warning. `alarms` and `activeTab` are used by Wafer but were
+> not in business doc §6f; their justifications below were added to keep the CWS submission
 > accurate. Paste each line verbatim into the corresponding per-permission justification field
 > in the Chrome Web Store / Edge Partner Center dashboards.
 

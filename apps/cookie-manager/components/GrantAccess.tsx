@@ -1,4 +1,5 @@
-import { requestSiteAccess, requestAllUrls } from '../lib/permissions';
+import { useState } from 'react';
+import { requestSiteAccess, requestAllUrls, siteOriginPatterns } from '../lib/permissions';
 
 function hostOf(url: string | null): string | null {
   if (!url) return null;
@@ -9,8 +10,13 @@ function hostOf(url: string | null): string | null {
 // (the all-cookies scope, or a fallback when Wafer can't yet read the active site's URL).
 export function GrantAccess({ activeUrl, scope, onGrant }: { activeUrl: string | null; scope: 'site' | 'all'; onGrant: () => void }) {
   const host = hostOf(activeUrl);
+  // Only offer the per-site path for http(s) sites (siteOriginPatterns is empty otherwise).
+  const canGrantSite = !!activeUrl && siteOriginPatterns(activeUrl).length > 0;
+  const [error, setError] = useState<string | null>(null);
   // Each request must be called synchronously in the click (URL already known) — no await before it.
-  const grant = (p: Promise<boolean>): void => { void p.then((g) => { if (g) onGrant(); }); };
+  const grant = (p: Promise<boolean>): void => {
+    void p.then((g) => { if (g) onGrant(); }).catch(() => setError('Couldn’t request access — try “Allow all sites”.'));
+  };
   const allowSite = (): void => { if (activeUrl) grant(requestSiteAccess(activeUrl)); };
   const allowAll = (): void => grant(requestAllUrls());
 
@@ -26,7 +32,7 @@ export function GrantAccess({ activeUrl, scope, onGrant }: { activeUrl: string |
           </p>
           <button type="button" onClick={allowAll} style={{ padding: '6px 12px', cursor: 'pointer' }}>Allow all sites</button>
         </>
-      ) : host ? (
+      ) : canGrantSite ? (
         <>
           <p style={{ margin: '0 0 12px', color: 'var(--wafer-muted)' }}>
             Allow Wafer to read and edit cookies for <b>{host}</b> — just this site, nothing else.
@@ -44,6 +50,7 @@ export function GrantAccess({ activeUrl, scope, onGrant }: { activeUrl: string |
           <button type="button" onClick={allowAll} style={{ padding: '6px 12px', cursor: 'pointer' }}>Allow all sites</button>
         </>
       )}
+      {error && <p style={{ marginTop: 8, fontSize: 12, color: 'var(--wafer-accent)' }}>{error}</p>}
       <p style={{ marginTop: 12, fontSize: 11, color: 'var(--wafer-muted)' }}>
         Wafer lives in the side panel — click the toolbar icon any time to open it here.
       </p>

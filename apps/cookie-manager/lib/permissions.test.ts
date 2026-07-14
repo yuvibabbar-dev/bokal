@@ -1,30 +1,28 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { registrableDomain, siteOriginPatterns, hasSiteAccess, requestSiteAccess } from './permissions';
-
-describe('registrableDomain', () => {
-  it('reduces a subdomain to eTLD+1', () => {
-    expect(registrableDomain('www.example.com')).toBe('example.com');
-    expect(registrableDomain('a.b.c.example.com')).toBe('example.com');
-  });
-  it('handles a multi-part public suffix', () => {
-    expect(registrableDomain('shop.example.co.uk')).toBe('example.co.uk');
-    expect(registrableDomain('example.co.uk')).toBe('example.co.uk');
-  });
-  it('leaves an apex domain', () => {
-    expect(registrableDomain('example.com')).toBe('example.com');
-  });
-  it('leaves an IP or single-label host', () => {
-    expect(registrableDomain('localhost')).toBe('localhost');
-    expect(registrableDomain('127.0.0.1')).toBe('127.0.0.1');
-  });
-});
+import { siteOriginPatterns, hasSiteAccess, requestSiteAccess } from './permissions';
 
 describe('siteOriginPatterns', () => {
-  it('covers the host and *.registrableDomain', () => {
-    expect(siteOriginPatterns('https://www.example.com/path?q=1')).toEqual(['https://www.example.com/*', 'https://*.example.com/*']);
+  it('covers the host and each parent domain as EXACT patterns (no wildcard)', () => {
+    expect(siteOriginPatterns('https://www.example.com/path?q=1')).toEqual(['https://www.example.com/*', 'https://example.com/*']);
   });
-  it('works for http and an apex host', () => {
-    expect(siteOriginPatterns('http://example.com/')).toEqual(['http://example.com/*', 'http://*.example.com/*']);
+  it('walks deep subdomains', () => {
+    expect(siteOriginPatterns('https://a.b.example.com/')).toEqual(['https://a.b.example.com/*', 'https://b.example.com/*', 'https://example.com/*']);
+  });
+  it('an apex host yields just itself', () => {
+    expect(siteOriginPatterns('http://example.com/')).toEqual(['http://example.com/*']);
+  });
+  // The trust-critical property: NEVER emit a *.<suffix> wildcard, even for unknown ccTLDs.
+  it('never over-grants to a public suffix for an unlisted multi-part ccTLD', () => {
+    const p = siteOriginPatterns('https://mybank.co.il/');
+    expect(p).toEqual(['https://mybank.co.il/*', 'https://co.il/*']);
+    expect(p.some((x) => x.includes('*.'))).toBe(false);
+  });
+  it('handles IPv4/IPv6 with no subdomain wildcard', () => {
+    expect(siteOriginPatterns('http://127.0.0.1:3000/')).toEqual(['http://127.0.0.1/*']);
+    expect(siteOriginPatterns('http://[::1]:8080/')).toEqual(['http://[::1]/*']);
+  });
+  it('strips a trailing FQDN dot', () => {
+    expect(siteOriginPatterns('https://example.com./')).toEqual(['https://example.com/*']);
   });
   it('returns [] for a non-http(s) url', () => {
     expect(siteOriginPatterns('chrome://extensions')).toEqual([]);
@@ -41,7 +39,7 @@ describe('hasSiteAccess / requestSiteAccess', () => {
 
   it('checks contains() with the site patterns', async () => {
     expect(await hasSiteAccess('https://a.example.com/')).toBe(true);
-    expect(chrome.permissions.contains).toHaveBeenCalledWith({ origins: ['https://a.example.com/*', 'https://*.example.com/*'] });
+    expect(chrome.permissions.contains).toHaveBeenCalledWith({ origins: ['https://a.example.com/*', 'https://example.com/*'] });
   });
 
   it('returns false for an unsupported url without touching chrome', async () => {
@@ -50,8 +48,8 @@ describe('hasSiteAccess / requestSiteAccess', () => {
   });
 
   it('requestSiteAccess requests the site patterns', async () => {
-    expect(await requestSiteAccess('https://example.com/')).toBe(true);
-    expect(chrome.permissions.request).toHaveBeenCalledWith({ origins: ['https://example.com/*', 'https://*.example.com/*'] });
+    expect(await requestSiteAccess('https://www.example.com/')).toBe(true);
+    expect(chrome.permissions.request).toHaveBeenCalledWith({ origins: ['https://www.example.com/*', 'https://example.com/*'] });
   });
 
   it('requestSiteAccess returns false for an unsupported url', async () => {

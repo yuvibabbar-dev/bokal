@@ -14,30 +14,33 @@ export function requestAllUrls(): Promise<boolean> {
 // genuinely broad features (all-cookies view, all-sites export, cleanup). Per Chrome's cookies API,
 // per-origin host permission + "cookies" is sufficient to read/write that origin's cookies.
 
-// Two-label public suffixes where the registrable domain is the last THREE labels. Not the full
-// Public Suffix List — a pragmatic heuristic (same class as Cookie-Editor's); a real PSL is exact.
-const MULTI_PART_SUFFIXES = new Set([
-  'co.uk', 'gov.uk', 'ac.uk', 'org.uk', 'me.uk',
-  'com.au', 'net.au', 'org.au', 'gov.au', 'edu.au',
-  'co.nz', 'co.jp', 'co.kr', 'com.br', 'com.cn', 'co.in', 'co.za', 'com.mx', 'com.tr', 'com.sg',
-]);
-
-/** Best-effort registrable domain (eTLD+1) for a hostname. IPs / single labels are returned as-is. */
-export function registrableDomain(host: string): string {
-  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) return host; // IPv4
-  const labels = host.split('.');
-  if (labels.length <= 2) return host;
-  const lastTwo = labels.slice(-2).join('.');
-  return MULTI_PART_SUFFIXES.has(lastTwo) ? labels.slice(-3).join('.') : labels.slice(-2).join('.');
-}
-
-/** Host-permission match patterns covering the exact host plus the whole registrable domain. */
+/**
+ * Host-permission match patterns covering the exact host plus each parent domain, as EXACT host
+ * patterns (`scheme//domain/*`) — deliberately NOT `scheme//*.domain/*`. A `*.` wildcard would
+ * over-grant to an entire public suffix (e.g. `*.co.il` covers every .co.il site) because we have
+ * no Public Suffix List to know where the registrable domain begins. Walking parents as exact
+ * patterns is safe even if we overshoot into a public-suffix level: `co.il/*` grants access only
+ * to the (non-registrable, non-navigable) host `co.il`, i.e. nothing real. This still covers the
+ * current URL's cookies, which live on the host or one of its parent domains. IPv4/IPv6 hosts have
+ * no subdomains, so only the exact host is requested. Returns [] for non-http(s)/unparseable URLs.
+ */
 export function siteOriginPatterns(url: string): string[] {
   let u: URL;
   try { u = new URL(url); } catch { return []; }
   if (u.protocol !== 'https:' && u.protocol !== 'http:') return [];
   const scheme = u.protocol; // includes the trailing ':'
-  return [`${scheme}//${u.hostname}/*`, `${scheme}//*.${registrableDomain(u.hostname)}/*`];
+  const host = u.hostname.replace(/\.$/, ''); // drop a trailing FQDN dot
+  if (!host) return [];
+  const patterns = [`${scheme}//${host}/*`];
+  const isIp = /^\d{1,3}(\.\d{1,3}){3}$/.test(host) || host.includes(':'); // IPv4 or IPv6 literal
+  if (!isIp) {
+    const labels = host.split('.');
+    // parent domains down to (and including) the two-label level; each as an exact host pattern
+    for (let i = 1; i <= labels.length - 2; i++) {
+      patterns.push(`${scheme}//${labels.slice(i).join('.')}/*`);
+    }
+  }
+  return patterns;
 }
 
 export async function hasSiteAccess(url: string): Promise<boolean> {

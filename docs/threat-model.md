@@ -79,9 +79,23 @@ permission (granted when the panel is opened from the toolbar) to know which ori
 cookie access. A broad `<all_urls>` grant is requested **only** as an explicit opt-in for the
 features that inherently span every site: the all-cookies view, all-sites export/import, and the
 cleanup sweep. `<all_urls>` is declared *optional* solely because Chrome requires a declared
-pattern before an extension can request any subset of it. The per-site coverage relies on a
-best-effort registrable-domain heuristic (a full Public Suffix List would be exact). Nothing is
-transmitted off the device regardless of scope.
+pattern before an extension can request any subset of it.
+
+The per-site request (`siteOriginPatterns`) uses **exact** host patterns for the active host and
+each parent domain (`scheme://domain/*`), never a `scheme://*.domain/*` wildcard. This is a
+deliberate safety choice: without a Public Suffix List, a `*.` wildcard on a guessed registrable
+domain could over-grant to an entire public suffix (e.g. `*.co.il` = every .co.il site). Exact
+patterns cannot do that — overshooting into a public-suffix level (e.g. `co.il/*`) grants access
+only to the non-registrable, non-navigable host `co.il`, i.e. nothing real — while still covering
+the current URL's cookies (which live on the host or a parent domain). Nothing is transmitted off
+the device regardless of scope.
+
+**Residual (needs real-browser QA before ship):** the per-site grant surfaces the active site's
+URL via `activeTab`, which Chrome grants for the tab Wafer is invoked on (opening the panel from
+the toolbar). On tab-switch to a not-yet-granted site, `activeTab` is not re-granted, so the panel
+falls back to the "allow all sites" path until the user re-invokes Wafer on that tab. This flow is
+covered by unit tests for the permission logic but the actual permission prompt / activeTab timing
+is not exercised by the standalone-panel E2E harness.
 
 **2.2b Automatic cleanup + block rules.** Block rules (reactive, in the service worker) and the
 optional daily cleanup sweep (`wafer:cleanup` alarm) both *delete* cookies; they never transmit
