@@ -4,10 +4,9 @@ import { test, expect } from './fixtures';
 // skip on the env var — not a transient DOM read — makes the decision deterministic and avoids the
 // grant-gate-then-refresh render flash that could otherwise make this test silently self-skip.
 //
-// Note: full CRUD-through-the-UI E2E (add a cookie, see it listed) requires a real side-panel binding
-// to an active tab, which a standalone-page harness cannot model (the panel's active-tab resolution
-// is ambiguous when opened as its own page). That path is covered by unit/integration tests
-// (validation, write wrapper, round-trips). Here we assert the granted-state UI renders.
+// This spec only asserts that the granted-state UI renders. Full CRUD through the UI against a real
+// site — including the cookie jar as ground truth — is covered by crud.spec.ts, which binds the
+// panel to a live tab by fronting the site tab (the panel re-reads on tabs.onActivated).
 test('with host access granted, the cookie-management UI renders (no grant gate)', async ({ context, extensionId }) => {
   test.skip(!process.env.BOKAL_E2E, 'run against build:e2e with BOKAL_E2E=1 to exercise the granted UI');
 

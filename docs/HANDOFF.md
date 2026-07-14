@@ -63,7 +63,7 @@ Each milestone: TDD per task → two-stage per-task review → an **opus whole-b
 - Netscape *import* (export exists; import is JSON/header/automation only).
 - Named-automation-profile *suites* (Pro storageState round-trip) — the one-off automation exports shipped Free in M8; the Pro suite lever is unbuilt.
 - Extract `lib/pay` → `packages/pay` when/if the second JSON-viewer app is built.
-- A hero "populated cookie list on a real site" marketing screenshot (manual capture; the standalone-panel harness can't bind an active tab, so full CRUD-through-UI E2E is also not automated).
+- A hero "populated cookie list on a real site" marketing screenshot (manual capture). *(Full CRUD-through-UI E2E is no longer a gap — `e2e/crud.spec.ts` and `e2e/pro.spec.ts` now drive the real UI against a real site and verify against `chrome.cookies`.)*
 
 ## 5. Wiring real ExtPay (the launch gate) — exact steps
 Currently `lib/pay/billing.ts` `getBilling()` returns `MockBilling` (entitlement via the `bokal:mockPaid` local flag; `openUpgrade()` sets it). `USE_MOCK_BILLING` in `lib/pay/config.ts` is a **live guard**: flip it to `false` and `getBilling()` throws until a real adapter exists. To go live (full detail in `docs/pro-monetization.md`):
