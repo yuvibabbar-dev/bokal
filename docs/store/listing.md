@@ -75,8 +75,8 @@ PERMISSIONS, IN PLAIN ENGLISH
 • sidePanel — renders Wafer's side-panel interface next to the page.
 • unlimitedStorage — lets Pro cookie profiles grow past the default quota;
   everything stays on your device.
-• alarms — schedules a periodic local re-check of your Pro license; nothing is
-  transmitted.
+• alarms — schedules local periodic tasks: a re-check of your Pro license, and (only if you
+  turn it on) the daily cookie-cleanup sweep; nothing is transmitted.
 • activeTab — reads the current tab's address (only when you open Wafer) so it
   can request access to just that one site. Not the "tabs" permission.
 • Host access — required by Chrome's cookies API to read/write cookies for a

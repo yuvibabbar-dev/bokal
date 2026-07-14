@@ -30,9 +30,10 @@
   Pro cookie-profile library, so users can keep more than a handful of saved profiles/snapshots
   (profiles are stored in IndexedDB, not `chrome.storage.local`). Everything stays on the device;
   nothing is transmitted.
-- **`alarms`** — Schedules a daily local re-check of the user's Pro entitlement status (e.g.
-  trial expiry) so the paywall stays accurate without polling on every action. No data leaves
-  the device; the alarm only triggers a local entitlement re-check.
+- **`alarms`** — Schedules two purely local periodic tasks: (1) a daily re-check of the user's Pro
+  entitlement status so the paywall stays accurate without polling on every action, and (2) — only
+  when the user explicitly enables auto-sweep — the daily cookie-cleanup sweep that clears cookies
+  outside their keep-list. No data leaves the device; both alarms only trigger local work.
 - **`activeTab`** — Lets Wafer read the current tab's address (only after you open Wafer from the
   toolbar) so it can ask for access to just that one site. This is not the `tabs` permission and
   shows no install warning; it does not grant cookie access on its own.
