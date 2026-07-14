@@ -6,9 +6,9 @@
 
 ## 1. Snapshot (verified, ground truth)
 - **Repo:** `/Users/yuvibabbar/Desktop/Projects/chrome_extensions/wafer` (own git repo; pnpm monorepo).
-- **Branch/HEAD:** `master` @ `9e5e8da` — clean working tree, **106 commits, 10 milestone merges** (M1–M10).
-- **State:** `tsc` clean · **93 unit tests pass** · build + zip succeed · Playwright E2E passes in real Chromium (both build variants) · published manifest has **no `host_permissions`** (adds `devtools_page`).
-- **v1.1 (M8–M10) added:** CHIPS all-view fix; validated imports + detailed errors; Playwright/Puppeteer automation-format I/O; all-sites export; one-time review prompt; protect/pin/block cookies; DevTools panel; whitelist auto-cleanup (Clean now + optional daily sweep); cookie audit badges. All Free. Research + program spec: `docs/business/2026-07-13-feature-roadmap-research.md`, `docs/superpowers/specs/2026-07-13-wafer-v1.1-roadmap-design.md`.
+- **Branch/HEAD:** `master` @ `ac8a22c` — clean working tree, **116 commits, 11 milestone merges** (M1–M11).
+- **State:** `tsc` clean · **104 unit tests pass** · build + zip succeed · Playwright E2E passes in real Chromium (both build variants) · published manifest has **no `host_permissions`**, **no `tabs`** (adds `activeTab`, `devtools_page`).
+- **v1.1 (M8–M11) added:** CHIPS all-view fix; validated imports + detailed errors; Playwright/Puppeteer automation-format I/O; all-sites export; one-time review prompt; protect/pin/block cookies; DevTools panel; whitelist auto-cleanup (Clean now + optional daily sweep); cookie audit badges; **per-site permission model** (requests just the active site; `<all_urls>` opt-in only for all-sites features). All Free. Research + program spec: `docs/business/2026-07-13-feature-roadmap-research.md`, `docs/superpowers/specs/2026-07-13-wafer-v1.1-roadmap-design.md`.
 - **What it is:** a complete, monetization-ready MV3 Chrome/Edge **cookie manager** ("Wafer"), positioned as the trustworthy, open-source successor to the delisted EditThisCookie. Business 4 for this solo founder.
 - **One-command verify:**
   ```bash
@@ -43,9 +43,9 @@
 Each milestone: TDD per task → two-stage per-task review → an **opus whole-branch review** → fixes → merge. (M8–M10 whole-branch reviews were run via an adversarial general-purpose subagent; each found real issues that were fixed pre-merge — notably M9's Critical where the Pro profile "apply-replace" wiped protected cookies, now enforced at the data layer.)
 
 ## 4. What's NEXT
-**⚠ TWO PRE-SUBMISSION FOUNDER DECISIONS (surfaced during the v1.1 build):**
-1. **Store-copy permission accuracy.** `docs/store/permission-justifications.md:36` + `docs/store/listing.md:66` say host access is "for the specific site you choose", but the code requests **`<all_urls>`** at runtime (the grant gate is `hasAllUrlsPermission`; a per-site grant would not satisfy the app). Fix before submitting: **(a)** build the per-site permission model the design spec §3 intended (restores the stronger "minimal permissions" claim + unblocks the deferred native per-site access chip), or **(b)** correct the copy to describe the runtime all-sites grant. Flagged in `docs/threat-model.md` §2.2.
-2. **Popup surface direction.** A popup requires `action.default_popup`, which overrides `openPanelOnActionClick` — the toolbar-icon click would open the popup instead of the side panel, regressing the side-panel-first flagship UX. Decide popup-primary (Cookie-Editor-like, eases migration) vs. keep side-panel-primary (deferred in M9 for this reason).
+**Both pre-submission decisions from the v1.1 build are now RESOLVED (M11, deep-research-backed):**
+1. ~~Store-copy permission accuracy~~ → **built the real per-site permission model.** Wafer now requests host access for just the active site (exact host + parent-domain patterns, never a `*.wildcard`, so it can't over-grant to a public suffix), via `activeTab` to read the URL (not `tabs`, no install warning). `<all_urls>` is an explicit opt-in for the all-cookies view / all-sites export / cleanup. Store copy + threat-model now match the code. **⚠ ONE RESIDUAL — real-browser QA before submission:** `activeTab` timing on side-panel open isn't exercisable in the E2E harness; the flow degrades safely to the all-sites fallback if it doesn't surface the URL. Verify the per-site prompt works in a real browser before store submission.
+2. ~~Popup surface direction~~ → **kept side-panel-primary** (no `action.default_popup` — it would kill side-panel-on-click; evidence to switch was thin, n=1). Added first-run onboarding to ease Cookie-Editor-migrant friction. Popup-primary remains a deliberate future option if user testing shows severe friction.
 
 **Account-bound (only the USER can do — see `docs/MORNING-REVIEW.md` §Your turn):**
 1. **Wire real ExtPay before selling** (see §5) — mock mode currently unlocks Pro locally; it MUST NOT ship as the paid build.

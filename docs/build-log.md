@@ -159,4 +159,15 @@ M10: COMPLETE — merged to master (9e5e8da). 93 tests, tsc clean, build+zip, E2
 
 ## v1.1 ROADMAP COMPLETE (M8+M9+M10 merged): 93 tests, no host_permissions, all free features, Pro code still chunked.
 CARRIED FOUNDER DECISIONS (pre-submission): (1) store-copy per-site-vs-<all_urls> accuracy gap (permission-justifications.md:36, listing.md:66) — build per-site permission model OR correct copy; (2) popup surface direction (would take over the action click, regressing side-panel-first UX).
+
+## M11 (feat/m11-per-site-permissions) — Per-site permission model. Plan: docs/superpowers/plans/2026-07-13-wafer-m11-per-site-permissions.md
+DECISIONS (deep-research wf_4d83631c, 22 confirmed/3 refuted, primary Chrome docs + Cookie-Editor source): (1) HOST PERMS = build the real per-site model (HIGH conf) — per-origin host perm + cookies suffices; <all_urls> only for all-sites enumeration. (2) SURFACE = keep side-panel primary (MEDIUM conf) — action.default_popup would kill side-panel-on-click; evidence to switch thin (n=1). DONE both.
+M11-T1: per-site helpers (siteOriginPatterns, hasSiteAccess, requestSiteAccess); 11 tests (eb0e536)
+M11-T2: declare activeTab (read active URL for per-site grant; not tabs; no install warning) (ad09830)
+M11-T3: per-site grant gate — site scope granted if broad OR hasSiteAccess(activeUrl); all scope needs <all_urls> (e1bc5fe); FIX 31156aa: broad users never re-prompted (E2E caught it)
+M11-T4: per-site grant UI (Allow one site; all-sites opt-in/fallback) + side-panel onboarding hint (c106339)
+M11-T5: store copy + threat-model now describe (and MATCH) per-site — closes the M8 accuracy gap (061d02a)
+M11 whole-branch review (general-purpose adversarial): 1 CRITICAL + 1 Important + minors, ALL FIXED. C1: registrableDomain's 21-entry suffix list was incomplete → *.co.il-class over-grant to a whole public suffix for unlisted ccTLDs (mybank.co.il → *.co.il). FIX: siteOriginPatterns now emits EXACT host + parent-domain patterns, NO *.wildcard, removing eTLD+1 guessing entirely — can never over-grant. Also fixed IPv4/IPv6 invalid patterns, unhandled rejection, non-http button gating, copy/threat-model consistency. RESIDUAL (real-browser QA before submit): activeTab timing on side-panel open; degrades safely to all-sites fallback.
+M11: COMPLETE — merged to master (ac8a22c). 104 tests, tsc clean, build+zip, E2E both builds green, permissions = 5 + activeTab, no host_permissions, no tabs, ProfilesPanel still chunked.
+DECISION (1) RESOLVED by M11 (per-site built, copy true). DECISION (2) RESOLVED: side-panel stays primary (no popup); onboarding added.
 ```
