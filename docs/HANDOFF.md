@@ -1,133 +1,194 @@
 # Bokal — Session Handoff / Resume Point
 
-**This is the single self-contained entry point for the next session.** Everything below is committed to git. Last updated: 2026-07-13 (post v1.1 roadmap: M8–M10).
+**The single self-contained entry point for the next session.** Last updated: **2026-07-14, post
+store submission.** (Note: git history was rewritten on 2026-07-14 — any commit SHA you remember or
+find in older notes from before that date is INVALID. `git log` is authoritative.)
 
 ---
 
-## 1. Snapshot (verified, ground truth)
-- **Repo:** `/Users/yuvibabbar/Desktop/Projects/chrome_extensions/bokal` (own git repo; pnpm monorepo).
-- **Branch/HEAD:** `master` @ `ac8a22c` — clean working tree, **116 commits, 11 milestone merges** (M1–M11).
-- **State:** `tsc` clean · **104 unit tests pass** · build + zip succeed · Playwright E2E passes in real Chromium (both build variants) · published manifest has **no `host_permissions`**, **no `tabs`** (adds `activeTab`, `devtools_page`).
-- **v1.1 (M8–M11) added:** CHIPS all-view fix; validated imports + detailed errors; Playwright/Puppeteer automation-format I/O; all-sites export; one-time review prompt; protect/pin/block cookies; DevTools panel; whitelist auto-cleanup (Clean now + optional daily sweep); cookie audit badges; **per-site permission model** (requests just the active site; `<all_urls>` opt-in only for all-sites features). All Free. Research + program spec: `docs/business/2026-07-13-feature-roadmap-research.md`, `docs/design/specs/2026-07-13-bokal-v1.1-roadmap-design.md`.
-- **What it is:** a complete, monetization-ready MV3 Chrome/Edge **cookie manager** ("Bokal"), positioned as the trustworthy, open-source successor to the delisted EditThisCookie. Business 4 for this solo founder.
-- **One-command verify:**
-  ```bash
-  cd /Users/yuvibabbar/Desktop/Projects/chrome_extensions/bokal && pnpm install \
-    && pnpm -r test && pnpm --filter @bokal/cookie-manager exec tsc --noEmit \
-    && pnpm --filter @bokal/cookie-manager build
-  ```
+## 1. Where things stand (verified ground truth)
 
-## 2. How to resume (do this first)
-1. Read this file, then `docs/MORNING-REVIEW.md` (narrative status) and `docs/build-log.md` (per-task/review history).
-2. The persistent memory already carries the project summary (`project_bokal.md`); trust git history + these docs over any stale recollection.
-3. `docs/build-log.md` holds the per-milestone execution and review history; `git log` is authoritative.
-4. Confirm state with the verify command above before changing anything.
+- **Product:** "Bokal" (renamed from "Wafer" — a funded YC startup owns that name) — a complete MV3
+  Chrome/Edge cookie manager. Free tier = full cookie CRUD/search/rules/cleanup/import/export/CHIPS/
+  DevTools panel. Pro = named local cookie profiles + optional AES-GCM passphrase encryption.
+- **Repo:** `/Users/yuvibabbar/Desktop/Projects/chrome_extensions/bokal` — **public** at
+  `github.com/yuvibabbar-dev/bokal`, branch **`main`**, license **GPL-3.0-or-later** (forced by
+  bundled AGPL ExtPay; see `docs/licensing-notes.md`).
+- **Status: SUBMITTED to the Chrome Web Store — awaiting review.** Trader verification also pending
+  (listing shows "non-trader" label until Google processes it; does not block anything).
+- **Quality bar at submission:** 124 unit tests · tsc clean · build + `check:bundle` guard · zip
+  113 KB with LICENSE.txt + THIRD-PARTY-NOTICES.txt inside · Playwright E2E green on BOTH build
+  variants (incl. full CRUD-through-UI against a real site, the real ExtPay purchase sequence against
+  a mocked backend, and wrong-passphrase-destroys-nothing) · **CI green on GitHub Actions** (runs on
+  every push to `main`: tsc, tests, build, bundle guard, E2E under xvfb).
+- **Payments: LIVE.** ExtPay app id `bokal-test` (id is permanent — the display name is "Bokal",
+  which is what customers see; do NOT change the id, it would orphan licenses). Stripe connected
+  LIVE. Plans: **$4.99/mo · $19.99/yr · $29.99 one-time (launch price; raise to ~$39 after ~60
+  days — around 2026-09-14).** ExtPay auto-selects test mode for unpacked installs (test card
+  4242 4242 4242 4242) and live mode for store installs — one app id serves both; never use a real
+  card for testing.
+- **Site: LIVE** via GitHub Pages from the **`gh-pages` branch** (branch-based Pages, NOT the
+  Actions route — the repo's Actions token can't create Pages sites):
+  - `https://yuvibabbar-dev.github.io/bokal/` (landing; Limited Use statement on the page)
+  - `https://yuvibabbar-dev.github.io/bokal/privacy.html` (the URL pasted into CWS)
+  - To republish: copy `site/*` + `.nojekyll` into a fresh checkout of `gh-pages` and force-push
+    that branch (source of truth for content is `site/` on `main`).
 
-**Likely next requests and where to start:**
-- **"Wire real ExtPay / I made the accounts"** → follow `docs/pro-monetization.md` exactly (steps in §5 below). This is the #1 pre-launch item.
-- **"Submit to the store"** → `docs/store/submission-guide.md` + the paste-ready copy in `docs/store/`. (User does the actual upload/verification.)
-- **"Build the v1.1 features / fix X"** → use the same dev workflow (§6) — write a plan under `docs/design/plans/`, branch `feat/mN-*`, TDD each task, whole-branch review, merge. Deferred list in §4.
-- **"Does it work / show me"** → `pnpm --filter @bokal/cookie-manager build`, then load `apps/cookie-manager/.output/chrome-mv3` unpacked at `chrome://extensions`. Or run `pnpm --filter @bokal/cookie-manager exec playwright test`.
+## 2. How to resume
 
-## 3. What's DONE (M1–M7, all merged to master)
-| Milestone | Delivers | Merge |
-|---|---|---|
-| **M1** Foundation | monorepo, minimal manifest (no `tabs`, runtime `<all_urls>` grant), XSS-safe searchable cookie viewer, SW `onChanged` relay | `e743177` |
-| **M2** CRUD | add/edit/delete + wired validation, edit **replaces** (no orphan dup), write wrapper, refresh seq-guard | `0694f45` |
-| **M3** I/O · theme · CHIPS | JSON+Netscape export, JSON import (Blob+anchor, no `downloads` perm), `@bokal/ui-kit` light/dark, CHIPS inspector | `654dec6` |
-| **M4** Pro layer | mock Billing + entitlement (14-day grace, daily alarm), AES-GCM+PBKDF2 profile encryption, IndexedDB profiles, dynamic-import gating (free build ships no Pro code) | `cac007c` |
-| **M5** Hardening | integration round-trips, redaction guard, Playwright E2E, GitHub Actions CI, threat model | `97c165f` |
-| **M6** Store-prep | privacy policy + listing + justifications + data-use + trader checklist + submission guide, generated icons + real screenshots, grant-gate flash fix, publishable zip | `40847ca` |
-| **M7** Parity + fixes | bulk delete-all (scope-honest), copy-value/copy-as-header/clipboard, header-string import, profile apply-as-**replace** + in-panel passphrase, all-cookies view, attr-length validation + domain-count warning; bugs: alarm-reset, same-tab-nav, entitlement seq-guard, profiles try/catch, accurate CHIPS via `getPartitionKey`, cross-panel theme sync | `45ba0df` |
+1. Read this file. `docs/build-log.md` = per-milestone history; `git log` = authoritative.
+2. Verify state before changing anything:
+   ```bash
+   cd /Users/yuvibabbar/Desktop/Projects/chrome_extensions/bokal && pnpm install \
+     && pnpm -r test && pnpm --filter @bokal/cookie-manager exec tsc --noEmit \
+     && pnpm --filter @bokal/cookie-manager build \
+     && pnpm --filter @bokal/cookie-manager check:bundle
+   ```
+3. Likely next events and what to do:
+   - **"Approved / it's live"** → follow §4 LAUNCH DAY checklist.
+   - **"Rejected / reviewer question"** → read the rejection text; the usual causes for cookie
+     extensions are permission-justification gaps — the prepared answers live in
+     `docs/store/permission-justifications.md` and `docs/store/data-use-answers.md`. Fix, bump the
+     version in `apps/cookie-manager/wxt.config.ts`, rebuild, re-zip, re-upload.
+   - **"Build feature X"** → plan under `docs/design/plans/`, branch off `main`, TDD, whole-branch
+     review, merge. Deferred list in §5.
 
-Each milestone: TDD per task → two-stage per-task review → a whole-branch review → fixes → merge. (M8–M10 whole-branch reviews were run via an independent adversarial review; each found real issues that were fixed pre-merge — notably M9's Critical where the Pro profile "apply-replace" wiped protected cookies, now enforced at the data layer.)
+## 3. What happened in the last two sessions (compressed)
 
-## 4. What's NEXT
-**Both pre-submission decisions from the v1.1 build are now RESOLVED (M11, deep-research-backed):**
-1. ~~Store-copy permission accuracy~~ → **built the real per-site permission model.** Bokal now requests host access for just the active site (exact host + parent-domain patterns, never a `*.wildcard`, so it can't over-grant to a public suffix), via `activeTab` to read the URL (not `tabs`, no install warning). `<all_urls>` is an explicit opt-in for the all-cookies view / all-sites export / cleanup. Store copy + threat-model now match the code. **⚠ ONE RESIDUAL — real-browser QA before submission:** `activeTab` timing on side-panel open isn't exercisable in the E2E harness; the flow degrades safely to the all-sites fallback if it doesn't surface the URL. Verify the per-site prompt works in a real browser before store submission.
-2. ~~Popup surface direction~~ → **kept side-panel-primary** (no `action.default_popup` — it would kill side-panel-on-click; evidence to switch was thin, n=1). Added first-run onboarding to ease Cookie-Editor-migrant friction. Popup-primary remains a deliberate future option if user testing shows severe friction.
+Rename Wafer→Bokal everywhere (code, docs, dir, git history rewritten to strip tool trailers — old
+SHAs invalid). GPL-3.0 adopted (LICENSE + THIRD-PARTY-NOTICES; also shipped INSIDE the zip + in-panel
+Source/License/Notices footer). Repo pack (README/CONTRIBUTING/SECURITY) + landing page + privacy
+policy written, deployed. Logo: amber "cookie disc with flat edge" on graphite (concept in
+`docs/design/specs/2026-07-13-bokal-brand-design.md`). Store prep hardened by an adversarial audit,
+which caught: manifest title/summary are what CWS uses (set the SEO title there), a would-have-been
+FALSE data-use certification (now scoped: cookie data never transmitted; Pro buyer's EMAIL is stored
+by ExtPay in storage.sync → PII box ticked), listing said "coming soon" for a live paid tier (fixed +
+prices matched to live checkout), all screenshots were blank (regenerated: 5 real frames via the
+tab-binding technique), no restore-purchase path (built: `Billing.openRestore()` → ExtPay
+`openLoginPage`, "Restore purchase" + "Manage subscription" UI, TDD), promo tiles created
+(440x280 + 1400x560, 24-bit no-alpha), CI was silently never running (trigger said `master`, branch
+is `main` — fixed, now green), per-site permission model, bundle-split CI guard
+(`scripts/check-bundle-split.mjs`), E2E rebuilt to drive the real UI against a real site.
 
-**Account-bound (only the USER can do — see `docs/MORNING-REVIEW.md` §Your turn):**
-1. ~~Wire real ExtPay~~ → **WIRED (M12), sandbox test RUN 2026-07-13 — one wiring issue found, awaiting the founder's new app id.**
-   **State:** `ExtPayBilling` live (`USE_MOCK_BILLING=false`, app id `bokal-test`), free users make zero ExtPay contact (engagement gate + no SW ExtPay construction), no new permissions. 115 tests incl. a paid-flow integration test (`lib/pay/paid-flow.test.ts`).
-   **Sandbox history (RESOLVED — do not act on the old note):** an early test purchase under the
-   *previous* app id landed in the founder's unrelated "Couples Companion" ExtPay app. That is
-   **fixed**. As of 2026-07-14 the id `bokal-test` resolves to a real, dedicated **Bokal** ExtPay
-   app: the live checkout page renders "Bokal-Test", in Stripe **test mode**, with all three plans
-   ($4.99/mo · $19.99/yr · $29.99 one-time). Verified by driving the real extension against the real
-   server. **Remaining:** the app's display name is still "Bokal-Test" (customers would see that
-   while paying — rename it in the ExtPay dashboard), and Stripe is **not yet onboarded for live
-   charges**.
-   **NEXT SESSION:** (a) founder registers a dedicated Bokal app on extensionpay.com (own id, connected to the Bokal Stripe, plans $4.99/$19/$39 lifetime-default) and provides the id; (b) set `EXTPAY_APP_ID` in `lib/pay/config.ts` (one line); (c) re-run the sandbox purchase from the loaded extension and confirm the Pro panel unlocks + the charge appears in the right Stripe (test mode toggle!); (d) also still unverified in a real browser: whether the Pro panel unlocked after this payment, and the free-user no-network check. Guide: `docs/pro-monetization.md`. At launch: prod app id + Stripe test→live.
-2. Decide default-on profile encryption (currently opt-in + warning; plaintext-at-rest otherwise).
-3. Chrome Web Store + Edge Partner Center accounts; upload the zip; host the privacy policy at a URL.
-4. EU-DSA trader verification (legal name + business address + SMS phone — public; use a business address). Checklist: `docs/store/trader-verification-checklist.md`.
-5. Publish the open-source repo (no git remote / README / LICENSE yet) — the store copy claims "open source, every line published", so this is a launch blocker; also the GitHub Actions CI has never actually run.
+## 4. LAUNCH DAY checklist (when CWS approves)
 
-**v1.1 DONE in M8–M10 (previously deferred):** validate imports; detailed import errors; protect/block cookies; DevTools panel; auto-delete/cleanup; audit hints. **Still deferred (an AGENT can build; not regressions):**
-- Popup surface (see decision #2 above).
-- Firefox port (WXT emits it; `sidebar_action` differs from `chrome.sidePanel`).
-- Netscape *import* (export exists; import is JSON/header/automation only).
-- Named-automation-profile *suites* (Pro storageState round-trip) — the one-off automation exports shipped Free in M8; the Pro suite lever is unbuilt.
-- Extract `lib/pay` → `packages/pay` when/if the second JSON-viewer app is built.
-- A hero "populated cookie list on a real site" marketing screenshot (manual capture). *(Full CRUD-through-UI E2E is no longer a gap — `e2e/crud.spec.ts` and `e2e/pro.spec.ts` now drive the real UI against a real site and verify against `chrome.cookies`.)*
+1. Install from the store yourself → confirm live checkout (no "Test mode" badge) → ExtPay's
+   dashboard checklist ticks after the first live payment.
+2. Update `site/index.html`: replace the disabled "Coming soon to Chrome" button with the real store
+   URL → republish `gh-pages`.
+3. Update `README.md` status block (pre-launch → live + store link).
+4. Submit the SAME zip to **Edge Add-ons** (partner.microsoft.com; free, no rebuild).
+5. Start the ~60-day clock to raise lifetime $29.99 → $39 (ExtPay dashboard).
+6. Announce ONLY after the namespaces are locked (see §5 item 1).
 
-## 5. Wiring real ExtPay (the launch gate) — exact steps
-Currently `lib/pay/billing.ts` `getBilling()` returns `MockBilling` (entitlement via the `bokal:mockPaid` local flag; `openUpgrade()` sets it). `USE_MOCK_BILLING` in `lib/pay/config.ts` is a **live guard**: flip it to `false` and `getBilling()` throws until a real adapter exists. To go live (full detail in `docs/pro-monetization.md`):
-1. Register at extensionpay.com → set `EXTPAY_APP_ID` in `lib/pay/config.ts`.
-2. `pnpm --filter @bokal/cookie-manager add extpay`.
-3. Add `ExtPayBilling implements Billing` in `billing.ts` (`getEntitlement` → `extpay.getUser().paid`; `openUpgrade` → `extpay.openPaymentPage()`; catch network errors + popup-blockers).
-4. Call `extpay.startBackground()` at the top of `entrypoints/background.ts`.
-5. Set `USE_MOCK_BILLING=false` and return `ExtPayBilling` from `getBilling()`.
-6. Real test purchase end-to-end before publishing. Pricing decided: **$4.99/mo · $19/yr · $39 lifetime** ($29 launch) — see `docs/business/2026-07-13-business-recommendations.md`.
+## 5. Open items (owner: FOUNDER unless marked AGENT)
 
-## 6. Dev workflow to CONTINUE (how every milestone was built)
-- **Branch per milestone:** `git checkout -b feat/mN-<topic>` off `master`.
-- **Plan first:** write `docs/design/plans/YYYY-MM-DD-bokal-mN-<topic>.md` with complete code per task (see the 7 existing plans as templates).
-- **Test-driven execution:** per task → write the failing test first → watch it fail → implement the minimum to pass → keep the whole suite green.
-- **Whole-branch review** at the end of each milestone: re-read the full diff adversarially against the §7 invariants, fix everything Critical/Important, then merge `--no-ff` and delete the branch.
-- **Log it:** record each milestone's tasks, review findings, and fixes in `docs/build-log.md`.
+1. **Lock namespaces BEFORE announcing the name anywhere:** buy `bokal.dev` (+ `.app`/`.io`
+   defensively — all verified available 2026-07-14), npm `bokal`, GitHub org `bokal-dev`
+   (github.com/bokal is a personal account). Then: set CWS "Official URL" via Search Console,
+   update manifest `homepage_url` + site links (AGENT, one pass).
+2. **USPTO knockout search** for BOKAL/BOKALL/BOCAL, Classes 9+42 (tmsearch.uspto.gov or an attorney,
+   $300–800). All prior screening was search-index-derived, NOT a register pull.
+3. **Manual QA checklist** `docs/pre-launch-qa.md` — ⚠ item #1 (the per-site activeTab grant
+   prompt) has NEVER been confirmed in a real browser by a human. If it falls back to asking for
+   all-sites access, the "minimal permissions" store claim weakens — check it.
+4. **EU-DSA trader verification** — pending at Google; no action unless they ask for more info.
+   (If offered individual vs organization: individual avoids the ~30-day D-U-N-S detour.)
+5. (AGENT, post-launch) **Reverse trial (M13):** 7-day full-Pro on 2nd-profile trigger. Deliberately
+   deferred until there is traffic to A/B against. Real expected lift is Verna's anecdotal 10–40%,
+   NOT the debunked "60%". ExtPay supports trials natively (`openTrialPage`/`trialStartedAt`).
+6. (AGENT, post-launch) **Entitlement hardening:** fail closed unless the install has EVER seen a
+   successful ExtPay verification (`everVerified` flag) — kills the copy-paste one-liner forge while
+   costing legit buyers nothing. Accepted truth: any client-side paywall remains patchable; if Pro
+   revenue matters long-term, Pro needs a server-side component (sync/hosted backup).
+7. (AGENT, optional) Split public repo concerns: `docs/business/` (pricing strategy) and internal
+   ledgers are public — audit flagged as competitive-intel exposure; founder has implicitly accepted
+   by going public, but slimming is still possible.
+8. (AGENT, deferred features): Firefox port (WXT emits it; sidebar_action differs), Netscape import,
+   popup-surface option, named-automation Pro suites, UI accent blue→amber migration, jar-shaped
+   logo evolution (name means "jar"), default-on profile encryption decision.
+9. **GitHub old-SHA purge (optional):** pre-rewrite commits may still resolve by direct URL until
+   GitHub GC; Support can purge on request.
 
-## 7. Critical invariants the next session MUST preserve (do not regress)
-- **Trust posture is the whole product.** Every privacy/permission claim in `docs/store/` and `docs/threat-model.md` must stay literally true against the code.
-- **No `tabs` permission; no install-time `host_permissions`.** Host access is `optional_host_permissions: ['<all_urls>']` requested at runtime. The `BOKAL_E2E=1` build adds `host_permissions` for E2E ONLY — the **published build must never ship it** (a redaction/manifest check + the `wxt.config.ts` env gate enforce this).
-- **Free build ships zero Pro code** — `ProfilesPanel` loads via dynamic `import()` behind the entitlement gate; verified as a separate chunk. Don't add a static import of it.
-- **Never log cookie values / passphrases** — enforced by `lib/security/redaction.test.ts` (runs in CI; scans the app + `@bokal/ui-kit`).
-- **Cookie values render as text nodes only** (never `dangerouslySetInnerHTML`); an XSS regression test locks this.
-- **Profile encryption:** AES-GCM + PBKDF2 600k; `apply()` decrypts BEFORE removing, so a wrong passphrase can never wipe cookies. `chrome.storage` (local/session) is the source of truth; theme pref is **`storage.local`** (deliberately NOT `sync`, so "nothing leaves your device" holds).
-- **`refresh()` seq-guards** in `cookies-store` and `entitlement-store` — keep them; compute state before the `if (seq !== …) return;` check.
-- **Deviation on record:** the Pro layer lives in `apps/cookie-manager/lib/pay` + `lib/profiles`, NOT a separate `packages/pay` (YAGNI until the JSON-viewer app exists).
+## 6. Critical invariants (do not regress — enforced where noted)
 
-## 8. Repo map
+- **No `tabs` permission; no install-time `host_permissions`** — runtime per-site grant via
+  `activeTab` + `optional_host_permissions:['<all_urls>']`. The `BOKAL_E2E=1` build adds
+  host_permissions FOR TESTS ONLY; the published zip must never contain it. **Always check the ZIP,
+  not `.output/chrome-mv3`** (which may hold the E2E build after running E2E).
+- **Free users make ZERO network calls and zero off-device writes** — all ExtPay contact is gated by
+  `lib/pay/engagement.ts`; no ExtPay construction at SW top. Asserted in `e2e/crud.spec.ts`.
+- **Pro UI stays a code-split lazy chunk** — enforced in CI by `check:bundle`
+  (`scripts/check-bundle-split.mjs`). Phrase it as "never fetched/executed for free users", NOT
+  "free build ships zero Pro code" (there is one build; the chunk ships).
+- **Cookie values: never logged** (`lib/security/redaction.test.ts` in CI), **rendered as text nodes
+  only** (XSS regression test).
+- **Profile crypto:** AES-GCM + PBKDF2 600k; `apply()` decrypts BEFORE removing — a wrong passphrase
+  can never destroy cookies (also asserted in `e2e/pro.spec.ts`).
+- **Trust copy must stay literally true against the code** — including: prices in listing == live
+  ExtPay plans; the PII (email) disclosure stays as long as ExtPay is bundled; never certify
+  "nothing is transmitted" on the CWS privacy tab.
+- **`EXTPAY_APP_ID` is permanent post-launch.** Theme pref stays `storage.local` (not sync).
+  `refresh()` seq-guards stay in cookies/entitlement stores.
+
+## 7. Repo map (current)
+
 ```
-apps/cookie-manager/      # the WXT + React + TS extension
-  entrypoints/            #   background.ts (SW), sidepanel/ (App.tsx = main UI)
-  lib/                    #   cookies/ (validation,keys,read,write), io/ (export,import,header,download), pay/, profiles/, security/, clipboard, permissions, site, debounce
-  stores/                 #   cookies-store, entitlement-store, profiles-store (zustand)
-  components/             #   CookieRow/List/Editor, IoBar, SearchBar, ThemeToggle, UpgradeButton, GrantAccess, pro/ProfilesPanel (lazy)
-  e2e/                    #   Playwright fixtures + smoke/granted specs
-  scripts/                #   gen-icons.mjs, gen-screenshots.mjs
-  public/icon/            #   generated 16/32/48/128 png (placeholder — designer can replace)
-packages/tsconfig, packages/ui-kit   # shared TS config; theme.css + useTheme
-docs/                     # HANDOFF.md (this), MORNING-REVIEW.md, build-log.md, threat-model.md, pro-monetization.md
-docs/business/            # business-recommendations (pricing/positioning/copy)
-docs/store/               # paste-ready: privacy-policy, listing, permission-justifications, data-use-answers, trader-verification-checklist, submission-guide, screenshots/
-docs/design/specs/   # design spec ; docs/design/plans/ = the 7 milestone plans
-.github/workflows/ci.yml  # tsc + vitest + build + Playwright E2E (both builds under xvfb)
+apps/cookie-manager/
+  entrypoints/  background.ts · sidepanel/ (App.tsx) · devtools/ · devtools-panel/
+  lib/          cookies/ io/ pay/ (billing, engagement, entitlement, sync, config) profiles/
+                rules/ security/ audit.ts permissions.ts review.ts site.ts origin.ts ...
+  stores/       cookies-store · entitlement-store (upgradeError/restore) · rules-store · profiles-store
+  components/   CookieRow/List/Editor · IoBar · SearchBar · GrantAccess · BlockRules · CleanupRules
+                UpgradeButton (+Restore) · ManageBilling · ThemeToggle · pro/ProfilesPanel (lazy)
+  e2e/          fixtures · smoke · granted · crud (real-site CRUD) · pro (purchase + profiles)
+  scripts/      gen-icons.mjs · gen-screenshots.mjs (tab-binding, real cookies) · gen-promo.mjs
+                · check-bundle-split.mjs (CI guard)
+  public/       icon/{16,32,48,128}.png · LICENSE.txt · THIRD-PARTY-NOTICES.txt   (ship in the zip)
+packages/       ui-kit (theme.css, useTheme — storage.local) · tsconfig
+site/           index.html · privacy.html · styles.css · icon-128.png  → published via gh-pages branch
+docs/           HANDOFF (this) · build-log · threat-model · pro-monetization · licensing-notes
+                · pre-launch-qa.md (manual QA) · MORNING-REVIEW (historical)
+docs/store/     listing · permission-justifications · data-use-answers · privacy-policy
+                · submission-guide (field-by-field, current) · trader-verification-checklist
+                · screenshots/ (5 × 1280x800) · promo/ (440x280 + 1400x560)
+docs/design/    specs/ (incl. brand) · plans/ (11 milestone plans)
+docs/business/  strategy docs (internal; public in repo — see §5.7)
+.github/workflows/ci.yml   (tsc+tests+build+guard+artifact; e2e both variants; on: main)
 ```
 
-## 9. Commands
+## 8. Commands
+
 ```bash
-pnpm install
-pnpm -r test                                              # 60 unit tests
-pnpm --filter @bokal/cookie-manager exec tsc --noEmit     # type-check
-pnpm --filter @bokal/cookie-manager build                 # -> .output/chrome-mv3
-pnpm --filter @bokal/cookie-manager zip                   # -> .output/*.zip (CWS/Edge upload)
-pnpm --filter @bokal/cookie-manager exec playwright test  # E2E smoke (normal build)
-pnpm --filter @bokal/cookie-manager build:e2e && BOKAL_E2E=1 pnpm --filter @bokal/cookie-manager exec playwright test  # granted-UI E2E
-pnpm --filter @bokal/cookie-manager exec node scripts/gen-icons.mjs        # regen icons
-pnpm --filter @bokal/cookie-manager exec node scripts/gen-screenshots.mjs  # regen screenshots (run against build:e2e)
+pnpm -r test                                               # unit (124)
+pnpm --filter @bokal/cookie-manager exec tsc --noEmit
+pnpm --filter @bokal/cookie-manager build                  # normal build (publishable)
+pnpm --filter @bokal/cookie-manager check:bundle           # free/Pro split guard
+pnpm --filter @bokal/cookie-manager zip                    # -> .output/bokalcookie-manager-*.zip
+pnpm --filter @bokal/cookie-manager e2e                    # E2E vs normal build (some specs skip)
+pnpm --filter @bokal/cookie-manager build:e2e && BOKAL_E2E=1 pnpm --filter @bokal/cookie-manager e2e
+pnpm --filter @bokal/cookie-manager exec node scripts/gen-icons.mjs        # icons
+pnpm --filter @bokal/cookie-manager exec node scripts/gen-screenshots.mjs  # store screenshots (needs build:e2e)
+pnpm --filter @bokal/cookie-manager exec node scripts/gen-promo.mjs        # promo tiles
 ```
 
-## 10. Market verdict (for context on priorities)
-Engineering is ship-ready and now at feature parity with the free incumbent (Cookie-Editor) plus a trust + one-time-pricing edge over SessionBox (subscription). The remaining blocker to revenue is **distribution/launch motion + wiring payments**, not features — see `docs/MORNING-REVIEW.md` and `project_bokal.md` memory.
+## 9. Hard-won gotchas (do not relearn these)
+
+- CWS listing title/summary come from the **manifest**, not dashboard fields.
+- CWS images must be **24-bit PNG, NO alpha** (RGBA screenshots get rejected; generators already
+  emit opaque RGB).
+- Stripe "**Sandbox**" ≠ "**Test mode**": ExtPay test payments appear in the MAIN account with the
+  Test-mode toggle ON — never inside a Sandbox.
+- ExtPay: `fetch_user()` short-circuits to `{paid:false}` (NO network) when no
+  `extensionpay_api_key` in storage.sync — seeding entitlement cache alone gets overwritten.
+  Constructing `ExtPay()` writes an install marker to storage.sync — never construct it for free
+  users. `startBackground()` is only a content-script relay — deliberately not called.
+- The side panel binds to a tab via `tabs.query({active,lastFocusedWindow})` + re-reads on
+  `tabs.onActivated` — that's how E2E/screenshots drive a REAL site (open panel page, then
+  `site.bringToFront()`).
+- Playwright label selectors: the editor's checkbox labels have a leading space (`" Secure"`) — use
+  `getByRole('checkbox',{name:'Secure'})`.
+- Quoted font names inside an HTML `style="..."` attribute terminate the attribute (gen-promo).
+- Vitest here has no RTL auto-cleanup (`globals` off) — component tests call `cleanup()` in
+  `beforeEach`, and `stores/**` is explicitly in the vitest `include`.
+```
