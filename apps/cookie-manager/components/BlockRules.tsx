@@ -14,10 +14,10 @@ export function BlockRules() {
 
   return (
     <details style={{ marginTop: 8, fontSize: 12 }}>
-      <summary style={{ cursor: 'pointer', color: 'var(--wafer-muted)' }}>Blocked domains ({blocked.length})</summary>
+      <summary style={{ cursor: 'pointer', color: 'var(--bokal-muted)' }}>Blocked domains ({blocked.length})</summary>
       <div style={{ padding: '6px 2px' }}>
-        <p style={{ margin: '0 0 6px', color: 'var(--wafer-muted)' }}>
-          Wafer deletes cookies from these domains as soon as a site sets them. This is reactive
+        <p style={{ margin: '0 0 6px', color: 'var(--bokal-muted)' }}>
+          Bokal deletes cookies from these domains as soon as a site sets them. This is reactive
           cleanup (set-then-removed), not network-level blocking.
         </p>
         <div style={{ display: 'flex', gap: 6, marginBottom: 6 }}>
@@ -32,7 +32,7 @@ export function BlockRules() {
           <button type="button" onClick={add}>Block</button>
         </div>
         {blocked.length === 0 ? (
-          <div style={{ color: 'var(--wafer-muted)' }}>No blocked domains.</div>
+          <div style={{ color: 'var(--bokal-muted)' }}>No blocked domains.</div>
         ) : (
           <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
             {blocked.map((d) => (

@@ -24,7 +24,7 @@ function fail(msg) {
 }
 
 if (!existsSync(chunksDir)) {
-  fail(`no build output at ${chunksDir}\n  Run: pnpm --filter @wafer/cookie-manager build`);
+  fail(`no build output at ${chunksDir}\n  Run: pnpm --filter @bokal/cookie-manager build`);
 }
 
 const files = readdirSync(chunksDir);

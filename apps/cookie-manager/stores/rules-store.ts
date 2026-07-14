@@ -16,7 +16,7 @@ interface RulesState {
   setAutoSweep: (on: boolean) => Promise<void>;
 }
 
-const RULES_KEY = 'wafer:rules';
+const RULES_KEY = 'bokal:rules';
 const EMPTY: Rules = { protectedIds: [], pinnedIds: [], blockedDomains: [], keepDomains: [], autoSweep: false };
 
 export const rulesStore = createStore<RulesState>((set, get) => ({

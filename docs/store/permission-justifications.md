@@ -1,4 +1,4 @@
-# Wafer — Permission Justifications
+# Bokal — Permission Justifications
 
 > Source: `docs/business/2026-07-13-business-recommendations.md` §6f, cross-checked against the
 > actual shipped manifest (`apps/cookie-manager/.output/chrome-mv3/manifest.json`):
@@ -10,8 +10,8 @@
 >
 > Note: the manifest has **no `tabs` permission** — that is a deliberate, load-bearing part of
 > the trust positioning (see business doc §1). `activeTab` (added in M11) is NOT `tabs`: it only
-> exposes the current tab's URL after the user opens Wafer, so Wafer can request access to just
-> that one site; it shows no install warning. `alarms` and `activeTab` are used by Wafer but were
+> exposes the current tab's URL after the user opens Bokal, so Bokal can request access to just
+> that one site; it shows no install warning. `alarms` and `activeTab` are used by Bokal but were
 > not in business doc §6f; their justifications below were added to keep the CWS submission
 > accurate. Paste each line verbatim into the corresponding per-permission justification field
 > in the Chrome Web Store / Edge Partner Center dashboards.
@@ -34,11 +34,11 @@
   entitlement status so the paywall stays accurate without polling on every action, and (2) — only
   when the user explicitly enables auto-sweep — the daily cookie-cleanup sweep that clears cookies
   outside their keep-list. No data leaves the device; both alarms only trigger local work.
-- **`activeTab`** — Lets Wafer read the current tab's address (only after you open Wafer from the
+- **`activeTab`** — Lets Bokal read the current tab's address (only after you open Bokal from the
   toolbar) so it can ask for access to just that one site. This is not the `tabs` permission and
   shows no install warning; it does not grant cookie access on its own.
 - **Host permissions (`optional_host_permissions: ["<all_urls>"]`)** — The `chrome.cookies` API
-  requires host access to read and write cookies for a domain. Wafer requests access **for the
+  requires host access to read and write cookies for a domain. Bokal requests access **for the
   specific site you're on** at runtime (never `<all_urls>` up front, nothing at install). It
   requests all-sites access only when you explicitly open the all-cookies view, export all sites,
   or run cleanup — features that inherently span every site. `<all_urls>` is declared as

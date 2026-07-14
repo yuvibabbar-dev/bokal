@@ -1,4 +1,4 @@
-# Wafer — Milestone 6: Store Prep — Plan
+# Bokal — Milestone 6: Store Prep — Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Steps use checkbox (`- [ ]`).
 
@@ -53,10 +53,10 @@ docs/store/
   - Immediately before the `if (!granted) return <GrantAccess .../>;` line, add:
 ```tsx
   if (!ready) {
-    return <main style={{ font: '13px system-ui', padding: 12, color: 'var(--wafer-muted)' }}>Loading…</main>;
+    return <main style={{ font: '13px system-ui', padding: 12, color: 'var(--bokal-muted)' }}>Loading…</main>;
   }
 ```
-- [ ] **Step 3: Verify** `tsc --noEmit` exit 0; `test` green (54); `build` ok. E2E still passes (auto-retrying assertions wait through the `ready` gate): `pnpm --filter @wafer/cookie-manager exec playwright test` → 2 passed / 1 skipped. **Commit** `git add apps/cookie-manager/stores/cookies-store.ts apps/cookie-manager/entrypoints/sidepanel/App.tsx && git commit -m "fix: gate initial panel render on ready flag (no grant-gate flash)"`
+- [ ] **Step 3: Verify** `tsc --noEmit` exit 0; `test` green (54); `build` ok. E2E still passes (auto-retrying assertions wait through the `ready` gate): `pnpm --filter @bokal/cookie-manager exec playwright test` → 2 passed / 1 skipped. **Commit** `git add apps/cookie-manager/stores/cookies-store.ts apps/cookie-manager/entrypoints/sidepanel/App.tsx && git commit -m "fix: gate initial panel render on ready flag (no grant-gate flash)"`
 
 ---
 
@@ -66,7 +66,7 @@ docs/store/
 
 - [ ] **Step 1:** Read `docs/business/2026-07-13-business-recommendations.md` (§4 listing, §6 privacy). Extract and finalize each artifact as a STANDALONE, paste-ready file:
   - `privacy-policy.md` — the full policy text from business §6a (hostable at a URL; include the Limited Use statement and a "Last updated: 2026-07-13" line).
-  - `listing.md` — the exact TITLE (`Wafer - Cookie Editor & Manager (Open Source, No Tracking)`), the 132-char SUMMARY, the full DESCRIPTION, and the feature bullets from business §4.
+  - `listing.md` — the exact TITLE (`Bokal - Cookie Editor & Manager (Open Source, No Tracking)`), the 132-char SUMMARY, the full DESCRIPTION, and the feature bullets from business §4.
   - `permission-justifications.md` — one line per permission (cookies, storage, sidePanel, unlimitedStorage, alarms) + the optional host permission, each explaining why it's needed (paste into the CWS per-permission fields).
   - `data-use-answers.md` — the CWS data-use form answers from business §6b–§6e (the two categories, the three certifications, collected/transmitted = no, single-purpose statement).
   - `trader-verification-checklist.md` — the EU-DSA trader steps (legal name, business address, SMS phone; DUNS optional) from business §7, with the note that these are publicly displayed → use a business/registered-agent address.
@@ -90,7 +90,7 @@ import { dirname, join } from 'node:path';
 const outDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'icon');
 mkdirSync(outDir, { recursive: true });
 
-// A "wafer": a rounded square with a subtle grid (silicon-wafer + cookie motif) on the brand accent.
+// The icon: a rounded square with a subtle grid (cookie motif) on the brand accent.
 const svg = (s) => `
 <svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 128 128">
   <rect width="128" height="128" rx="28" fill="#2563eb"/>
@@ -113,7 +113,7 @@ for (const s of sizes) {
 await browser.close();
 console.log('icons written to', outDir);
 ```
-- [ ] **Step 2: run it** — `pnpm --filter @wafer/cookie-manager exec node scripts/gen-icons.mjs`. Confirm `public/icon/{16,32,48,128}.png` exist (non-zero size).
+- [ ] **Step 2: run it** — `pnpm --filter @bokal/cookie-manager exec node scripts/gen-icons.mjs`. Confirm `public/icon/{16,32,48,128}.png` exist (non-zero size).
 - [ ] **Step 3: wire manifest.icons** — in `apps/cookie-manager/wxt.config.ts`, add to `manifest` (WXT serves `public/` at the root):
 ```ts
     icons: { '16': 'icon/16.png', '32': 'icon/32.png', '48': 'icon/48.png', '128': 'icon/128.png' },
@@ -174,7 +174,7 @@ await shot('03-pro-profiles', async (p) => {
 await context.close();
 console.log('screenshots written to', outDir);
 ```
-- [ ] **Step 2: run against the e2e build** (management UI + Pro render): `pnpm --filter @wafer/cookie-manager build:e2e && pnpm --filter @wafer/cookie-manager exec node scripts/gen-screenshots.mjs`. Confirm `docs/store/screenshots/*.png` exist (non-zero). Then restore the normal build: `pnpm --filter @wafer/cookie-manager build`.
+- [ ] **Step 2: run against the e2e build** (management UI + Pro render): `pnpm --filter @bokal/cookie-manager build:e2e && pnpm --filter @bokal/cookie-manager exec node scripts/gen-screenshots.mjs`. Confirm `docs/store/screenshots/*.png` exist (non-zero). Then restore the normal build: `pnpm --filter @bokal/cookie-manager build`.
 - [ ] **Step 3:** In `docs/store/listing.md`, add a "Screenshots" section listing each generated file with its caption (from business §5), and note that a hero "populated cookie list on a real site" screenshot should be captured manually (the standalone-panel harness can't bind an active tab).
 - [ ] **Step 4: Commit** `git add apps/cookie-manager/scripts/gen-screenshots.mjs docs/store/screenshots docs/store/listing.md && git commit -m "feat: generate real store screenshots from the running extension"`
 
@@ -184,7 +184,7 @@ console.log('screenshots written to', outDir);
 
 **Files:** Modify `docs/store/submission-guide.md` (add packaging), verify the zip.
 
-- [ ] **Step 1: build + zip** — run `pnpm --filter @wafer/cookie-manager build && pnpm --filter @wafer/cookie-manager zip`. Confirm a `.output/*.zip` (Chrome MV3) is produced. Inspect the zipped `manifest.json` to CONFIRM it has NO `host_permissions` and the correct `permissions`/`icons`.
+- [ ] **Step 1: build + zip** — run `pnpm --filter @bokal/cookie-manager build && pnpm --filter @bokal/cookie-manager zip`. Confirm a `.output/*.zip` (Chrome MV3) is produced. Inspect the zipped `manifest.json` to CONFIRM it has NO `host_permissions` and the correct `permissions`/`icons`.
 - [ ] **Step 2:** Append to `docs/store/submission-guide.md` the exact packaging commands (`pnpm build`, `pnpm zip`) and where the artifact lands (`.output/*.zip`), plus the Edge note (same zip via Partner Center) and the Firefox-later note.
 - [ ] **Step 3: final verification** — run `tsc --noEmit` (0), `pnpm -r test` (all pass), and the E2E smoke (`playwright test` → green). Confirm the published `.output/chrome-mv3/manifest.json` permissions/icons/CSP.
 - [ ] **Step 4: Commit** `git add docs/store/submission-guide.md && git commit -m "docs: packaging + store-readiness checklist"`

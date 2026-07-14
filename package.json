@@ -1,12 +1,12 @@
 {
-  "name": "wafer-monorepo",
+  "name": "bokal-monorepo",
   "private": true,
   "license": "GPL-3.0-or-later",
   "packageManager": "pnpm@9.9.0",
   "engines": { "node": ">=24" },
   "scripts": {
-    "dev": "pnpm --filter @wafer/cookie-manager dev",
-    "build": "pnpm --filter @wafer/cookie-manager build",
+    "dev": "pnpm --filter @bokal/cookie-manager dev",
+    "build": "pnpm --filter @bokal/cookie-manager build",
     "test": "pnpm -r test"
   }
 }

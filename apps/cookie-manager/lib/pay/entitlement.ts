@@ -4,7 +4,7 @@ export interface EntitlementCache {
   checkedAt: number;
 }
 
-export const CACHE_KEY = 'wafer:entitlement';
+export const CACHE_KEY = 'bokal:entitlement';
 
 // Fail OPEN for paying users within the offline grace window; fail CLOSED for never-paid.
 export function isEntitled(cache: EntitlementCache | null, now: number, graceMs: number): boolean {

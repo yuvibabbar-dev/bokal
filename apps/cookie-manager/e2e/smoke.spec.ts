@@ -15,9 +15,9 @@ test('side panel mounts cleanly with no console errors', async ({ context, exten
   expect(errors).toEqual([]);
 });
 
-// Normal build only (no WAFER_E2E). Self-skips deterministically on the e2e build.
+// Normal build only (no BOKAL_E2E). Self-skips deterministically on the e2e build.
 test('without host access, the panel shows the grant gate', async ({ context, extensionId }) => {
-  test.skip(!!process.env.WAFER_E2E, 'normal (non-e2e) build only');
+  test.skip(!!process.env.BOKAL_E2E, 'normal (non-e2e) build only');
   const page = await context.newPage();
   await page.goto(`chrome-extension://${extensionId}/sidepanel.html`);
   await expect(page.getByRole('button', { name: /allow/i })).toBeVisible();

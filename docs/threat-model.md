@@ -1,28 +1,28 @@
-# Wafer — Threat Model
+# Bokal — Threat Model
 
-Wafer is a Chrome (MV3) cookie manager. Its whole pitch is trust: it does the same job as
+Bokal is a Chrome (MV3) cookie manager. Its whole pitch is trust: it does the same job as
 copycat extensions (some of which have shipped malicious updates that exfiltrate cookies) while
 being minimal-permission, auditable, and honest about what it does and doesn't protect. This
-document describes what Wafer protects, how, and — just as importantly — what it doesn't.
+document describes what Bokal protects, how, and — just as importantly — what it doesn't.
 
 Every control below is cited by file path. If a claim here isn't backed by code and a test, it
 doesn't belong in this document.
 
 ## 1. Assets
 
-What an attacker (or a curious user) would want out of Wafer, roughly in order of sensitivity:
+What an attacker (or a curious user) would want out of Bokal, roughly in order of sensitivity:
 
 1. **Cookie values in transit through the UI.** A cookie value can be a session token, an auth
-   bearer, or other secret material for whatever site set it. Wafer displays and edits these
+   bearer, or other secret material for whatever site set it. Bokal displays and edits these
    values, so the UI is a place where that material passes through untrusted-input handling.
 2. **Saved Pro profiles.** A profile is a named, persisted snapshot of a cookie set
    (`apps/cookie-manager/lib/profiles/types.ts`) — effectively a bundle of credential material at
    rest, stored in IndexedDB (`apps/cookie-manager/lib/profiles/db.ts`).
 3. **The user's encryption passphrase**, when they opt to encrypt a profile
-   (`apps/cookie-manager/lib/profiles/crypto.ts`). Wafer never stores it — only key material
+   (`apps/cookie-manager/lib/profiles/crypto.ts`). Bokal never stores it — only key material
    derived from it, for the duration of a single encrypt/decrypt call.
-4. **Entitlement state** (`wafer:mockPaid` / future ExtPay user record) — low sensitivity to the
-   user, but relevant to Wafer's business model integrity.
+4. **Entitlement state** (`bokal:mockPaid` / future ExtPay user record) — low sensitivity to the
+   user, but relevant to Bokal's business model integrity.
 5. **The extension package itself** — its manifest, its dependency tree, and the update channel
    Chrome Web Store uses to push new code to every installed user.
 
@@ -31,7 +31,7 @@ What an attacker (or a curious user) would want out of Wafer, roughly in order o
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │  Web page (any origin)                                               │
-│  — no content script, no DOM access, no message channel from Wafer   │
+│  — no content script, no DOM access, no message channel from Bokal   │
 └─────────────────────────────────────────────────────────────────────┘
                  │  (no boundary crossing at all — see 2.1)
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -54,7 +54,7 @@ What an attacker (or a curious user) would want out of Wafer, roughly in order o
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-**2.1 Extension vs. page.** Wafer has no `content_scripts` entry and no `tabs` permission
+**2.1 Extension vs. page.** Bokal has no `content_scripts` entry and no `tabs` permission
 (`apps/cookie-manager/wxt.config.ts`). It never runs code in, or reads the DOM/JS globals of, any
 web page. All cookie access goes through the `chrome.cookies` API from the service worker / side
 panel, not through page injection. This removes an entire class of "malicious page attacks the
@@ -65,13 +65,13 @@ by accident, since WXT wires content scripts explicitly per entry point and none
 
 **2.2 Extension vs. the browser's cookie jar.** `cookies` is an install-time permission, but
 reading/writing cookies for a specific site additionally requires host permission for that site.
-Wafer ships `optional_host_permissions: ['<all_urls>']` (not `host_permissions`), so the published
+Bokal ships `optional_host_permissions: ['<all_urls>']` (not `host_permissions`), so the published
 build installs with **zero** host access. Host access is granted at runtime via
 `chrome.permissions.request` (`apps/cookie-manager/lib/permissions.ts`), which Chrome requires to
-be called synchronously inside a user gesture — Wafer can't silently self-grant this. This is the
+be called synchronously inside a user gesture — Bokal can't silently self-grant this. This is the
 primary consent boundary in the product.
 
-**Per-site by default (M11).** For the normal single-site view, Wafer requests host access **only
+**Per-site by default (M11).** For the normal single-site view, Bokal requests host access **only
 for the active origin's registrable domain** (`requestSiteAccess` → `chrome.permissions.request`
 with per-site match patterns), not `<all_urls>`. It reads the active tab's URL via the `activeTab`
 permission (granted when the panel is opened from the toolbar) to know which origin to request —
@@ -91,31 +91,31 @@ the current URL's cookies (which live on the host or a parent domain). Nothing i
 the device regardless of scope.
 
 **Residual (needs real-browser QA before ship):** the per-site grant surfaces the active site's
-URL via `activeTab`, which Chrome grants for the tab Wafer is invoked on (opening the panel from
+URL via `activeTab`, which Chrome grants for the tab Bokal is invoked on (opening the panel from
 the toolbar). On tab-switch to a not-yet-granted site, `activeTab` is not re-granted, so the panel
-falls back to the "allow all sites" path until the user re-invokes Wafer on that tab. This flow is
+falls back to the "allow all sites" path until the user re-invokes Bokal on that tab. This flow is
 covered by unit tests for the permission logic but the actual permission prompt / activeTab timing
 is not exercised by the standalone-panel E2E harness.
 
 **2.2b Automatic cleanup + block rules.** Block rules (reactive, in the service worker) and the
-optional daily cleanup sweep (`wafer:cleanup` alarm) both *delete* cookies; they never transmit
+optional daily cleanup sweep (`bokal:cleanup` alarm) both *delete* cookies; they never transmit
 anything. Both honor the protect list (a protected cookie is never removed, even by a sweep or a
 block match — enforced at the data layer, not the UI). Cleanup is on-demand or once-daily while the
-browser runs; Wafer has no `tabs` permission, so it cannot act on tab close. Rules live in
+browser runs; Bokal has no `tabs` permission, so it cannot act on tab close. Rules live in
 `chrome.storage.local`.
 
 **2.3 Extension vs. local storage.** `chrome.storage.local` (small state — the mock entitlement
-flag) and IndexedDB (`lib/profiles/db.ts`, database `wafer`, object store `profiles`) are both
+flag) and IndexedDB (`lib/profiles/db.ts`, database `bokal`, object store `profiles`) are both
 extension-origin storage: isolated from web pages and other extensions by the browser, but not
-encrypted by the browser itself. Anything Wafer writes there is as protected as the OS user
-account and disk — no more, no less — unless Wafer adds its own encryption layer (§4.3).
+encrypted by the browser itself. Anything Bokal writes there is as protected as the OS user
+account and disk — no more, no less — unless Bokal adds its own encryption layer (§4.3).
 
 **2.3b Billing network path (ExtPay, M12).** Pro entitlement is checked via ExtPay
 (`extensionpay.com`), the one network path in the product. It is **Pro-gated**: `getUser()` fires
 only after the user opens the upgrade page or holds a paid cache (`shouldContactBilling`), and
 `startBackground()` only registers a listener (no fetch on init) — so free users make zero network
 calls. Only license status is exchanged; no cookie or browsing data is sent. ExtPay's library is
-**bundled** (no remote code), and it needs only the `storage` permission — Wafer adds no
+**bundled** (no remote code), and it needs only the `storage` permission — Bokal adds no
 `host_permissions` and no content script (the `onPaid` content-script path is deliberately not
 used; entitlement is re-checked on panel `visibilitychange` instead). The privacy policy carves
 this out explicitly.
@@ -125,7 +125,7 @@ this out explicitly.
 `host_permissions` in the published manifest and no code that fetches or `eval`s remote script (the
 ExtPay library is bundled; its entitlement fetch to extensionpay.com is data, not remote code —
 see §2.3b).
-Wafer cannot load remotely-hosted JS even if it wanted to.
+Bokal cannot load remotely-hosted JS even if it wanted to.
 
 **2.5 Extension vs. future ExtPay.** Billing is currently mock-only
 (`apps/cookie-manager/lib/pay/billing.ts`) — no network call to `extensionpay.com` happens in this
@@ -140,7 +140,7 @@ out) is the constraint any future `ExtPayBilling` implementation has to preserve
 ### 3.1 XSS via a malicious cookie value
 
 **Threat:** a site sets a cookie whose name/value contains HTML or a script payload
-(`<img src=x onerror=...>`), hoping Wafer's UI will render it as markup and execute attacker
+(`<img src=x onerror=...>`), hoping Bokal's UI will render it as markup and execute attacker
 script inside the extension's privileged page context.
 
 **Mitigation:** `apps/cookie-manager/components/CookieRow.tsx` renders `cookie.value` as a plain
@@ -167,7 +167,7 @@ worker logs, crash reports, or a screenshot the user shares for support.
 
 **Mitigation / enforced by:** `apps/cookie-manager/lib/security/redaction.test.ts` is a static
 audit, not a manual review: it walks every shipped `.ts`/`.tsx` file across the app **and the
-`@wafer/ui-kit` package** (excluding tests, `.output`, `node_modules`, `.wxt`, `e2e`, `dist`) and,
+`@bokal/ui-kit` package** (excluding tests, `.output`, `node_modules`, `.wxt`, `e2e`, `dist`) and,
 after stripping string-literal contents (so a word inside a log *message* doesn't trip it), fails
 if any `console.log/error/warn/info/debug/dir/table/trace(...)` call on a line references an
 identifier named `value(s)`, `passphrase`, `pass`, `plaintext`, `blob`, `cookie(s)`, `draft`,
@@ -180,7 +180,7 @@ or a value aliased into an unrelated variable name, can evade it — code review
 
 **Threat:** this is the actual attack the EditThisCookie copycat is understood to have used — a
 widely-installed extension ships an update (or a compromised transitive dependency) that quietly
-sends cookies to a remote server. Wafer's whole trust pitch is that this class of attack is
+sends cookies to a remote server. Bokal's whole trust pitch is that this class of attack is
 structurally harder here.
 
 **Mitigations:**
@@ -231,10 +231,10 @@ plaintext `cookies` field is absent.
 
 ### 3.5 Passphrase loss
 
-**Threat:** the user forgets their profile passphrase and expects Wafer (or its developer) to
+**Threat:** the user forgets their profile passphrase and expects Bokal (or its developer) to
 recover it.
 
-**Mitigation:** documented zero-knowledge design — Wafer never stores the passphrase or a
+**Mitigation:** documented zero-knowledge design — Bokal never stores the passphrase or a
 recoverable derivative of it anywhere (not in `chrome.storage`, not in IndexedDB, not sent
 anywhere). `deriveKey()` in `crypto.ts` only ever holds the passphrase in memory for the duration
 of a single `encryptJson`/`decryptJson` call. This is the correct trade-off for a local secrets
@@ -245,10 +245,10 @@ user choice, not a support surprise.
 
 Stating these explicitly so the trust claim above isn't overstated:
 
-- **Wafer is not a malware/phishing scanner.** It does not analyze the sites whose cookies it
+- **Bokal is not a malware/phishing scanner.** It does not analyze the sites whose cookies it
   shows, does not warn about known-malicious domains, and does not validate cookie *content* for
   anything beyond the schema coercion in `lib/io/import.ts`. A cookie value being rendered safely
-  (§3.1) is not the same as Wafer vouching for the site that set it.
+  (§3.1) is not the same as Bokal vouching for the site that set it.
 - **No cloud sync in the MVP.** Profiles live only in local IndexedDB
   (`apps/cookie-manager/lib/profiles/db.ts`). There is no cross-device sync, no backend, and
   therefore no server-side breach surface for profile data — but also no cross-device recovery if
@@ -268,7 +268,7 @@ Honest, current gaps — not hidden in the mitigations above:
 
 **5.1 Mock billing lets anyone unlock Pro for free.** `MockBilling.openUpgrade()`
 (`apps/cookie-manager/lib/pay/billing.ts`) sets a local `chrome.storage.local` flag
-(`wafer:mockPaid`) with no payment or server-side check. Until real ExtPay billing is wired
+(`bokal:mockPaid`) with no payment or server-side check. Until real ExtPay billing is wired
 (tracked in `docs/pro-monetization.md`), any user (or anyone who reads the source, which is most
 of them) can grant themselves Pro entitlement locally at zero cost. This is a **business-model
 risk, not a data-security risk** — it doesn't expose any other user's data or weaken §3's
@@ -280,7 +280,7 @@ branch, and must be closed before Pro is sold for real.
 **5.2 Unencrypted profiles store cookie values in plaintext at rest, by user choice.** Encryption
 (§3.4) is opt-in. A user who saves a profile without a passphrase gets a `Profile` with
 `encrypted: false` and a populated `cookies: CookieAttrs[]` array — full plaintext values sitting
-in IndexedDB, protected only by OS/browser-profile isolation, not by Wafer. This is a deliberate
+in IndexedDB, protected only by OS/browser-profile isolation, not by Bokal. This is a deliberate
 UX trade-off (not every saved profile is sensitive enough to warrant a passphrase prompt every
 time), but it means the default path for a rushed user is plaintext-at-rest, and that should be
 stated rather than implied away by the existence of the encryption feature.
@@ -294,7 +294,7 @@ needs the Public Suffix List, or `chrome.cookies.getPartitionKey()` (Chrome 130+
 requires a real browser to validate against actual partition behavior — deferred to the M5
 Playwright E2E suite (`apps/cookie-manager/e2e/`) rather than solved with more string-matching
 logic that could itself be a false source of confidence. This is a correctness/UX gap in the CHIPS
-badge, not a data-exposure risk: it can only cause Wafer to *fail to label* a partitioned cookie
+badge, not a data-exposure risk: it can only cause Bokal to *fail to label* a partitioned cookie
 as such, not to leak or misattribute cookie values.
 
 ## 6. Verification

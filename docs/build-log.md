@@ -1,11 +1,11 @@
-# Wafer — Build Log (committed copy of the .superpowers/sdd/progress.md scratch ledger)
+# Bokal — Build Log (committed copy of the .superpowers/sdd/progress.md scratch ledger)
 
 > Per-task + per-review history for milestones M1–M7. The live ledger is git-ignored; this is the durable snapshot. Authoritative record = git history + docs/HANDOFF.md.
 
 ```
-# Wafer M1 — Subagent-Driven Execution Ledger
+# Bokal M1 — Subagent-Driven Execution Ledger
 
-Plan: docs/superpowers/plans/2026-07-13-wafer-m1-foundation-and-cookie-listing.md
+Plan: docs/superpowers/plans/2026-07-13-bokal-m1-foundation-and-cookie-listing.md
 Branch: feat/m1-foundation
 BASE (pre-Task-1): d54687c7b17c2a5a69c2126915e538e1bae3c8e4
 
@@ -34,7 +34,7 @@ Task 12: complete (commits 993493c..2138c11, review clean)
 ## M2 carry-forward (deferred items from M1 review — fold into the M2 plan)
 - chrome.storage.onChanged sync: not implemented in M1 (panel is sole writer; functionally fine). Needed once M2/M4 add a second writer (SW/entitlement/profiles). Do NOT assume it exists.
 - refresh() has no in-flight guard: overlapping calls race (last-write-wins). Add request-token/abort when writes land in M2.
-- session cache key `wafer:lastCookies` is global, not per-window: two windows on different domains can flash each other's snapshot on remount. Key by windowId/tabId in M2.
+- session cache key `bokal:lastCookies` is global, not per-window: two windows on different domains can flash each other's snapshot on remount. Key by windowId/tabId in M2.
 - CookieList height uses magic `calc(100vh - 90px)`: prefer a flex layout when the panel chrome changes.
 - types/chrome.d.ts shim: consider bumping @types/chrome past 0.0.287 to drop it (optional).
 
@@ -61,9 +61,9 @@ M3 BASE = 0694f45
 M3-T1: complete (commits 7ffd3d3..b74e1c4, review clean)
 M3-T2: complete (commits b74e1c4..380ad8c, review clean)
 M3-T3: complete (commits 380ad8c..f750e03, review clean)
-M3-T4: complete (commits f750e03..363b156, review clean; Minor roll-up: dead .wafer-dark-tokens class in theme.css; react as dep not peerDep in ui-kit)
+M3-T4: complete (commits f750e03..363b156, review clean; Minor roll-up: dead .bokal-dark-tokens class in theme.css; react as dep not peerDep in ui-kit)
 M3-T5: complete (commits 363b156..5b12e34, review clean)
-M3 final review (opus): Ready-with-fixes (no Critical). Applied: 1) siteFromUrl for CHIPS (partial; full eTLD+1/getPartitionKey deferred to M5), 2) ui-kit react->peerDependency, 3) surface import failure reasons, 4) prune dead .wafer-dark-tokens + --wafer-row-hover, 5) preserve hasCrossSiteAncestor on import, 6) hasCrossSiteAncestor in cookieId. tsc clean, 41/41, build ok.
+M3 final review (opus): Ready-with-fixes (no Critical). Applied: 1) siteFromUrl for CHIPS (partial; full eTLD+1/getPartitionKey deferred to M5), 2) ui-kit react->peerDependency, 3) surface import failure reasons, 4) prune dead .bokal-dark-tokens + --bokal-row-hover, 5) preserve hasCrossSiteAncestor on import, 6) hasCrossSiteAncestor in cookieId. tsc clean, 41/41, build ok.
 M5 carry-forward (from M3 review): correctly derive CHIPS topLevelSite (getPartitionKey feature-detect Chrome 130+ / PSL) and E2E-verify partition inspector shows partitioned cookies; add toJson->parseCookiesJson->toSetDetails partitioned round-trip integration test; confirm-before-bulk-overwrite on import; surface that imported cookies for non-active domains aren't shown; add storage.onChanged theme sync across panels; decide whether export should honor the active search filter.
 M3: COMPLETE — merging to master.
 Business decisions: researched + doc written docs/business/2026-07-13-business-recommendations.md (committed to master). Pricing $4.99/mo/$19yr/$39 lifetime; Pro=profiles+encryption.
@@ -120,12 +120,12 @@ M7: COMPLETE — merging to master. Pre-launch parity + all reviewed flaws fixed
 ========================================================================
 ## v1.1 ROADMAP BUILD (directive 2026-07-13): fix the CHIPS bug + build M8/M9/M10.
 Research: docs/business/2026-07-13-feature-roadmap-research.md (deep-research, 20 confirmed/5 refuted).
-Program spec: docs/superpowers/specs/2026-07-13-wafer-v1.1-roadmap-design.md.
+Program spec: docs/superpowers/specs/2026-07-13-bokal-v1.1-roadmap-design.md.
 Founder decisions: export-all = persistent runtime <all_urls> opt-in (install manifest unchanged);
 free/Pro = roadmap split; autonomous, report per milestone.
 ========================================================================
 
-## M8 (feat/m8-quickwins) — Quick wins. Plan: docs/superpowers/plans/2026-07-13-wafer-m8-quickwins.md
+## M8 (feat/m8-quickwins) — Quick wins. Plan: docs/superpowers/plans/2026-07-13-bokal-m8-quickwins.md
 M8-T1: complete — fix getAllCookies to include CHIPS partitioned cookies (getAll partitionKey:{} + 114-118 fallback); read.test.ts (commit 2ae1c03)
 M8-T2: complete — validateForImport splits valid/invalid; importCookies pre-validates (commit d664650)
 M8-T3: complete — detailed import error reporting in IoBar (commit 4d9300f)
@@ -138,7 +138,7 @@ M8 whole-branch review (general-purpose adversarial): CLEAN — no Critical/Impo
 M8 FINDING FOR FOUNDER (pre-submission): store copy (permission-justifications.md:36, listing.md:66) says host access "for the specific site you choose", but code requests <all_urls>. Decide: (a) build per-site permission model (spec §3 intent; restores claim + unblocks T6), or (b) correct copy to the runtime all-sites grant.
 M8: COMPLETE — merged to master (cb28a6a). 75 tests, tsc clean, build+zip, E2E both builds green, no host_permissions, Pro code still chunked.
 
-## M9 (feat/m9-parity) — Parity + differentiation. Plan: docs/superpowers/plans/2026-07-13-wafer-m9-parity.md
+## M9 (feat/m9-parity) — Parity + differentiation. Plan: docs/superpowers/plans/2026-07-13-bokal-m9-parity.md
 M9-T1: complete — lib/rules/rules.ts (protect/pin/block predicates + storage); 8 tests (commit a02ee49)
 M9-T2: complete — protect + pin UI (CookieRow lock/pin, CookieList sort, deleteAllForSite skips protected → {removed,failed,skipped}); rules-store (commit 411139c)
 M9-T3: complete — per-domain block rules (SW reactive auto-remove, loop-guarded; BlockRules UI with honest "reactive, not network-level" copy) (commit e318654)
@@ -148,9 +148,9 @@ M9-T6 (popup): DEFERRED + FLAGGED — a popup requires action.default_popup whic
 M9 whole-branch review (general-purpose adversarial): 1 Critical + 2 Important + 3 Minor, ALL FIXED (commit after review). C1: profile apply-as-replace wiped protected cookies (default-on, silent) → now skips protected. I2: SW block-remove ignored protection → protect now beats block. I3: single deleteCookie was UI-deep only → now guarded at the data layer. M1: block matching case-insensitive. M2: guard rules-store onChanged listener. M3: SW rules cache. Loop-safety, permissions, no-value-logging, Pro-isolation all verified clean by review.
 M9: COMPLETE — merged to master (2d2945c). 84 tests, tsc clean, build+zip, E2E both builds green, manifest adds devtools_page with no host_permissions, ProfilesPanel still chunked.
 
-## M10 (feat/m10-autodelete) — Auto-delete + audit (strategic bets). Plan: docs/superpowers/plans/2026-07-13-wafer-m10-autodelete.md
+## M10 (feat/m10-autodelete) — Auto-delete + audit (strategic bets). Plan: docs/superpowers/plans/2026-07-13-bokal-m10-autodelete.md
 M10-T1: complete — cleanup model: Rules gains keepDomains + autoSweep (migration-safe); matchesKeep + computeCleanup (removes non-kept, non-protected); shared suffixMatch; 11 rules tests (commit a9b4239)
-M10-T2: complete — cleanupNow + CleanupRules UI (keep-list, Clean now, auto-sweep toggle, honest "no tabs = no on-tab-close" copy) + SW daily wafer:cleanup alarm (commit fe9a6cb)
+M10-T2: complete — cleanupNow + CleanupRules UI (keep-list, Clean now, auto-sweep toggle, honest "no tabs = no on-tab-close" copy) + SW daily bokal:cleanup alarm (commit fe9a6cb)
 M10-T3: complete — lib/audit.ts auditCookie (missing SameSite, SameSite=None w/o partition, insecure, oversized); 6 tests (commit abe80ce)
 M10-T4: complete — per-row ⚠ audit badge (commit 6bbc09e)
 M10-T5: complete — listing + threat-model for cleanup/audit (commit 065d4e7)
@@ -160,7 +160,7 @@ M10: COMPLETE — merged to master (9e5e8da). 93 tests, tsc clean, build+zip, E2
 ## v1.1 ROADMAP COMPLETE (M8+M9+M10 merged): 93 tests, no host_permissions, all free features, Pro code still chunked.
 CARRIED FOUNDER DECISIONS (pre-submission): (1) store-copy per-site-vs-<all_urls> accuracy gap (permission-justifications.md:36, listing.md:66) — build per-site permission model OR correct copy; (2) popup surface direction (would take over the action click, regressing side-panel-first UX).
 
-## M11 (feat/m11-per-site-permissions) — Per-site permission model. Plan: docs/superpowers/plans/2026-07-13-wafer-m11-per-site-permissions.md
+## M11 (feat/m11-per-site-permissions) — Per-site permission model. Plan: docs/superpowers/plans/2026-07-13-bokal-m11-per-site-permissions.md
 DECISIONS (deep-research wf_4d83631c, 22 confirmed/3 refuted, primary Chrome docs + Cookie-Editor source): (1) HOST PERMS = build the real per-site model (HIGH conf) — per-origin host perm + cookies suffices; <all_urls> only for all-sites enumeration. (2) SURFACE = keep side-panel primary (MEDIUM conf) — action.default_popup would kill side-panel-on-click; evidence to switch thin (n=1). DONE both.
 M11-T1: per-site helpers (siteOriginPatterns, hasSiteAccess, requestSiteAccess); 11 tests (eb0e536)
 M11-T2: declare activeTab (read active URL for per-site grant; not tabs; no install warning) (ad09830)

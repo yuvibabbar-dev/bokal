@@ -1,4 +1,4 @@
-# Wafer M8 — Quick Wins Implementation Plan
+# Bokal M8 — Quick Wins Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -57,7 +57,7 @@ describe('getAllCookies', () => {
 });
 ```
 
-- [ ] **Step 2:** Run `pnpm --filter @wafer/cookie-manager exec vitest run lib/cookies/read.test.ts` → FAIL.
+- [ ] **Step 2:** Run `pnpm --filter @bokal/cookie-manager exec vitest run lib/cookies/read.test.ts` → FAIL.
 - [ ] **Step 3: Implement**
 
 ```ts
@@ -106,7 +106,7 @@ export async function getAllCookies(): Promise<CookieAttrs[]> {
 **Interfaces:** consumes `parseCookiesJson(text).errors` and `importCookies().errors`.
 
 - [ ] **Step 1:** Change `onImportFile` so that: if JSON parse yields zero cookies but `parseCookiesJson(text).errors` is non-empty, show `` `Import failed: ${parseErrors[0]}` ``. After import, if `res.failed > 0`, show `` `Imported ${res.imported}, failed ${res.failed}${note} — ${res.errors[0]}${res.errors.length > 1 ? ` (+${res.errors.length - 1} more)` : ''}` ``. Keep the success line for `failed===0`.
-- [ ] **Step 2:** `tsc --noEmit` clean; `pnpm --filter @wafer/cookie-manager build` succeeds.
+- [ ] **Step 2:** `tsc --noEmit` clean; `pnpm --filter @bokal/cookie-manager build` succeeds.
 - [ ] **Step 3: Commit** `feat(m8): surface parse + per-cookie failure reasons on import`
 
 ---
@@ -159,13 +159,13 @@ describe('automation formats', () => {
     expect(back?.[0].name).toBe('s');
   });
   it('returns null for non-automation data', () => {
-    expect(fromAutomationJson({ format: 'wafer-cookies', cookies: [] })).toBeNull();
+    expect(fromAutomationJson({ format: 'bokal-cookies', cookies: [] })).toBeNull();
   });
 });
 ```
 
 - [ ] **Step 2:** Run → FAIL.
-- [ ] **Step 3: Implement `automation.ts`** — `SAME_SITE_OUT: Record<SameSite,'Strict'|'Lax'|'None'|undefined>` (`strict→Strict, lax→Lax, no_restriction→None, unspecified→undefined`); reverse `SAME_SITE_IN`. `expires = c.expirationDate !== undefined ? Math.floor(c.expirationDate) : -1`. `fromAutomationJson`: if object with `cookies` array **and** `origins` present → storageState; if a top-level array whose items have `name`+`domain` → cookie array; map each via `automationToAttrs`. Return null otherwise (so the wafer-cookies object with no `origins`/non-array-top doesn't match). Reuse `CookieAttrs` defaults (`hostOnly: !domain.startsWith('.')` is wrong for leading-dot domains — set `hostOnly: false` for automation imports since these formats carry a Domain; leading-dot means non-host-only).
+- [ ] **Step 3: Implement `automation.ts`** — `SAME_SITE_OUT: Record<SameSite,'Strict'|'Lax'|'None'|undefined>` (`strict→Strict, lax→Lax, no_restriction→None, unspecified→undefined`); reverse `SAME_SITE_IN`. `expires = c.expirationDate !== undefined ? Math.floor(c.expirationDate) : -1`. `fromAutomationJson`: if object with `cookies` array **and** `origins` present → storageState; if a top-level array whose items have `name`+`domain` → cookie array; map each via `automationToAttrs`. Return null otherwise (so the bokal-cookies object with no `origins`/non-array-top doesn't match). Reuse `CookieAttrs` defaults (`hostOnly: !domain.startsWith('.')` is wrong for leading-dot domains — set `hostOnly: false` for automation imports since these formats carry a Domain; leading-dot means non-host-only).
 - [ ] **Step 4: Wire import sniffing** — in `parseCookiesJson`, before the "expected array/object" error, try `fromAutomationJson(data)`; if non-null, return `{ cookies, errors: [] }`.
 - [ ] **Step 5: Wire export UI** — in `IoBar`, add a `<select>`-style "Export for…" group or three buttons: "Playwright (storageState)", "Puppeteer", "Playwright addCookies" calling `downloadText('<slug>-storageState.json', toPlaywrightStorageState(cookies))` etc. Add a one-line note near the automation exports: "Cookies only — localStorage/tokens aren't included."
 - [ ] **Step 6:** Run tests → PASS; `pnpm -r test` green; `tsc` clean.
@@ -240,16 +240,16 @@ export async function registerSiteAccessRequest(tabId: number): Promise<void> {
 
 **Interfaces:**
 - Produces:
-  - `recordAction(): Promise<void>` — increments `wafer:actionCount` in `storage.local` (no-op once the prompt has been shown/dismissed).
+  - `recordAction(): Promise<void>` — increments `bokal:actionCount` in `storage.local` (no-op once the prompt has been shown/dismissed).
   - `shouldPromptReview(): Promise<boolean>` — true when `actionCount >= 3` and not yet shown.
-  - `dismissReviewPrompt(): Promise<void>` — sets `wafer:reviewPromptShown = true`.
+  - `dismissReviewPrompt(): Promise<void>` — sets `bokal:reviewPromptShown = true`.
   - `reviewUrl(): string` — `` `https://chromewebstore.google.com/detail/${chrome.runtime.id}/reviews` ``.
 
 - [ ] **Step 1: Failing tests** — with a fake `chrome.storage.local` (Map-backed): calling `recordAction()` three times then `shouldPromptReview()` → true; after `dismissReviewPrompt()`, `shouldPromptReview()` → false and further `recordAction()` leaves it false.
 - [ ] **Step 2:** Run → FAIL.
-- [ ] **Step 3: Implement `review.ts`** — keys `wafer:actionCount`, `wafer:reviewPromptShown`. `recordAction`: if shown flag set, return; else `count = (get)+1; set`. `shouldPromptReview`: `!shown && count >= 3`. Guard `chrome.runtime.id` for tests (fallback empty string).
+- [ ] **Step 3: Implement `review.ts`** — keys `bokal:actionCount`, `bokal:reviewPromptShown`. `recordAction`: if shown flag set, return; else `count = (get)+1; set`. `shouldPromptReview`: `!shown && count >= 3`. Guard `chrome.runtime.id` for tests (fallback empty string).
 - [ ] **Step 4: Wire store** — in `cookies-store`, after a successful `saveCookie`, `deleteCookie`, `deleteAllForSite` (removed>0), and `importCookies` (imported>0), call `void recordAction()`. Import from `../lib/review`.
-- [ ] **Step 5: Wire App** — add `const [showReview, setShowReview] = useState(false)`; in the mount effect, after refresh, `void shouldPromptReview().then(setShowReview)`; also re-check when `cookies` change (cheap). Render a dismissible banner above `IoBar` when `showReview`: text "Enjoying Wafer? A quick review helps." + a link (`<a href={reviewUrl()} target="_blank" rel="noreferrer">Leave a review</a>`) and a "Dismiss" button → `void dismissReviewPrompt(); setShowReview(false)`. The link click also dismisses.
+- [ ] **Step 5: Wire App** — add `const [showReview, setShowReview] = useState(false)`; in the mount effect, after refresh, `void shouldPromptReview().then(setShowReview)`; also re-check when `cookies` change (cheap). Render a dismissible banner above `IoBar` when `showReview`: text "Enjoying Bokal? A quick review helps." + a link (`<a href={reviewUrl()} target="_blank" rel="noreferrer">Leave a review</a>`) and a "Dismiss" button → `void dismissReviewPrompt(); setShowReview(false)`. The link click also dismisses.
 - [ ] **Step 6:** Run tests → PASS; `pnpm -r test` green; `tsc` clean; `build` ok.
 - [ ] **Step 7: Commit** `feat(m8): one-time post-task review prompt (non-incentivized)`
 
@@ -265,11 +265,11 @@ export async function registerSiteAccessRequest(tabId: number): Promise<void> {
 - [ ] **Step 2: Full gate** — run:
   ```bash
   pnpm -r test
-  pnpm --filter @wafer/cookie-manager exec tsc --noEmit
-  pnpm --filter @wafer/cookie-manager build
-  pnpm --filter @wafer/cookie-manager zip
-  pnpm --filter @wafer/cookie-manager exec playwright test
-  pnpm --filter @wafer/cookie-manager build:e2e && WAFER_E2E=1 pnpm --filter @wafer/cookie-manager exec playwright test
+  pnpm --filter @bokal/cookie-manager exec tsc --noEmit
+  pnpm --filter @bokal/cookie-manager build
+  pnpm --filter @bokal/cookie-manager zip
+  pnpm --filter @bokal/cookie-manager exec playwright test
+  pnpm --filter @bokal/cookie-manager build:e2e && BOKAL_E2E=1 pnpm --filter @bokal/cookie-manager exec playwright test
   ```
   Confirm: all tests green; `.output/chrome-mv3/manifest.json` has **no** `host_permissions`, permissions exactly `["cookies","storage","sidePanel","unlimitedStorage","alarms"]`; ProfilesPanel still a separate chunk; E2E green both builds.
 - [ ] **Step 3: Commit** `docs(m8): threat-model + privacy note the user-initiated persistent all-sites grant`

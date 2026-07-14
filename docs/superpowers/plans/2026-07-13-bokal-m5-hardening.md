@@ -1,4 +1,4 @@
-# Wafer — Milestone 5: Hardening · E2E harness · CI — Plan
+# Bokal — Milestone 5: Hardening · E2E harness · CI — Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Steps use checkbox (`- [ ]`).
 
@@ -101,7 +101,7 @@ describe('encrypted profile round-trip through IndexedDB', () => {
   });
 });
 ```
-- [ ] **Step 3: Run → PASS** (`pnpm --filter @wafer/cookie-manager test`, now 53). **Step 4: `tsc --noEmit` exit 0**; commit `git add apps/cookie-manager/lib/io/roundtrip.test.ts apps/cookie-manager/lib/profiles/roundtrip.test.ts && git commit -m "test: export/import/set + encrypted-profile IDB round-trip integration tests"`
+- [ ] **Step 3: Run → PASS** (`pnpm --filter @bokal/cookie-manager test`, now 53). **Step 4: `tsc --noEmit` exit 0**; commit `git add apps/cookie-manager/lib/io/roundtrip.test.ts apps/cookie-manager/lib/profiles/roundtrip.test.ts && git commit -m "test: export/import/set + encrypted-profile IDB round-trip integration tests"`
 
 ---
 
@@ -152,7 +152,7 @@ describe('redaction audit', () => {
 
 - [ ] **Step 1: deps + scripts** — add to `apps/cookie-manager/package.json` devDependencies `"@playwright/test": "^1.48.0"`; add scripts:
 ```json
-    "build:e2e": "WAFER_E2E=1 wxt build",
+    "build:e2e": "BOKAL_E2E=1 wxt build",
     "e2e": "playwright test",
     "e2e:install": "playwright install chromium"
 ```
@@ -163,10 +163,10 @@ Run `pnpm install`.
     // ...existing fields...
     // TEST-ONLY: in E2E builds, grant host access at install so specs bypass the runtime dialog.
     // Never set for the published build.
-    ...(process.env.WAFER_E2E ? { host_permissions: ['<all_urls>'] } : {}),
+    ...(process.env.BOKAL_E2E ? { host_permissions: ['<all_urls>'] } : {}),
   },
 ```
-(Add it as the last key inside `manifest`. The published build — no `WAFER_E2E` — is unchanged.)
+(Add it as the last key inside `manifest`. The published build — no `BOKAL_E2E` — is unchanged.)
 - [ ] **Step 3: playwright config** — `apps/cookie-manager/playwright.config.ts`
 ```ts
 import { defineConfig } from '@playwright/test';
@@ -224,7 +224,7 @@ test('side panel loads and shows the grant CTA', async ({ context, extensionId }
 ```ts
 import { test, expect } from './fixtures';
 
-// Runs against the WAFER_E2E build (host_permissions granted at install), so the grant CTA
+// Runs against the BOKAL_E2E build (host_permissions granted at install), so the grant CTA
 // is skipped and cookie APIs work without the native dialog.
 test('adds a cookie and shows it in the list', async ({ context, extensionId }) => {
   const site = await context.newPage();
@@ -244,7 +244,7 @@ test('adds a cookie and shows it in the list', async ({ context, extensionId }) 
   await expect(panel.getByText('e2e_test')).toBeVisible();
 });
 ```
-- [ ] **Step 7: attempt local run, else document** — Try `pnpm --filter @wafer/cookie-manager build && pnpm --filter @wafer/cookie-manager e2e:install && pnpm --filter @wafer/cookie-manager e2e`. If the environment cannot download/run Chromium (sandbox), that is expected — record it in the report; the specs run in CI. Confirm `tsc`/existing vitest still pass and the config/spec files type-check. **Commit** `git add -A && git commit -m "test: Playwright E2E harness (smoke + granted) + e2e-mode manifest gate"`
+- [ ] **Step 7: attempt local run, else document** — Try `pnpm --filter @bokal/cookie-manager build && pnpm --filter @bokal/cookie-manager e2e:install && pnpm --filter @bokal/cookie-manager e2e`. If the environment cannot download/run Chromium (sandbox), that is expected — record it in the report; the specs run in CI. Confirm `tsc`/existing vitest still pass and the config/spec files type-check. **Commit** `git add -A && git commit -m "test: Playwright E2E harness (smoke + granted) + e2e-mode manifest gate"`
 
 ---
 
@@ -268,9 +268,9 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 24, cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @wafer/cookie-manager exec tsc --noEmit
+      - run: pnpm --filter @bokal/cookie-manager exec tsc --noEmit
       - run: pnpm -r test
-      - run: pnpm --filter @wafer/cookie-manager build
+      - run: pnpm --filter @bokal/cookie-manager build
       - uses: actions/upload-artifact@v4
         with:
           name: chrome-mv3
@@ -284,11 +284,11 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 24, cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @wafer/cookie-manager e2e:install
+      - run: pnpm --filter @bokal/cookie-manager e2e:install
       - name: E2E against the normal build (grant-gate path)
-        run: pnpm --filter @wafer/cookie-manager build && xvfb-run -a pnpm --filter @wafer/cookie-manager e2e
+        run: pnpm --filter @bokal/cookie-manager build && xvfb-run -a pnpm --filter @bokal/cookie-manager e2e
       - name: E2E against the e2e build (granted-UI path)
-        run: pnpm --filter @wafer/cookie-manager build:e2e && xvfb-run -a pnpm --filter @wafer/cookie-manager e2e
+        run: pnpm --filter @bokal/cookie-manager build:e2e && xvfb-run -a pnpm --filter @bokal/cookie-manager e2e
 ```
 - [ ] **Step 2: Commit** `git add .github/workflows/ci.yml && git commit -m "ci: GitHub Actions — tsc, vitest, build+artifact, Playwright E2E (xvfb)"`
 

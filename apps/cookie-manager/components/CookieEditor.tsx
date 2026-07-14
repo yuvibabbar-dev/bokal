@@ -21,7 +21,7 @@ function fromLocalInput(v: string): number | undefined {
 }
 
 const rowStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 8 };
-const labelStyle: React.CSSProperties = { fontSize: 11, color: 'var(--wafer-muted)' };
+const labelStyle: React.CSSProperties = { fontSize: 11, color: 'var(--bokal-muted)' };
 
 export function CookieEditor({ initial, original, activeUrl, onDone }: { initial: CookieAttrs; original: CookieAttrs | null; activeUrl: string | null; onDone: () => void }) {
   const [draft, setDraft] = useState<CookieAttrs>(initial);
@@ -92,11 +92,11 @@ export function CookieEditor({ initial, original, activeUrl, onDone }: { initial
       )}
 
       {issues.length > 0 && (
-        <ul style={{ color: 'var(--wafer-danger)', fontSize: 12, margin: '8px 0', paddingLeft: 18 }}>
+        <ul style={{ color: 'var(--bokal-danger)', fontSize: 12, margin: '8px 0', paddingLeft: 18 }}>
           {issues.map((i) => (<li key={`${i.field}:${i.message}`}>{i.message}</li>))}
         </ul>
       )}
-      {saveError && <div style={{ color: 'var(--wafer-danger)', fontSize: 12, margin: '4px 0' }}>{saveError}</div>}
+      {saveError && <div style={{ color: 'var(--bokal-danger)', fontSize: 12, margin: '4px 0' }}>{saveError}</div>}
 
       <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
         <button type="button" disabled={issues.length > 0 || busy} onClick={onSave}>{busy ? 'Saving…' : 'Save'}</button>

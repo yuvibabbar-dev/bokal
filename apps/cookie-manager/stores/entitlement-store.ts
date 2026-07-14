@@ -46,7 +46,7 @@ export const entitlementStore = createStore<EntitlementState>((set) => ({
     } catch (err) {
       // Never fail silently: the click must always produce either the payment tab or a message.
       // No cookie data flows through billing, so logging the error itself is safe.
-      console.error('[wafer] openUpgrade failed', err);
+      console.error('[bokal] openUpgrade failed', err);
       set({ upgradeError: 'Couldn’t open the upgrade page — check your connection and try again.' });
       return;
     }

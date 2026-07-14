@@ -1,4 +1,4 @@
-import { useTheme, type ThemeMode } from '@wafer/ui-kit';
+import { useTheme, type ThemeMode } from '@bokal/ui-kit';
 
 const MODES: ThemeMode[] = ['system', 'light', 'dark'];
 

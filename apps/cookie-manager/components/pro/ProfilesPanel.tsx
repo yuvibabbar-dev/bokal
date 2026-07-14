@@ -36,11 +36,11 @@ export function ProfilesPanel() {
   }
 
   return (
-    <div style={{ padding: 12, font: '13px system-ui', borderTop: '1px solid var(--wafer-border)' }}>
+    <div style={{ padding: 12, font: '13px system-ui', borderTop: '1px solid var(--bokal-border)' }}>
       <div style={{ fontWeight: 600, marginBottom: 6 }}>Cookie profiles (Pro)</div>
       <div style={{ display: 'flex', gap: 6, marginBottom: 6, flexWrap: 'wrap' }}>
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Profile name" />
-        <label style={{ fontSize: 11, color: 'var(--wafer-muted)' }}>
+        <label style={{ fontSize: 11, color: 'var(--bokal-muted)' }}>
           <input type="checkbox" checked={encrypt} onChange={(e) => setEncrypt(e.target.checked)} /> Encrypt
         </label>
         {encrypt && <input type="password" value={pass} onChange={(e) => setPass(e.target.value)} placeholder="Passphrase" />}
@@ -49,18 +49,18 @@ export function ProfilesPanel() {
         </button>
       </div>
       {!encrypt && (
-        <div style={{ fontSize: 11, color: 'var(--wafer-muted)', marginBottom: 6 }}>
+        <div style={{ fontSize: 11, color: 'var(--bokal-muted)', marginBottom: 6 }}>
           ⚠ Saved unencrypted — cookie values are readable on this device. Enable Encrypt for auth/session cookies.
         </div>
       )}
-      <label style={{ fontSize: 11, color: 'var(--wafer-muted)', display: 'block', marginBottom: 6 }}>
+      <label style={{ fontSize: 11, color: 'var(--bokal-muted)', display: 'block', marginBottom: 6 }}>
         <input type="checkbox" checked={applyReplace} onChange={(e) => setApplyReplace(e.target.checked)} /> Apply replaces (clears the cookies this profile targets first)
       </label>
-      {error && <div style={{ color: 'var(--wafer-danger)', fontSize: 12 }}>{error}</div>}
-      {notice && <div style={{ color: 'var(--wafer-muted)', fontSize: 12 }}>{notice}</div>}
+      {error && <div style={{ color: 'var(--bokal-danger)', fontSize: 12 }}>{error}</div>}
+      {notice && <div style={{ color: 'var(--bokal-muted)', fontSize: 12 }}>{notice}</div>}
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {profiles.map((p) => (
-          <li key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 0', borderBottom: '1px solid var(--wafer-border)' }}>
+          <li key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 0', borderBottom: '1px solid var(--bokal-border)' }}>
             <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {p.name}{p.encrypted ? ' 🔒' : ''}
             </span>
@@ -96,7 +96,7 @@ export function ProfilesPanel() {
           </li>
         ))}
       </ul>
-      {profiles.length === 0 && <div style={{ color: 'var(--wafer-muted)', fontSize: 12 }}>No profiles yet.</div>}
+      {profiles.length === 0 && <div style={{ color: 'var(--bokal-muted)', fontSize: 12 }}>No profiles yet.</div>}
     </div>
   );
 }

@@ -12,12 +12,12 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 24, cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @wafer/cookie-manager exec tsc --noEmit
+      - run: pnpm --filter @bokal/cookie-manager exec tsc --noEmit
       - run: pnpm -r test
-      - run: pnpm --filter @wafer/cookie-manager build
+      - run: pnpm --filter @bokal/cookie-manager build
       # Trust invariant: the Pro UI must stay a separate lazy chunk so free users never load it.
       - name: Guard the free/Pro bundle split
-        run: pnpm --filter @wafer/cookie-manager check:bundle
+        run: pnpm --filter @bokal/cookie-manager check:bundle
       - uses: actions/upload-artifact@v4
         with:
           name: chrome-mv3
@@ -31,8 +31,8 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 24, cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @wafer/cookie-manager e2e:install
+      - run: pnpm --filter @bokal/cookie-manager e2e:install
       - name: E2E against the normal build (grant-gate path)
-        run: pnpm --filter @wafer/cookie-manager build && xvfb-run -a pnpm --filter @wafer/cookie-manager e2e
+        run: pnpm --filter @bokal/cookie-manager build && xvfb-run -a pnpm --filter @bokal/cookie-manager e2e
       - name: E2E against the e2e build (granted-UI path)
-        run: pnpm --filter @wafer/cookie-manager build:e2e && WAFER_E2E=1 xvfb-run -a pnpm --filter @wafer/cookie-manager e2e
+        run: pnpm --filter @bokal/cookie-manager build:e2e && BOKAL_E2E=1 xvfb-run -a pnpm --filter @bokal/cookie-manager e2e

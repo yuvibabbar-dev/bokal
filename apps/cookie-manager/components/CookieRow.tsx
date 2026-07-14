@@ -21,7 +21,7 @@ export function CookieRow({
 }) {
   const flags = auditCookie(cookie);
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 8px', borderBottom: '1px solid var(--wafer-border)' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 8px', borderBottom: '1px solid var(--bokal-border)' }}>
       <button
         type="button"
         onClick={() => onEdit?.(cookie)}
@@ -30,14 +30,14 @@ export function CookieRow({
         <div style={{ fontWeight: 600 }}>
           {cookie.name}
           {cookie.partitionKey?.topLevelSite && (
-            <span title={`Partitioned: ${cookie.partitionKey.topLevelSite}`} style={{ fontSize: 10, color: 'var(--wafer-accent)', border: '1px solid var(--wafer-border)', borderRadius: 3, padding: '0 3px', marginLeft: 4 }}>CHIPS</span>
+            <span title={`Partitioned: ${cookie.partitionKey.topLevelSite}`} style={{ fontSize: 10, color: 'var(--bokal-accent)', border: '1px solid var(--bokal-border)', borderRadius: 3, padding: '0 3px', marginLeft: 4 }}>CHIPS</span>
           )}
           {flags.length > 0 && (
-            <span title={flags.map((f) => f.message).join('\n')} aria-label={`${flags.length} audit note${flags.length > 1 ? 's' : ''}`} style={{ fontSize: 10, color: 'var(--wafer-muted)', marginLeft: 4 }}>⚠</span>
+            <span title={flags.map((f) => f.message).join('\n')} aria-label={`${flags.length} audit note${flags.length > 1 ? 's' : ''}`} style={{ fontSize: 10, color: 'var(--bokal-muted)', marginLeft: 4 }}>⚠</span>
           )}
         </div>
         {/* value is attacker-controlled → text node only, never HTML */}
-        <div style={{ color: 'var(--wafer-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{cookie.value}</div>
+        <div style={{ color: 'var(--bokal-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{cookie.value}</div>
       </button>
       {onTogglePin && (
         <button type="button" aria-label={pinned ? `Unpin ${cookie.name}` : `Pin ${cookie.name} to top`} title={pinned ? 'Unpin' : 'Pin to top'} onClick={() => onTogglePin(cookie)} style={{ flexShrink: 0, opacity: pinned ? 1 : 0.4 }}>📌</button>

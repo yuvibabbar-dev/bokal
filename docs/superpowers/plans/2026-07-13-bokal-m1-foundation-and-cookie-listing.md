@@ -1,8 +1,8 @@
-# Wafer — Milestone 1: Foundation & Cookie Listing — Implementation Plan
+# Bokal — Milestone 1: Foundation & Cookie Listing — Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Stand up the Wafer monorepo + WXT extension and ship a read-only, XSS-safe, searchable cookie viewer for the active tab's domain, gated behind a runtime `<all_urls>` permission grant.
+**Goal:** Stand up the Bokal monorepo + WXT extension and ship a read-only, XSS-safe, searchable cookie viewer for the active tab's domain, gated behind a runtime `<all_urls>` permission grant.
 
 **Architecture:** pnpm monorepo; a WXT (Vite) React+TS extension whose **side panel** is the primary UI and calls `chrome.cookies.*` directly. Pure logic (validation, cookie keys/URL construction, event debouncing) lives in framework-free `lib/` modules unit-tested with Vitest. `chrome.storage` is the source of truth; a Zustand vanilla store rehydrates from it. The background service worker only relays `cookies.onChanged` (debounced for the remove-then-write double-fire) and sets side-panel open-on-action behavior.
 
@@ -13,13 +13,13 @@
 _Every task's requirements implicitly include this section. Values are verbatim from the spec._
 
 - **Runtime:** Node ≥ 24, pnpm 9.9. WXT pinned to `0.20.27` (pre-1.0; do not use `^`).
-- **Product name:** `Wafer`. Manifest `version` `1.0.0`, `minimum_chrome_version` `"114"`.
+- **Product name:** `Bokal`. Manifest `version` `1.0.0`, `minimum_chrome_version` `"114"`.
 - **Install permissions:** `["cookies","storage","sidePanel","unlimitedStorage"]`. **No `tabs`.**
 - **Optional host permission:** `optional_host_permissions: ["<all_urls>"]`, requested at runtime via `chrome.permissions.request()` **synchronously inside a user gesture** (no `await` before the call).
 - **CSP (extension_pages):** `script-src 'self'; object-src 'self'`. **No remote code**, no CDNs, no `eval`. Bundle everything.
 - **Security:** cookie values render as **text nodes only** — never `dangerouslySetInnerHTML`, never inject a value into HTML/attributes. Never log cookie values to console in production.
 - **State:** `chrome.storage` is the single source of truth; in-memory store is ephemeral (panel remounts, SW idle-suspends ~30s). Rehydrate on load; sync via `chrome.storage.onChanged`.
-- **Repo root:** `chrome_extensions/wafer/` (git already initialized; the design spec is committed under `docs/`).
+- **Repo root:** `chrome_extensions/bokal/` (git already initialized; the design spec is committed under `docs/`).
 - **TypeScript:** `strict: true`. No `any` in committed code.
 
 **Definition of Done (Milestone 1):** With `pnpm dev` and the unpacked extension loaded, opening the side panel on a live site shows a Grant-access empty state; after granting, the current domain's cookies list (virtualized), are searchable, and a cookie whose value is `<img src=x onerror="alert(1)">` renders as literal text with no script execution. `pnpm test` is green.
@@ -29,18 +29,18 @@ _Every task's requirements implicitly include this section. Values are verbatim 
 ## File Structure
 
 ```
-wafer/
+bokal/
   package.json                                 # workspace root: scripts + devDeps
   pnpm-workspace.yaml
   .gitignore
   .nvmrc
   packages/
     tsconfig/
-      package.json                             # @wafer/tsconfig
+      package.json                             # @bokal/tsconfig
       base.json                                # shared strict tsconfig
   apps/
     cookie-manager/
-      package.json                             # @wafer/cookie-manager
+      package.json                             # @bokal/cookie-manager
       tsconfig.json
       wxt.config.ts                            # manifest + react module
       vitest.config.ts
@@ -79,7 +79,7 @@ wafer/
 - Create: `packages/tsconfig/package.json`, `packages/tsconfig/base.json`
 
 **Interfaces:**
-- Produces: workspace package `@wafer/tsconfig` exporting `base.json`; root scripts `build`, `test`, `dev`.
+- Produces: workspace package `@bokal/tsconfig` exporting `base.json`; root scripts `build`, `test`, `dev`.
 
 - [ ] **Step 1: Create workspace manifest files**
 
@@ -109,13 +109,13 @@ coverage/
 `package.json` (root):
 ```json
 {
-  "name": "wafer-monorepo",
+  "name": "bokal-monorepo",
   "private": true,
   "packageManager": "pnpm@9.9.0",
   "engines": { "node": ">=24" },
   "scripts": {
-    "dev": "pnpm --filter @wafer/cookie-manager dev",
-    "build": "pnpm --filter @wafer/cookie-manager build",
+    "dev": "pnpm --filter @bokal/cookie-manager dev",
+    "build": "pnpm --filter @bokal/cookie-manager build",
     "test": "pnpm -r test"
   }
 }
@@ -126,7 +126,7 @@ coverage/
 `packages/tsconfig/package.json`:
 ```json
 {
-  "name": "@wafer/tsconfig",
+  "name": "@bokal/tsconfig",
   "version": "0.0.0",
   "private": true,
   "files": ["base.json"]
@@ -175,14 +175,14 @@ git commit -m "chore: scaffold pnpm monorepo + shared tsconfig"
 - Create: `apps/cookie-manager/entrypoints/sidepanel/index.html`, `main.tsx`, `App.tsx`
 
 **Interfaces:**
-- Produces: a loadable MV3 extension named Wafer with a side panel entrypoint (`sidepanel.html`) and a module background SW.
+- Produces: a loadable MV3 extension named Bokal with a side panel entrypoint (`sidepanel.html`) and a module background SW.
 
 - [ ] **Step 1: Create the app package.json (pinned WXT + React 19)**
 
 `apps/cookie-manager/package.json`:
 ```json
 {
-  "name": "@wafer/cookie-manager",
+  "name": "@bokal/cookie-manager",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -200,7 +200,7 @@ git commit -m "chore: scaffold pnpm monorepo + shared tsconfig"
     "@tanstack/react-virtual": "3.14.6"
   },
   "devDependencies": {
-    "@wafer/tsconfig": "workspace:*",
+    "@bokal/tsconfig": "workspace:*",
     "@wxt-dev/module-react": "1.1.3",
     "wxt": "0.20.27",
     "typescript": "^5.6.0",
@@ -233,17 +233,17 @@ git commit -m "chore: scaffold pnpm monorepo + shared tsconfig"
 ```ts
 import { defineConfig } from 'wxt';
 
-// Wafer manifest — minimal install-time permissions; host access requested at runtime.
+// Bokal manifest — minimal install-time permissions; host access requested at runtime.
 export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   manifest: {
-    name: 'Wafer',
+    name: 'Bokal',
     version: '1.0.0',
     description: 'View, edit, add, delete, import, and export browser cookies.',
     minimum_chrome_version: '114',
     permissions: ['cookies', 'storage', 'sidePanel', 'unlimitedStorage'],
     optional_host_permissions: ['<all_urls>'],
-    action: { default_title: 'Wafer' },
+    action: { default_title: 'Bokal' },
     side_panel: { default_path: 'sidepanel.html' },
     content_security_policy: {
       extension_pages: "script-src 'self'; object-src 'self'",
@@ -260,7 +260,7 @@ export default defineBackground(() => {
   // Open the side panel when the toolbar icon is clicked (no manifest field for this).
   chrome.sidePanel
     .setPanelBehavior({ openPanelOnActionClick: true })
-    .catch((err) => console.error('[wafer] setPanelBehavior failed', err));
+    .catch((err) => console.error('[bokal] setPanelBehavior failed', err));
 });
 ```
 
@@ -271,7 +271,7 @@ export default defineBackground(() => {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wafer</title>
+    <title>Bokal</title>
   </head>
   <body>
     <div id="root"></div>
@@ -296,16 +296,16 @@ createRoot(document.getElementById('root')!).render(
 `apps/cookie-manager/entrypoints/sidepanel/App.tsx`:
 ```tsx
 export function App() {
-  return <main style={{ font: '13px system-ui', padding: 12 }}>Wafer</main>;
+  return <main style={{ font: '13px system-ui', padding: 12 }}>Bokal</main>;
 }
 ```
 
 - [ ] **Step 4: Build and verify it loads**
 
-Run: `pnpm install && pnpm --filter @wafer/cookie-manager build`
-Expected: build succeeds; `apps/cookie-manager/.output/chrome-mv3/` contains `manifest.json` with `name: "Wafer"`, no `tabs` permission, and `optional_host_permissions: ["<all_urls>"]`.
+Run: `pnpm install && pnpm --filter @bokal/cookie-manager build`
+Expected: build succeeds; `apps/cookie-manager/.output/chrome-mv3/` contains `manifest.json` with `name: "Bokal"`, no `tabs` permission, and `optional_host_permissions: ["<all_urls>"]`.
 
-Manual load: `chrome://extensions` → Developer mode → Load unpacked → select `.output/chrome-mv3`. Click the Wafer toolbar icon → the side panel opens showing "Wafer".
+Manual load: `chrome://extensions` → Developer mode → Load unpacked → select `.output/chrome-mv3`. Click the Bokal toolbar icon → the side panel opens showing "Bokal".
 
 - [ ] **Step 5: Commit**
 
@@ -413,7 +413,7 @@ describe('validateCookie', () => {
 
 - [ ] **Step 3: Run the tests to verify they fail**
 
-Run: `pnpm --filter @wafer/cookie-manager test`
+Run: `pnpm --filter @bokal/cookie-manager test`
 Expected: FAIL — `validation.ts` / `cookie-types.ts` not found.
 
 - [ ] **Step 4: Write the types + implementation**
@@ -487,7 +487,7 @@ export function validateCookie(c: CookieAttrs, ctx: { isSecureOrigin: boolean })
 
 - [ ] **Step 5: Run the tests to verify they pass**
 
-Run: `pnpm --filter @wafer/cookie-manager test`
+Run: `pnpm --filter @bokal/cookie-manager test`
 Expected: PASS (8 tests).
 
 - [ ] **Step 6: Commit**
@@ -545,7 +545,7 @@ describe('cookieId', () => {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `pnpm --filter @wafer/cookie-manager test`
+Run: `pnpm --filter @bokal/cookie-manager test`
 Expected: FAIL — `keys.ts` not found.
 
 - [ ] **Step 3: Implement**
@@ -570,7 +570,7 @@ export function cookieId(
 
 - [ ] **Step 4: Run to verify pass**
 
-Run: `pnpm --filter @wafer/cookie-manager test`
+Run: `pnpm --filter @bokal/cookie-manager test`
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
@@ -626,7 +626,7 @@ describe('createDebouncer', () => {
 
 - [ ] **Step 2: Run to verify failure**
 
-Run: `pnpm --filter @wafer/cookie-manager test`
+Run: `pnpm --filter @bokal/cookie-manager test`
 Expected: FAIL — `debounce.ts` not found.
 
 - [ ] **Step 3: Implement**
@@ -654,7 +654,7 @@ export function createDebouncer(fn: () => void, delayMs: number): { trigger: () 
 
 - [ ] **Step 4: Run to verify pass**
 
-Run: `pnpm --filter @wafer/cookie-manager test`
+Run: `pnpm --filter @bokal/cookie-manager test`
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
@@ -707,7 +707,7 @@ export function onPermissionsChanged(cb: (granted: boolean) => void): () => void
 
 - [ ] **Step 2: Type-check**
 
-Run: `pnpm --filter @wafer/cookie-manager exec tsc --noEmit`
+Run: `pnpm --filter @bokal/cookie-manager exec tsc --noEmit`
 Expected: no errors.
 
 - [ ] **Step 3: Commit**
@@ -771,7 +771,7 @@ export async function getActiveTabUrl(): Promise<string | null> {
 
 - [ ] **Step 2: Type-check**
 
-Run: `pnpm --filter @wafer/cookie-manager exec tsc --noEmit`
+Run: `pnpm --filter @bokal/cookie-manager exec tsc --noEmit`
 Expected: no errors.
 
 - [ ] **Step 3: Commit**
@@ -813,7 +813,7 @@ interface CookiesState {
   refresh: () => Promise<void>;
 }
 
-const SESSION_KEY = 'wafer:lastCookies';
+const SESSION_KEY = 'bokal:lastCookies';
 
 export const cookiesStore = createStore<CookiesState>((set, get) => ({
   granted: false,
@@ -837,7 +837,7 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
       // chrome.storage is the source of truth for cross-context rehydrate.
       await chrome.storage.session.set({ [SESSION_KEY]: { activeUrl, cookies } });
     } catch (err) {
-      console.error('[wafer] refresh failed', err);
+      console.error('[bokal] refresh failed', err);
       set({ loading: false });
     }
   },
@@ -857,7 +857,7 @@ export function useCookiesStore<T>(selector: (s: CookiesState) => T): T {
 
 - [ ] **Step 2: Type-check**
 
-Run: `pnpm --filter @wafer/cookie-manager exec tsc --noEmit`
+Run: `pnpm --filter @bokal/cookie-manager exec tsc --noEmit`
 Expected: no errors.
 
 - [ ] **Step 3: Commit**
@@ -894,9 +894,9 @@ export function GrantAccess({ onGrant }: { onGrant: () => void }) {
   };
   return (
     <div style={{ padding: 16, font: '13px system-ui' }}>
-      <h1 style={{ fontSize: 15, margin: '0 0 8px' }}>Wafer</h1>
+      <h1 style={{ fontSize: 15, margin: '0 0 8px' }}>Bokal</h1>
       <p style={{ margin: '0 0 12px', color: '#555' }}>
-        Grant access to read cookies for this site. Wafer requests no site access until you allow it.
+        Grant access to read cookies for this site. Bokal requests no site access until you allow it.
       </p>
       <button type="button" onClick={handleClick} style={{ padding: '6px 12px', cursor: 'pointer' }}>
         Grant access
@@ -947,7 +947,7 @@ export function App() {
 
 - [ ] **Step 3: Verify the grant flow in a browser**
 
-Run: `pnpm --filter @wafer/cookie-manager dev`
+Run: `pnpm --filter @bokal/cookie-manager dev`
 Load the dev build unpacked, open the side panel on `https://example.com`. Expected: "Grant access" shown; clicking it triggers Chrome's host-permission prompt; after allowing, the panel switches to the "N cookies · https://example.com" header.
 
 - [ ] **Step 4: Commit**
@@ -1042,7 +1042,7 @@ import { CookieList } from '../../components/CookieList';
 
 - [ ] **Step 4: Verify in the browser**
 
-Run: `pnpm --filter @wafer/cookie-manager dev`
+Run: `pnpm --filter @bokal/cookie-manager dev`
 On a cookie-rich site (e.g. after logging into any site), open the panel and grant access. Expected: cookies list renders and scrolls smoothly.
 
 - [ ] **Step 5: Commit**
@@ -1127,7 +1127,7 @@ describe('CookieRow', () => {
 
 - [ ] **Step 3: Run to verify it passes immediately (React escapes by default)**
 
-Run: `pnpm --filter @wafer/cookie-manager test`
+Run: `pnpm --filter @bokal/cookie-manager test`
 Expected: PASS — this test *locks in* the XSS-safe behavior so a future regression (e.g. someone using `dangerouslySetInnerHTML`) fails CI.
 
 - [ ] **Step 4: Create the SearchBar and wire filtering**
@@ -1167,7 +1167,7 @@ Render `<SearchBar />` above the header count and pass `filtered` to `<CookieLis
 
 - [ ] **Step 5: Run tests + verify search in browser**
 
-Run: `pnpm --filter @wafer/cookie-manager test`
+Run: `pnpm --filter @bokal/cookie-manager test`
 Expected: PASS.
 Browser: typing in the search box narrows the visible cookies.
 
@@ -1188,7 +1188,7 @@ git commit -m "feat: search/filter + regression test for XSS-safe value renderin
 
 **Interfaces:**
 - Consumes: `createDebouncer` from `../lib/debounce`.
-- Produces: a runtime message `{ type: 'wafer:cookies-changed' }` broadcast by the SW; the panel listens and refreshes.
+- Produces: a runtime message `{ type: 'bokal:cookies-changed' }` broadcast by the SW; the panel listens and refreshes.
 
 - [ ] **Step 1: Broadcast a debounced change signal from the SW**
 
@@ -1199,11 +1199,11 @@ import { createDebouncer } from '../lib/debounce';
 export default defineBackground(() => {
   chrome.sidePanel
     .setPanelBehavior({ openPanelOnActionClick: true })
-    .catch((err) => console.error('[wafer] setPanelBehavior failed', err));
+    .catch((err) => console.error('[bokal] setPanelBehavior failed', err));
 
   // Coalesce the remove-then-write double-fire ("overwrite" then "explicit") into one signal.
   const notify = createDebouncer(() => {
-    chrome.runtime.sendMessage({ type: 'wafer:cookies-changed' }).catch(() => {
+    chrome.runtime.sendMessage({ type: 'bokal:cookies-changed' }).catch(() => {
       // No receiver (panel closed) — safe to ignore.
     });
   }, 120);
@@ -1217,7 +1217,7 @@ export default defineBackground(() => {
 In `App.tsx`, extend the `useEffect` to listen for the runtime message:
 ```tsx
     const onMessage = (msg: unknown): void => {
-      if (typeof msg === 'object' && msg !== null && (msg as { type?: string }).type === 'wafer:cookies-changed') {
+      if (typeof msg === 'object' && msg !== null && (msg as { type?: string }).type === 'bokal:cookies-changed') {
         void cookiesStore.getState().refresh();
       }
     };
@@ -1227,12 +1227,12 @@ And add `chrome.runtime.onMessage.removeListener(onMessage);` to the cleanup ret
 
 - [ ] **Step 3: Verify live refresh**
 
-Run: `pnpm --filter @wafer/cookie-manager dev`
+Run: `pnpm --filter @bokal/cookie-manager dev`
 With the panel open on a site, in DevTools console run `document.cookie = "watched=1"`. Expected: the list updates within ~120ms without a manual refresh, and a single cookie edit does not cause a visible double-flash (debounce working).
 
 - [ ] **Step 4: Type-check, full test run, commit**
 
-Run: `pnpm --filter @wafer/cookie-manager exec tsc --noEmit && pnpm --filter @wafer/cookie-manager test`
+Run: `pnpm --filter @bokal/cookie-manager exec tsc --noEmit && pnpm --filter @bokal/cookie-manager test`
 Expected: no type errors; all tests PASS.
 ```bash
 git add apps/cookie-manager/entrypoints/background.ts apps/cookie-manager/entrypoints/sidepanel/App.tsx

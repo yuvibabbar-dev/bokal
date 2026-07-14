@@ -29,7 +29,7 @@ interface CookiesState {
   importCookies: (cookies: CookieAttrs[]) => Promise<{ imported: number; failed: number; errors: string[] }>;
 }
 
-const SESSION_KEY = 'wafer:lastCookies';
+const SESSION_KEY = 'bokal:lastCookies';
 
 let refreshSeq = 0;
 
@@ -77,7 +77,7 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
       // chrome.storage is the source of truth for cross-context rehydrate.
       await chrome.storage.session.set({ [SESSION_KEY]: { activeUrl, cookies } });
     } catch (err) {
-      console.error('[wafer] refresh failed', err);
+      console.error('[bokal] refresh failed', err);
       if (seq === refreshSeq) set({ loading: false, ready: true });
     }
   },
@@ -102,7 +102,7 @@ export const cookiesStore = createStore<CookiesState>((set, get) => ({
     await get().refresh();
   },
   deleteAllForSite: async (list) => {
-    // Protected cookies are never deleted by any Wafer action.
+    // Protected cookies are never deleted by any Bokal action.
     const rules = await loadRules();
     const { deletable, protectedSkipped } = partitionDeletable(list, rules);
     let removed = 0;

@@ -22,11 +22,11 @@ export function CleanupRules() {
 
   return (
     <details style={{ marginTop: 8, fontSize: 12 }}>
-      <summary style={{ cursor: 'pointer', color: 'var(--wafer-muted)' }}>Cleanup — keep-list ({keep.length})</summary>
+      <summary style={{ cursor: 'pointer', color: 'var(--bokal-muted)' }}>Cleanup — keep-list ({keep.length})</summary>
       <div style={{ padding: '6px 2px' }}>
-        <p style={{ margin: '0 0 6px', color: 'var(--wafer-muted)' }}>
+        <p style={{ margin: '0 0 6px', color: 'var(--bokal-muted)' }}>
           "Clean now" deletes every cookie except the domains below (protected cookies are always
-          kept). Auto-sweep repeats this once a day while your browser is open — Wafer has no "tabs"
+          kept). Auto-sweep repeats this once a day while your browser is open — Bokal has no "tabs"
           permission, so it can't clear cookies the moment you close a tab.
         </p>
         <div style={{ display: 'flex', gap: 6, marginBottom: 6 }}>
@@ -41,7 +41,7 @@ export function CleanupRules() {
           <button type="button" onClick={add}>Keep</button>
         </div>
         {keep.length === 0 ? (
-          <div style={{ color: 'var(--wafer-muted)', marginBottom: 6 }}>No keep-list — "Clean now" would remove everything unprotected.</div>
+          <div style={{ color: 'var(--bokal-muted)', marginBottom: 6 }}>No keep-list — "Clean now" would remove everything unprotected.</div>
         ) : (
           <ul style={{ listStyle: 'none', margin: '0 0 6px', padding: 0 }}>
             {keep.map((d) => (
@@ -54,13 +54,13 @@ export function CleanupRules() {
         )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
           <button type="button" onClick={cleanNow}>Clean now</button>
-          <label style={{ color: 'var(--wafer-muted)' }}>
+          <label style={{ color: 'var(--bokal-muted)' }}>
             <input type="checkbox" checked={autoSweep} onChange={(e) => void rulesStore.getState().setAutoSweep(e.target.checked)} /> Auto-sweep daily
           </label>
-          {status && <span style={{ color: 'var(--wafer-muted)' }}>{status}</span>}
+          {status && <span style={{ color: 'var(--bokal-muted)' }}>{status}</span>}
         </div>
         {autoSweep && keep.length === 0 && (
-          <div style={{ color: 'var(--wafer-accent)', marginTop: 4 }}>Add at least one keep-domain — auto-sweep won't run with an empty keep-list (it would wipe everything).</div>
+          <div style={{ color: 'var(--bokal-accent)', marginTop: 4 }}>Add at least one keep-domain — auto-sweep won't run with an empty keep-list (it would wipe everything).</div>
         )}
       </div>
     </details>

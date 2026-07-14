@@ -1,4 +1,4 @@
-# Wafer — Chrome Web Store "Data Use" Form Answers
+# Bokal — Chrome Web Store "Data Use" Form Answers
 
 > Source: `docs/business/2026-07-13-business-recommendations.md` §6b–§6e. Paste-ready for the
 > CWS "Privacy practices" tab. Re-affirm this (and the privacy policy + Limited Use statement)
@@ -8,15 +8,15 @@
 
 | Category | Check? | Reason |
 |---|---|---|
-| **Authentication information** | YES | Google's definition = "logins, passwords, and authentication cookies"; Wafer reads/edits auth cookies |
+| **Authentication information** | YES | Google's definition = "logins, passwords, and authentication cookies"; Bokal reads/edits auth cookies |
 | **Website content** | YES | Google's definition literally lists "cookies" as website content |
-| Personally identifiable information | No | Wafer touches no name/email/ID |
+| Personally identifiable information | No | Bokal touches no name/email/ID |
 | Health information | No | — |
-| Financial and payment information | No | Handled by ExtPay/Stripe as processors, not by Wafer |
+| Financial and payment information | No | Handled by ExtPay/Stripe as processors, not by Bokal |
 | Personal communications | No | — |
 | Location | No | — |
-| **Web history** | No | Wafer logs no domains visited — do NOT check even though reviewers associate cookies with tracking |
-| **User activity** | No | Wafer logs no clicks/keystrokes/actions |
+| **Web history** | No | Bokal logs no domains visited — do NOT check even though reviewers associate cookies with tracking |
+| **User activity** | No | Bokal logs no clicks/keystrokes/actions |
 
 ## Collected / Transmitted
 
@@ -35,5 +35,5 @@
 
 ## Single-purpose statement
 
-> "Wafer is a cookie manager: it lets users view, add, edit, delete, search, import and export
+> "Bokal is a cookie manager: it lets users view, add, edit, delete, search, import and export
 > the cookies of the site they are working on. All data stays on the user's device."

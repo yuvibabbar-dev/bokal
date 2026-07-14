@@ -40,8 +40,8 @@ describe('automation formats', () => {
     expect(back?.[0]?.sameSite).toBe('no_restriction');
   });
 
-  it('returns null for the wafer-cookies object (no origins, not an automation array)', () => {
-    expect(fromAutomationJson({ format: 'wafer-cookies', cookies: [] })).toBeNull();
+  it('returns null for the bokal-cookies object (no origins, not an automation array)', () => {
+    expect(fromAutomationJson({ format: 'bokal-cookies', cookies: [] })).toBeNull();
   });
 
   it('returns null for a Cookie-Editor-style array (uses expirationDate, not expires)', () => {

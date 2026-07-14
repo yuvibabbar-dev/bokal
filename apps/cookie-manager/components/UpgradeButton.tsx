@@ -12,7 +12,7 @@ export function UpgradeButton() {
         ★ Unlock Pro — cookie profiles
       </button>
       {upgradeError && (
-        <div role="alert" style={{ color: 'var(--wafer-danger)', fontSize: 12, marginTop: 4 }}>
+        <div role="alert" style={{ color: 'var(--bokal-danger)', fontSize: 12, marginTop: 4 }}>
           {upgradeError}
         </div>
       )}

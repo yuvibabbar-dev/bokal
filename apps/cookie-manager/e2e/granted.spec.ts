@@ -1,6 +1,6 @@
 import { test, expect } from './fixtures';
 
-// This is the WAFER_E2E build iff the run sets WAFER_E2E=1 (CI does, after build:e2e). Gating the
+// This is the BOKAL_E2E build iff the run sets BOKAL_E2E=1 (CI does, after build:e2e). Gating the
 // skip on the env var — not a transient DOM read — makes the decision deterministic and avoids the
 // grant-gate-then-refresh render flash that could otherwise make this test silently self-skip.
 //
@@ -9,7 +9,7 @@ import { test, expect } from './fixtures';
 // is ambiguous when opened as its own page). That path is covered by unit/integration tests
 // (validation, write wrapper, round-trips). Here we assert the granted-state UI renders.
 test('with host access granted, the cookie-management UI renders (no grant gate)', async ({ context, extensionId }) => {
-  test.skip(!process.env.WAFER_E2E, 'run against build:e2e with WAFER_E2E=1 to exercise the granted UI');
+  test.skip(!process.env.BOKAL_E2E, 'run against build:e2e with BOKAL_E2E=1 to exercise the granted UI');
 
   const page = await context.newPage();
   await page.goto(`chrome-extension://${extensionId}/sidepanel.html`);
