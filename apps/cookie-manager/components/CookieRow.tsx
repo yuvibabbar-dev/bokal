@@ -1,5 +1,6 @@
 import type { CookieAttrs } from '../lib/cookie-types';
 import { copyText } from '../lib/clipboard';
+import { auditCookie } from '../lib/audit';
 
 export function CookieRow({
   cookie,
@@ -18,6 +19,7 @@ export function CookieRow({
   onTogglePin?: (c: CookieAttrs) => void;
   onToggleProtect?: (c: CookieAttrs) => void;
 }) {
+  const flags = auditCookie(cookie);
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 8px', borderBottom: '1px solid var(--wafer-border)' }}>
       <button
@@ -29,6 +31,9 @@ export function CookieRow({
           {cookie.name}
           {cookie.partitionKey?.topLevelSite && (
             <span title={`Partitioned: ${cookie.partitionKey.topLevelSite}`} style={{ fontSize: 10, color: 'var(--wafer-accent)', border: '1px solid var(--wafer-border)', borderRadius: 3, padding: '0 3px', marginLeft: 4 }}>CHIPS</span>
+          )}
+          {flags.length > 0 && (
+            <span title={flags.map((f) => f.message).join('\n')} aria-label={`${flags.length} audit note${flags.length > 1 ? 's' : ''}`} style={{ fontSize: 10, color: 'var(--wafer-muted)', marginLeft: 4 }}>⚠</span>
           )}
         </div>
         {/* value is attacker-controlled → text node only, never HTML */}
