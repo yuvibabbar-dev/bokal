@@ -12,8 +12,9 @@ export default defineConfig({
     version: '1.0.0',
     description:
       'Edit, add, view & delete cookies incl. HttpOnly. JSON/Netscape export, JSON import, CHIPS inspector. Open source, no tracking.',
-    // GPL-3.0 obliges us to point recipients of the binary at the corresponding source.
-    homepage_url: 'https://github.com/yuvibabbar-dev/bokal',
+    // Product homepage. (GPL source-pointing is satisfied by the in-panel Source link, README, and
+    // THIRD-PARTY-NOTICES, which all reference the GitHub repo.)
+    homepage_url: 'https://bokal.dev',
     minimum_chrome_version: '114',
     icons: { '16': 'icon/16.png', '32': 'icon/32.png', '48': 'icon/48.png', '128': 'icon/128.png' },
     // activeTab lets the panel read the active tab's URL after the toolbar-click that opens it, so

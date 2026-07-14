@@ -61,7 +61,7 @@ If Pro unlocks, your payment integration is done.
 | **Category** | Developer Tools |
 | **Language** | English |
 | **Screenshots** | All 5 in `docs/store/screenshots/` (1280×800) |
-| **Homepage URL** | `https://yuvibabbar-dev.github.io/bokal/` |
+| **Homepage URL** | `https://bokal.dev/` |
 | **Support URL** | `https://github.com/yuvibabbar-dev/bokal/issues` |
 
 ⚠ **Do NOT put "EditThisCookie" or "Cookie-Editor" in the title or summary** — impersonation /
@@ -109,7 +109,7 @@ Leave unticked: health, financial, personal communications, location, web histor
 
 ### Privacy policy URL
 ```
-https://yuvibabbar-dev.github.io/bokal/privacy.html
+https://bokal.dev/privacy.html
 ```
 Live and verified. The Limited Use statement also appears on the homepage, as Google requires.
 

@@ -29,8 +29,8 @@ find in older notes from before that date is INVALID. `git log` is authoritative
   card for testing.
 - **Site: LIVE** via GitHub Pages from the **`gh-pages` branch** (branch-based Pages, NOT the
   Actions route — the repo's Actions token can't create Pages sites):
-  - `https://yuvibabbar-dev.github.io/bokal/` (landing; Limited Use statement on the page)
-  - `https://yuvibabbar-dev.github.io/bokal/privacy.html` (the URL pasted into CWS)
+  - `https://bokal.dev/` (landing; Limited Use statement on the page)
+  - `https://bokal.dev/privacy.html` (the URL pasted into CWS)
   - To republish: copy `site/*` + `.nojekyll` into a fresh checkout of `gh-pages` and force-push
     that branch (source of truth for content is `site/` on `main`).
 
@@ -83,10 +83,15 @@ is `main` — fixed, now green), per-site permission model, bundle-split CI guar
 
 ## 5. Open items (owner: FOUNDER unless marked AGENT)
 
-1. **Lock namespaces BEFORE announcing the name anywhere:** buy `bokal.dev` (+ `.app`/`.io`
-   defensively — all verified available 2026-07-14), npm `bokal`, GitHub org `bokal-dev`
-   (github.com/bokal is a personal account). Then: set CWS "Official URL" via Search Console,
-   update manifest `homepage_url` + site links (AGENT, one pass).
+1. **Namespaces:** `bokal.dev` **PURCHASED** (Porkbun, 2026-07-14, exp 2027-07-14). Code/docs already
+   point at `https://bokal.dev` (manifest homepage_url, site links, CWS privacy URL); `site/CNAME`
+   staged. **REMAINING:** (a) FOUNDER adds DNS at Porkbun — apex `bokal.dev` → four A records
+   185.199.108–111.153, and `www` CNAME → yuvibabbar-dev.github.io; (b) once DNS resolves, AGENT
+   redeploys `gh-pages` (now includes CNAME) and FOUNDER sets Settings→Pages custom domain =
+   bokal.dev + Enforce HTTPS; (c) FOUNDER updates the CWS listing's Homepage + Privacy URL fields to
+   bokal.dev (the old github.io 301-redirects, so not breaking); (d) still TODO: npm `bokal`
+   (available), GitHub org `bokal-dev`/`bokalhq` (available), social handles; CWS "Official URL" via
+   Search Console domain verification of bokal.dev. `.app`/`.io`/`.sh`/`.co`/`.tools` all still free.
 2. **USPTO knockout search** for BOKAL/BOKALL/BOCAL, Classes 9+42 (tmsearch.uspto.gov or an attorney,
    $300–800). All prior screening was search-index-derived, NOT a register pull.
 3. **Manual QA checklist** `docs/pre-launch-qa.md` — ⚠ item #1 (the per-site activeTab grant
