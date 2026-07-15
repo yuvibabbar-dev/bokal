@@ -1,7 +1,21 @@
 import { entitlementStore, useEntitlement } from '../stores/entitlement-store';
 
-export function UpgradeButton() {
+export function UpgradeButton({ compact = false }: { compact?: boolean } = {}) {
   const upgradeError = useEntitlement((s) => s.upgradeError);
+  if (compact) {
+    // Header chip: keeps the upsell visible without scrolling. Restore and the role="alert" error
+    // stay in the full bottom section so the alert exists exactly once in the DOM.
+    return (
+      <button
+        type="button"
+        onClick={() => void entitlementStore.getState().openUpgrade()}
+        title="Named cookie profiles + encryption"
+        style={{ fontSize: 11 }}
+      >
+        ★ Unlock Pro
+      </button>
+    );
+  }
   return (
     <div style={{ marginBottom: 8 }}>
       <button
