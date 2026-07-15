@@ -103,9 +103,19 @@ parked), price-raise date fixed at ~2026-09-13.
 
 > **2026-07-15: APPROVED + PUBLISHED.** Agent-side items DONE the same day: item 2 (site CTA now
 > links the live listing; `gh-pages` redeployed **without** CNAME — DNS still parked) and item 3
-> (README status → live). STILL OPEN, founder-only: item 1 (install from the store, confirm live
-> checkout, and run `docs/pre-launch-qa.md` against the STORE build — the per-site grant, QA #1,
-> has STILL never been human-verified and real users hit it now); item 4 (Edge — submit the
+> (README status → live).
+>
+> **Item 1 CONFIRMED 2026-07-15: the founder made a REAL live payment (own card) on the store
+> build and Pro unlocked** — live checkout + ExtPay + Stripe(live) + entitlement proven in
+> production. Follow-ups: verify the charge sits in BOKAL's Stripe account, live mode (not another
+> app — remember the wafer-test/Couples-Companion mixup) and that ExtPay's dashboard checklist
+> ticked; if the plan bought was monthly/annual, cancel the self-subscription via "Manage
+> subscription" (keeping a LIFETIME one as the founder's QA license is recommended; refunding
+> returns no Stripe processing fees and flips the license off).
+>
+> STILL OPEN, founder-only: the REST of `docs/pre-launch-qa.md` against the STORE build — above
+> all the per-site grant, QA #1, which has STILL never been human-verified and real users hit it
+> now; item 4 (Edge — submit the
 > REBUILT zip so the MPL notice ships there from day one); item 5 (lifetime $29.99 → ~$39 around
 > **2026-09-13**, 60 days from publish); item 6 (announce only after §5.1 namespaces + USPTO).
 
