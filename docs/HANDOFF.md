@@ -36,16 +36,18 @@ find in older notes from before that date is INVALID. `git log` is authoritative
   card for testing.
 - **Site: LIVE** via GitHub Pages from the **`gh-pages` branch** (branch-based Pages, NOT the
   Actions route — the repo's Actions token can't create Pages sites):
-  - ⚠ **bokal.dev DNS IS NOT CONFIGURED (verified 2026-07-14 late):** the apex resolves to Porkbun
-    PARKING IPs (207.207.210.x) and HTTPS does not answer; `.dev` is HSTS-preloaded, so browsers
-    have no HTTP fallback. Until §5.1(a) is done, the ONLY working origin is
-    `https://yuvibabbar-dev.github.io/bokal/`.
-  - `https://bokal.dev/` (landing; Limited Use statement on the page) — target state, dead until DNS
-  - `https://bokal.dev/privacy.html` — target state. RESOLVED 2026-07-15: the live listing links
-    the github.io privacy URL (verified on the public listing page), so DNS is NOT review-critical
-    — it now gates only the §5.1 chain (custom domain, official-URL verification, announce).
-  - To republish: copy `site/*` + `.nojekyll` into a fresh checkout of `gh-pages` and force-push
-    that branch (source of truth for content is `site/` on `main`).
+  - ✅ **bokal.dev CUSTOM DOMAIN LIVE 2026-07-15:** founder added the four GitHub A records + www
+    CNAME at Porkbun; agent redeployed `gh-pages` WITH the `CNAME` file (order honored: DNS first).
+    Verified: `http://bokal.dev/` → 200 from GitHub.com, and `yuvibabbar-dev.github.io/bokal/*` now
+    301-redirects to bokal.dev — so the github.io privacy URL in the CWS listing keeps working.
+    HTTPS serves once GitHub's Let's Encrypt cert provisions (~minutes after CNAME deploy).
+  - `https://bokal.dev/` (landing; Limited Use statement on the page)
+  - `https://bokal.dev/privacy.html` (canonical privacy URL)
+  - REMAINING for FOUNDER: Settings→Pages → confirm custom domain shows `bokal.dev` (auto-set by
+    the CNAME file) and tick **Enforce HTTPS** once available; swap the CWS listing Homepage +
+    Privacy URL fields to bokal.dev at the next dashboard visit (no rush — the 301 covers it).
+  - To republish: copy `site/*` (INCLUDING `CNAME` from now on) + `.nojekyll` into a fresh checkout
+    of `gh-pages` and push (source of truth for content is `site/` on `main`).
 
 ## 2. How to resume
 
@@ -155,12 +157,12 @@ submitted zip** (that can reset the review). The changes and our status:
 1. **Namespaces:** `bokal.dev` **PURCHASED** (Porkbun, 2026-07-14, exp 2027-07-14). Code/docs already
    point at `https://bokal.dev` (manifest homepage_url, site links, CWS privacy URL); `site/CNAME`
    staged. **REMAINING:** (a) FOUNDER adds DNS at Porkbun — apex `bokal.dev` → four A records
-   185.199.108–111.153, and `www` CNAME → yuvibabbar-dev.github.io; (b) once DNS resolves, AGENT
-   redeploys `gh-pages` (now includes CNAME) and FOUNDER sets Settings→Pages custom domain =
-   bokal.dev + Enforce HTTPS — ⚠ **ORDER IS LOAD-BEARING: do NOT push the CNAME to `gh-pages` (or
-   set the Pages custom domain) before `dig bokal.dev` returns the four GitHub A records.** A
-   configured custom domain makes github.io/bokal/* 301-redirect to bokal.dev immediately — done
-   too early, it breaks the currently-working privacy URL mid-review; (c) FOUNDER updates the CWS listing's Homepage + Privacy URL fields to
+   185.199.108–111.153, and `www` CNAME → yuvibabbar-dev.github.io — **✅ DONE 2026-07-15
+   (founder)**; (b) AGENT redeployed `gh-pages` WITH the CNAME after DNS resolved (the do-DNS-first
+   order was honored) — **✅ DONE 2026-07-15**, full chain verified: apex + www → 200 over HTTPS
+   with the store link on the page, github.io/bokal/* → 301 → bokal.dev (listing's privacy link
+   unbroken). **LAST CLICK for FOUNDER:** Settings→Pages → tick **Enforce HTTPS** (cert is
+   provisioned, the box should be available); (c) FOUNDER updates the CWS listing's Homepage + Privacy URL fields to
    bokal.dev (the old github.io 301-redirects, so not breaking); (d) still TODO: npm `bokal`
    (available), GitHub org `bokal-dev`/`bokalhq` (available), social handles; CWS "Official URL" via
    Search Console domain verification of bokal.dev. `.app`/`.io`/`.sh`/`.co`/`.tools` all still free.
