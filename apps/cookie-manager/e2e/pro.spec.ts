@@ -65,12 +65,13 @@ test('Pro: the real purchase flow unlocks Pro and lazily loads the Pro chunk', a
   const panel = await context.newPage();
   await panel.goto(`chrome-extension://${extensionId}/sidepanel.html`);
 
-  // Free state: the upsell is shown and the Pro panel is NOT in the DOM (chunk never fetched).
-  await expect(panel.getByRole('button', { name: /unlock pro/i })).toBeVisible({ timeout: 15_000 });
+  // Free state: the upsell is shown (header chip + full section) and the Pro panel is NOT in the
+  // DOM (chunk never fetched). Two controls match /unlock pro/i, so scope with .first().
+  await expect(panel.getByRole('button', { name: /unlock pro/i }).first()).toBeVisible({ timeout: 15_000 });
   await expect(panel.getByText('Cookie profiles (Pro)')).toHaveCount(0);
 
   // The user clicks Unlock Pro → engagement is recorded, a key is minted, checkout opens, polling starts.
-  await panel.getByRole('button', { name: /unlock pro/i }).click();
+  await panel.getByRole('button', { name: /unlock pro/i }).first().click();
 
   // …the purchase completes on the (mocked) payment page.
   billing.paid = true;

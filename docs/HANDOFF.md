@@ -19,9 +19,9 @@ find in older notes from before that date is INVALID. `git log` is authoritative
   (extension id `oidemgbbhocfepdadkmfdlbjgdcjdldd`, v1.0.0). Trader verification still pending
   (listing shows the "non-trader" label until Google processes it; does not block anything).
   **Resolved 2026-07-15:** the live listing's privacy link is the WORKING github.io URL (verified
-  on the public listing page) — the parked bokal.dev never threatened the review. Move the listing
-  URLs to bokal.dev only after DNS + CNAME + custom domain are live, ideally bundled with the
-  1.0.1 update.
+  on the public listing page) — the parked bokal.dev never threatened the review. bokal.dev is now
+  fully live (§1 site block); swap the listing URLs to it in the same dashboard visit as the
+  1.0.2 upload.
 - **Quality bar:** 125 unit tests (124 at submission; +1 openRestore coverage added in the
   post-submission review) · tsc clean · build + `check:bundle` guard · zip
   113 KB with LICENSE.txt + THIRD-PARTY-NOTICES.txt inside · Playwright E2E green on BOTH build
@@ -118,8 +118,8 @@ parked), price-raise date fixed at ~2026-09-13.
 > **Full manual QA PASSED 2026-07-15 (founder, store build) — including QA #1: the per-site grant
 > prompts for the specific site.** Every listing claim is now human-verified in production.
 >
-> STILL OPEN, founder-only: item 4 (Edge — submit the **1.0.1 zip** so both stores carry the
-> identical, MPL-complete artifact); upload 1.0.1 to CWS (normal update; current version stays
+> STILL OPEN, founder-only: item 4 (Edge — submit the **1.0.2 zip** so both stores carry the
+> identical, MPL-complete artifact); upload 1.0.2 to CWS (normal update; current version stays
 > live during review); item 5 (lifetime $29.99 → ~$39 around **2026-09-13**, 60 days from
 > publish); item 6 (announce only after §5.1 namespaces + USPTO).
 
@@ -172,7 +172,8 @@ submitted zip** (that can reset the review). The changes and our status:
    `docs/pre-launch-qa.md` against the STORE build and everything passed — **including item #1:
    the per-site activeTab grant prompts for the specific site (verified in a real browser).** The
    minimal-permissions store claim is now human-verified end to end; the live-payment test the
-   same day proved checkout/entitlement. No findings → v1.0.1 is the MPL-notice zip only.
+   same day proved checkout/entitlement. No findings. (v1.0.1 = MPL-notice zip, built but never
+   uploaded — SUPERSEDED by v1.0.2, which adds the header Unlock-Pro chip; upload 1.0.2.)
 4. **EU-DSA trader verification** — pending at Google; no action unless they ask for more info.
    (If offered individual vs organization: individual avoids the ~30-day D-U-N-S detour.)
 5. (AGENT, post-launch) **Reverse trial (M13):** 7-day full-Pro on 2nd-profile trigger. Deliberately

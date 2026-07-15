@@ -118,6 +118,7 @@ export function App() {
         <label style={{ fontSize: 11, color: 'var(--bokal-muted)' }}>
           <input type="checkbox" checked={showPartitioned} disabled={scope === 'all'} onChange={(e) => cookiesStore.getState().setShowPartitioned(e.target.checked)} /> Show partitioned (CHIPS)
         </label>
+        {!entitled && <UpgradeButton compact />}
         <ThemeToggle />
       </div>
       {scope === 'site' && cookies.length >= SOFT_DOMAIN_COOKIE_WARN && (

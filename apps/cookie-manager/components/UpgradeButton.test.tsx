@@ -43,4 +43,28 @@ describe('UpgradeButton', () => {
     expect(alert).not.toBeNull();
     expect(alert?.textContent).toContain('Couldn’t open the upgrade page.');
   });
+
+  // The compact variant lives in the header so the upsell is visible without scrolling; the full
+  // section at the bottom keeps Restore + the error alert.
+  describe('compact', () => {
+    it('renders only the Unlock Pro chip — no restore link', () => {
+      const { getByRole, queryByRole } = render(<UpgradeButton compact />);
+      expect(getByRole('button', { name: /unlock pro/i })).toBeTruthy();
+      expect(queryByRole('button', { name: /restore/i })).toBeNull();
+    });
+
+    it('opens the upgrade flow on click', () => {
+      const spy = vi.spyOn(entitlementStore.getState(), 'openUpgrade').mockImplementation(async () => {});
+      const { getByRole } = render(<UpgradeButton compact />);
+      getByRole('button', { name: /unlock pro/i }).click();
+      expect(spy).toHaveBeenCalledOnce();
+      spy.mockRestore();
+    });
+
+    it('never duplicates the error alert — the full section owns role="alert"', () => {
+      entitlementStore.setState({ upgradeError: 'Couldn’t open the upgrade page.' });
+      const { container } = render(<UpgradeButton compact />);
+      expect(container.querySelector('[role="alert"]')).toBeNull();
+    });
+  });
 });
