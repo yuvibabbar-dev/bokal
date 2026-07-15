@@ -4,6 +4,18 @@
 **Author:** Strategy Lead
 **Status:** DECISIONS — locked for launch. This is a decision document, not a menu. Each choice below is the version we ship.
 
+> **⚠ Corrections (2026-07-14, post-audit — where this doc and the live state disagree, the live
+> state wins):**
+> 1. **Live checkout prices are $4.99/mo · $19.99/yr · $29.99 lifetime launch** (→ ~$39 around
+>    2026-09-14). The $19/$29 figures that appeared below predate the ExtPay setup and have been
+>    corrected in place; the store listing must always match the live checkout.
+> 2. **§6 predates the audit finding that ExtPay stores the Pro buyer's EMAIL in
+>    `chrome.storage.sync`** — so the CWS **PII category IS ticked (THREE categories, not two)**,
+>    and licence data (incl. that email) IS transmitted to ExtensionPay/Stripe when a user buys
+>    Pro. §6b/6c are corrected in place; the §6a policy block is the pre-audit draft kept for
+>    history. **Canonical store answers: `docs/store/data-use-answers.md`; canonical policy:
+>    `docs/store/privacy-policy.md` (live at `/privacy.html`).**
+
 **Product in one line:** Bokal is a Manifest V3 Chrome/Edge cookie manager positioned as the trustworthy, open-source successor to the delisted EditThisCookie — minimal permissions, no remote code, no telemetry, local-first.
 
 ---
@@ -60,10 +72,10 @@ We do **not** cripple the free tier. Free stays fully useful so it wins installs
 | Plan | Price | Notes |
 |---|---|---|
 | Monthly | **$4.99 / mo** | Anchor only — makes annual look cheap; not a revenue line |
-| Annual | **$19 / yr** | ~3.8 months of monthly; the "sensible subscriber" option |
+| Annual | **$19.99 / yr** | ~4 months of monthly; the "sensible subscriber" option |
 | **Lifetime** | **$39 one-time** | **DEFAULT-SELECTED in the ExtPay paywall — this is the featured offer** |
 
-- **Launch promo:** Lifetime **$29** for the first **~60 days** to seed reviews, then it returns to $39. (Never offer lifetime to legacy subscribers.)
+- **Launch promo:** Lifetime **$29.99** for the first **~60 days** to seed reviews, then it returns to $39. (Never offer lifetime to legacy subscribers.)
 - **Feature the lifetime, not the subscription.** For a local, no-backend, trust-first utility competing with a free incumbent, "pay once, own it, no subscription, no cloud, no telemetry" is both the best-converting and the most on-brand offer.
 
 ### FREE-TRIAL STANCE
@@ -218,12 +230,12 @@ requirements.
 **Also place this exact sentence visibly on the extension's homepage/landing page** (Google requires the affirmative Limited Use statement on the site, one click from home):
 > *"Bokal's use of information received from Chrome APIs and any user data adheres to the Chrome Web Store User Data Policy, including the Limited Use requirements."*
 
-### 6b. CWS "Data collected" checkboxes — check EXACTLY TWO
+### 6b. CWS "Data collected" checkboxes — check EXACTLY THREE (corrected 2026-07-14)
 | Category | Check? | Reason |
 |---|---|---|
 | **Authentication information** | ✅ **YES** | Google's definition = "logins, passwords, and authentication cookies"; Bokal reads/edits auth cookies |
 | **Website content** | ✅ **YES** | Google's definition literally lists "cookies" as website content |
-| Personally identifiable information | ❌ No | Bokal touches no name/email/ID |
+| **Personally identifiable information** | ✅ **YES** (corrected) | ExtPay stores the Pro buyer's **email** in `chrome.storage.sync` after purchase — verified against the live API. Ticking this is not optional. |
 | Health information | ❌ No | — |
 | Financial and payment information | ❌ No | Handled by ExtPay/Stripe as processors, not by Bokal |
 | Personal communications | ❌ No | — |
@@ -232,8 +244,14 @@ requirements.
 | **User activity** | ❌ **No** | Bokal logs no clicks/keystrokes/actions |
 
 ### 6c. Collected / Transmitted (yes/no)
-- **Collected (handled locally):** YES for Authentication information + Website content only — because "handle" includes local-only storage (login/auth functionality requires the disclosure even when nothing leaves the device).
-- **Transmitted off device:** **NO** for everything. Nothing is sent anywhere.
+- **Collected (handled locally):** YES for Authentication information + Website content + PII
+  (the Pro buyer's email, stored by ExtPay in `storage.sync`) — because "handle" includes
+  local-only storage (login/auth functionality requires the disclosure even when nothing leaves
+  the device).
+- **Transmitted off device:** **NO** for cookie data / website content (enforced in code, asserted
+  in E2E). **YES for licence data, including the Pro buyer's email — to ExtensionPay/Stripe, only
+  if the user buys Pro.** Free users transmit nothing at all. Never certify "nothing is
+  transmitted" on the CWS privacy tab.
 
 ### 6d. Three certification checkboxes — check ALL THREE (all true)
 - ✅ "I do not sell or transfer user data to third parties, outside of the approved use cases."
@@ -256,7 +274,7 @@ requirements.
 
 ## 7. Launch Checklist (account-bound — only the founder can do these)
 
-- [ ] **ExtPay account** — register the extension at extensionpay.com; connect it to your **own Stripe** account (non-merchant-of-record; ~7–8% all-in take). Create the three products: Monthly $4.99, Annual $19, Lifetime $39 (set the $29 launch price for the first ~60 days), and set **Lifetime as default-selected**.
+- [ ] **ExtPay account** — register the extension at extensionpay.com; connect it to your **own Stripe** account (non-merchant-of-record; ~7–8% all-in take). Create the three products: Monthly $4.99, Annual $19.99, Lifetime $39 (set the $29.99 launch price for the first ~60 days), and set **Lifetime as default-selected**. *(DONE 2026-07-14 — live.)*
 - [ ] **Stripe account** — complete Stripe onboarding as a Canada-based sole proprietor; confirm payout bank details and tax/identity verification.
 - [ ] **Chrome Web Store developer account** — pay the one-time $5 registration fee; verify the publisher email.
 - [ ] **Microsoft Edge Add-ons developer account** — register in Partner Center (no fee) for the Edge listing.
@@ -268,7 +286,7 @@ requirements.
 
 ### One-look decision summary
 - **Tagline:** "Every cookie, under your control. Nothing leaves your device."
-- **Pricing:** Monthly **$4.99** · Annual **$19** · **Lifetime $39** (launch **$29** for ~60 days) — **lifetime is the default-selected, featured offer**; 7-day full-Pro reverse trial triggered on saving/applying a second profile.
+- **Pricing:** Monthly **$4.99** · Annual **$19.99** · **Lifetime $39** (launch **$29.99** for ~60 days) — **lifetime is the default-selected, featured offer**; 7-day full-Pro reverse trial triggered on saving/applying a second profile.
 - **Free vs Pro:** Free keeps all CRUD/search/import-export/CHIPS/dark-mode (wins installs + trust); Pro gates only named local cookie profiles + optional passphrase encryption (converts the QA/dev ~1%).
 - **Store title:** `Bokal - Cookie Editor & Manager (Open Source, No Tracking)`
 - **Store summary (126 chars):** `Edit, add, view & delete cookies incl. HttpOnly. JSON/Netscape export, JSON import, CHIPS inspector. Open source, no tracking.`

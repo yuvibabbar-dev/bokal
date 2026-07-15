@@ -112,9 +112,11 @@ account and disk — no more, no less — unless Bokal adds its own encryption l
 
 **2.3b Billing network path (ExtPay, M12).** Pro entitlement is checked via ExtPay
 (`extensionpay.com`), the one network path in the product. It is **Pro-gated**: `getUser()` fires
-only after the user opens the upgrade page or holds a paid cache (`shouldContactBilling`), and
-`startBackground()` only registers a listener (no fetch on init) — so free users make zero network
-calls. Only license status is exchanged; no cookie or browsing data is sent. ExtPay's library is
+only after the user opens the upgrade page or holds a paid cache (`shouldContactBilling`), and the
+service worker never constructs ExtPay at all — `startBackground()` is deliberately not called
+(even constructing the client writes an install marker to `storage.sync`; see the note at the top
+of `entrypoints/background.ts`) — so free users make zero network calls and zero off-device
+writes. Only license status is exchanged; no cookie or browsing data is sent. ExtPay's library is
 **bundled** (no remote code), and it needs only the `storage` permission — Bokal adds no
 `host_permissions` and no content script (the `onPaid` content-script path is deliberately not
 used; entitlement is re-checked on panel `visibilitychange` instead). The privacy policy carves
