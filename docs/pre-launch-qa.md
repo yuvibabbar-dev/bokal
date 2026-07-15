@@ -1,6 +1,6 @@
 # Bokal — Manual QA checklist (real browser)
 
-The automated suite (124 unit tests + 5 Playwright E2E specs) already covers cookie CRUD, the
+The automated suite (125 unit tests + 5 Playwright E2E specs) already covers cookie CRUD, the
 free/Pro bundle split, the ExtPay purchase sequence against a mocked backend, encrypted
 snapshot→restore, and "a free user makes zero network calls."
 

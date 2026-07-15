@@ -16,7 +16,8 @@ find in older notes from before that date is INVALID. `git log` is authoritative
   bundled AGPL ExtPay; see `docs/licensing-notes.md`).
 - **Status: SUBMITTED to the Chrome Web Store — awaiting review.** Trader verification also pending
   (listing shows "non-trader" label until Google processes it; does not block anything).
-- **Quality bar at submission:** 124 unit tests · tsc clean · build + `check:bundle` guard · zip
+- **Quality bar:** 125 unit tests (124 at submission; +1 openRestore coverage added in the
+  post-submission review) · tsc clean · build + `check:bundle` guard · zip
   113 KB with LICENSE.txt + THIRD-PARTY-NOTICES.txt inside · Playwright E2E green on BOTH build
   variants (incl. full CRUD-through-UI against a real site, the real ExtPay purchase sequence against
   a mocked backend, and wrong-passphrase-destroys-nothing) · **CI green on GitHub Actions** (runs on
@@ -29,8 +30,16 @@ find in older notes from before that date is INVALID. `git log` is authoritative
   card for testing.
 - **Site: LIVE** via GitHub Pages from the **`gh-pages` branch** (branch-based Pages, NOT the
   Actions route — the repo's Actions token can't create Pages sites):
-  - `https://bokal.dev/` (landing; Limited Use statement on the page)
-  - `https://bokal.dev/privacy.html` (the URL pasted into CWS)
+  - ⚠ **bokal.dev DNS IS NOT CONFIGURED (verified 2026-07-14 late):** the apex resolves to Porkbun
+    PARKING IPs (207.207.210.x) and HTTPS does not answer; `.dev` is HSTS-preloaded, so browsers
+    have no HTTP fallback. Until §5.1(a) is done, the ONLY working origin is
+    `https://yuvibabbar-dev.github.io/bokal/`.
+  - `https://bokal.dev/` (landing; Limited Use statement on the page) — target state, dead until DNS
+  - `https://bokal.dev/privacy.html` — the URL the submission guide instructed for the CWS privacy
+    field. ⚠ FOUNDER: open the dashboard and CONFIRM which URL is actually in the Homepage +
+    Privacy fields (§5.1c implies it may still be github.io). If the listing says bokal.dev, the
+    DNS fix is REVIEW-CRITICAL — a reviewer clicking the privacy link today gets a connection
+    error, a top rejection cause.
   - To republish: copy `site/*` + `.nojekyll` into a fresh checkout of `gh-pages` and force-push
     that branch (source of truth for content is `site/` on `main`).
 
@@ -70,6 +79,16 @@ tab-binding technique), no restore-purchase path (built: `Billing.openRestore()`
 is `main` — fixed, now green), per-site permission model, bundle-split CI guard
 (`scripts/check-bundle-split.mjs`), E2E rebuilt to drive the real UI against a real site.
 
+**Session 4 (2026-07-14 late) — tech-lead review + doc fixes:** found bokal.dev still PARKED (DNS
+never added — see §1 warning; founder P0) and fixed the stale-doc landmines: `pro-monetization.md`
+still said "swap the app id before launch" (would orphan licenses) + claimed the SW calls
+`startBackground()`; business doc §6b still said PII=No / "exactly two" + pre-live prices;
+`threat-model.md` §2.3b same startBackground drift. Test count now 125. Added
+`docs/business/2026-07-14-launch-plan.md` (distribution was the missing artifact). Verified fresh:
+tests/tsc/build/guard green locally, CI green on `main`, npm `bokal` still unclaimed. Market
+analysis (session log): realistic year-1 gross $500–$6k; distribution, not product, is the
+constraint; strongest validated Pro signal is automation/storageState interop, not profiles.
+
 ## 4. LAUNCH DAY checklist (when CWS approves)
 
 1. Install from the store yourself → confirm live checkout (no "Test mode" badge) → ExtPay's
@@ -108,7 +127,10 @@ submitted zip** (that can reset the review). The changes and our status:
    staged. **REMAINING:** (a) FOUNDER adds DNS at Porkbun — apex `bokal.dev` → four A records
    185.199.108–111.153, and `www` CNAME → yuvibabbar-dev.github.io; (b) once DNS resolves, AGENT
    redeploys `gh-pages` (now includes CNAME) and FOUNDER sets Settings→Pages custom domain =
-   bokal.dev + Enforce HTTPS; (c) FOUNDER updates the CWS listing's Homepage + Privacy URL fields to
+   bokal.dev + Enforce HTTPS — ⚠ **ORDER IS LOAD-BEARING: do NOT push the CNAME to `gh-pages` (or
+   set the Pages custom domain) before `dig bokal.dev` returns the four GitHub A records.** A
+   configured custom domain makes github.io/bokal/* 301-redirect to bokal.dev immediately — done
+   too early, it breaks the currently-working privacy URL mid-review; (c) FOUNDER updates the CWS listing's Homepage + Privacy URL fields to
    bokal.dev (the old github.io 301-redirects, so not breaking); (d) still TODO: npm `bokal`
    (available), GitHub org `bokal-dev`/`bokalhq` (available), social handles; CWS "Official URL" via
    Search Console domain verification of bokal.dev. `.app`/`.io`/`.sh`/`.co`/`.tools` all still free.
