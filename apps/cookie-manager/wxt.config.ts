@@ -9,7 +9,7 @@ export default defineConfig({
     // live here, or the listing ships as the bare word "Bokal", which nobody searches for.
     // name: 58/75 chars · description: 126/132 chars.
     name: 'Bokal - Cookie Editor & Manager (Open Source, No Tracking)',
-    version: '1.0.0',
+    version: '1.0.1',
     description:
       'Edit, add, view & delete cookies incl. HttpOnly. JSON/Netscape export, JSON import, CHIPS inspector. Open source, no tracking.',
     // Product homepage. (GPL source-pointing is satisfied by the in-panel Source link, README, and
