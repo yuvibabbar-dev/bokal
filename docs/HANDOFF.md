@@ -14,8 +14,14 @@ find in older notes from before that date is INVALID. `git log` is authoritative
 - **Repo:** `/Users/yuvibabbar/Desktop/Projects/chrome_extensions/bokal` — **public** at
   `github.com/yuvibabbar-dev/bokal`, branch **`main`**, license **GPL-3.0-or-later** (forced by
   bundled AGPL ExtPay; see `docs/licensing-notes.md`).
-- **Status: SUBMITTED to the Chrome Web Store — awaiting review.** Trader verification also pending
-  (listing shows "non-trader" label until Google processes it; does not block anything).
+- **Status: LIVE on the Chrome Web Store — approved and published 2026-07-15.**
+  Listing: <https://chromewebstore.google.com/detail/bokal-cookie-editor-manag/oidemgbbhocfepdadkmfdlbjgdcjdldd>
+  (extension id `oidemgbbhocfepdadkmfdlbjgdcjdldd`, v1.0.0). Trader verification still pending
+  (listing shows the "non-trader" label until Google processes it; does not block anything).
+  **Resolved 2026-07-15:** the live listing's privacy link is the WORKING github.io URL (verified
+  on the public listing page) — the parked bokal.dev never threatened the review. Move the listing
+  URLs to bokal.dev only after DNS + CNAME + custom domain are live, ideally bundled with the
+  1.0.1 update.
 - **Quality bar:** 125 unit tests (124 at submission; +1 openRestore coverage added in the
   post-submission review) · tsc clean · build + `check:bundle` guard · zip
   113 KB with LICENSE.txt + THIRD-PARTY-NOTICES.txt inside · Playwright E2E green on BOTH build
@@ -25,7 +31,7 @@ find in older notes from before that date is INVALID. `git log` is authoritative
 - **Payments: LIVE.** ExtPay app id `bokal-test` (id is permanent — the display name is "Bokal",
   which is what customers see; do NOT change the id, it would orphan licenses). Stripe connected
   LIVE. Plans: **$4.99/mo · $19.99/yr · $29.99 one-time (launch price; raise to ~$39 after ~60
-  days — around 2026-09-14).** ExtPay auto-selects test mode for unpacked installs (test card
+  days — around 2026-09-13, 60 days from the 2026-07-15 publish).** ExtPay auto-selects test mode for unpacked installs (test card
   4242 4242 4242 4242) and live mode for store installs — one app id serves both; never use a real
   card for testing.
 - **Site: LIVE** via GitHub Pages from the **`gh-pages` branch** (branch-based Pages, NOT the
@@ -35,11 +41,9 @@ find in older notes from before that date is INVALID. `git log` is authoritative
     have no HTTP fallback. Until §5.1(a) is done, the ONLY working origin is
     `https://yuvibabbar-dev.github.io/bokal/`.
   - `https://bokal.dev/` (landing; Limited Use statement on the page) — target state, dead until DNS
-  - `https://bokal.dev/privacy.html` — the URL the submission guide instructed for the CWS privacy
-    field. ⚠ FOUNDER: open the dashboard and CONFIRM which URL is actually in the Homepage +
-    Privacy fields (§5.1c implies it may still be github.io). If the listing says bokal.dev, the
-    DNS fix is REVIEW-CRITICAL — a reviewer clicking the privacy link today gets a connection
-    error, a top rejection cause.
+  - `https://bokal.dev/privacy.html` — target state. RESOLVED 2026-07-15: the live listing links
+    the github.io privacy URL (verified on the public listing page), so DNS is NOT review-critical
+    — it now gates only the §5.1 chain (custom domain, official-URL verification, announce).
   - To republish: copy `site/*` + `.nojekyll` into a fresh checkout of `gh-pages` and force-push
     that branch (source of truth for content is `site/` on `main`).
 
@@ -89,7 +93,21 @@ tests/tsc/build/guard green locally, CI green on `main`, npm `bokal` still uncla
 analysis (session log): realistic year-1 gross $500–$6k; distribution, not product, is the
 constraint; strongest validated Pro signal is automation/storageState interop, not profiles.
 
+**2026-07-15: APPROVED + PUBLISHED** (day after submission). Verified live on the public listing:
+v1.0.0, in-app purchases disclosed with the correct prices, github.io privacy URL (working),
+"non-trader" label pending verification. Launch-day agent items executed same day — store URL
+wired into `site/index.html` + README, `gh-pages` redeployed WITHOUT CNAME (bokal.dev still
+parked), price-raise date fixed at ~2026-09-13.
+
 ## 4. LAUNCH DAY checklist (when CWS approves)
+
+> **2026-07-15: APPROVED + PUBLISHED.** Agent-side items DONE the same day: item 2 (site CTA now
+> links the live listing; `gh-pages` redeployed **without** CNAME — DNS still parked) and item 3
+> (README status → live). STILL OPEN, founder-only: item 1 (install from the store, confirm live
+> checkout, and run `docs/pre-launch-qa.md` against the STORE build — the per-site grant, QA #1,
+> has STILL never been human-verified and real users hit it now); item 4 (Edge — submit the
+> REBUILT zip so the MPL notice ships there from day one); item 5 (lifetime $29.99 → ~$39 around
+> **2026-09-13**, 60 days from publish); item 6 (announce only after §5.1 namespaces + USPTO).
 
 1. Install from the store yourself → confirm live checkout (no "Test mode" badge) → ExtPay's
    dashboard checklist ticks after the first live payment.

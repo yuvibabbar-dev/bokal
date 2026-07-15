@@ -11,9 +11,8 @@
 
 ---
 
-> **Status:** pre-launch. The extension is feature-complete and passes its full test + build + E2E
-> suite, but is not yet published to the Chrome Web Store / Edge Add-ons. See
-> [`docs/HANDOFF.md`](docs/HANDOFF.md) for the current state and remaining launch steps.
+> **Status:** **LIVE on the [Chrome Web Store](https://chromewebstore.google.com/detail/bokal-cookie-editor-manag/oidemgbbhocfepdadkmfdlbjgdcjdldd)** (published 2026-07-15).
+> Edge Add-ons submission is next. See [`docs/HANDOFF.md`](docs/HANDOFF.md) for the current state.
 >
 > **License:** [**GPL-3.0-or-later**](LICENSE). Bokal bundles ExtPay, which is copyleft
 > (AGPL-3.0-or-later), so the combined work is conveyed under GPL-compatible terms — a permissive
@@ -97,7 +96,7 @@ apps/cookie-manager/   # the WXT + React + TypeScript extension (the product)
   e2e/                 #   Playwright fixtures + smoke/granted specs
 packages/ui-kit/       # shared theme.css + useTheme
 packages/tsconfig/     # shared TS config
-site/                  # pre-launch landing page + hosted privacy policy (static)
+site/                  # landing page + hosted privacy policy (static)
 docs/                  # HANDOFF, threat-model, pro-monetization, store/, business/, specs
 ```
 
