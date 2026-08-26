@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cookie-Editor Alternative: an honest comparison — Bokal</title>
+  <meta name="description" content="Cookie-Editor is also GPL-3.0, also MV3, and has used optional host permissions since 2023. Here is what actually differs between it and Bokal, verified against both manifests.">
+  <link rel="canonical" href="https://bokal.dev/cookie-editor-alternative.html">
+  <link rel="icon" type="image/png" href="icon-128.png">
+  <link rel="stylesheet" href="styles.css">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Cookie-Editor Alternative: an honest comparison — Bokal">
+  <meta property="og:description" content="Cookie-Editor is also GPL-3.0, also MV3, and has used optional host permissions since 2023. Here is what actually differs between it and Bokal, verified against both manifests.">
+  <meta property="og:url" content="https://bokal.dev/cookie-editor-alternative.html">
+  <meta property="og:image" content="https://bokal.dev/icon-128.png">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Bokal - Cookie Editor & Manager","applicationCategory":"DeveloperApplication","operatingSystem":"Chrome, Chromium","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"license":"https://www.gnu.org/licenses/gpl-3.0.html","url":"https://bokal.dev/"}</script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" style="color:inherit"><svg width="30" height="30" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#24282C"/><circle cx="64" cy="64" r="45" fill="#E9A83E"/><rect x="18" y="99" width="92" height="16" fill="#24282C"/><g fill="#B67A22"><rect x="40" y="40" width="9" height="9" rx="2"/><rect x="70" y="40" width="9" height="9" rx="2"/><rect x="55" y="58" width="9" height="9" rx="2"/><rect x="80" y="62" width="9" height="9" rx="2"/><rect x="46" y="74" width="9" height="9" rx="2"/><rect x="68" y="80" width="9" height="9" rx="2"/></g></svg> Bokal</a>
+    <nav class="nav">
+      <a href="/editthiscookie-alternative.html">EditThisCookie</a>
+      <a href="/cookie-editor-alternative.html">Cookie-Editor</a>
+      <a href="/export-cookies-playwright.html">Playwright</a>
+      <a href="https://github.com/yuvibabbar-dev/bokal">Source</a>
+    </nav>
+  </header>
+  <main>
+    <article class="article">
+      <p class="crumb"><a href="/">Bokal</a> › cookie editor alternative</p>
+      <h1>A Cookie-Editor alternative for developers who read the permissions</h1>
+      <p class="standfirst">An honest comparison. Cookie-Editor is a good tool with around 2 million users, and most of what people assume separates it from Bokal turns out not to. Here is what actually does.</p>
+      <p class="updated">Last updated 26 August 2026. Competitor details below were verified against published manifests and repositories on that date.</p>
+
+      <div class="callout">
+        <p><strong>Let us kill three myths first, because we checked.</strong> Cookie-Editor is <strong>also GPL-3.0</strong> open source (about 1.7k GitHub stars). It has been <strong>Manifest V3 since March 2022</strong>. And it has used <strong><code>optional_host_permissions</code> rather than install-time site access since August 2023</strong>. So "open source", "MV3" and "no install-time host permissions" are <em>not</em> reasons to prefer Bokal. Anyone telling you otherwise has not read its manifest.</p>
+      </div>
+
+      <h2>What actually differs</h2>
+      <div class="cmp-scroll">
+      <table class="cmp">
+        <thead><tr><th>&nbsp;</th><th>Bokal</th><th>Cookie-Editor</th></tr></thead>
+        <tbody>
+          <tr><th><code>tabs</code> permission</th><td class="yes">Not requested — uses <code>activeTab</code></td><td class="no">Requested</td></tr>
+          <tr><th>"Read your browsing history" at install</th><td class="yes">No</td><td class="no">Yes (consequence of <code>tabs</code>)</td></tr>
+          <tr><th>Install-time site access</th><td>None — optional grant</td><td>None — optional grant</td></tr>
+          <tr><th>Licence</th><td>GPL-3.0</td><td>GPL-3.0</td></tr>
+          <tr><th>Manifest version</th><td>MV3</td><td>MV3</td></tr>
+          <tr><th>CHIPS partitioned cookies</th><td class="yes">Partition inspector</td><td class="no">No <code>partitionKey</code> handling</td></tr>
+          <tr><th>Playwright <code>storageState</code> export</th><td class="yes">Yes</td><td class="no">No</td></tr>
+          <tr><th>Puppeteer <code>setCookie</code> export</th><td class="yes">Yes</td><td class="no">No</td></tr>
+          <tr><th>Users</th><td>Small and new</td><td class="yes">~2 million, 4.4★</td></tr>
+          <tr><th>Browsers</th><td>Chrome / Chromium</td><td class="yes">Chrome, Edge, Firefox, Opera, Safari</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h2>The permission difference, precisely</h2>
+      <p>This is the whole of it. Cookie-Editor's published Chrome manifest requests:</p>
+      <pre><code>"permissions": ["cookies", "tabs", "storage", "sidePanel"]</code></pre>
+      <p>Bokal's requests:</p>
+      <pre><code>"permissions": ["cookies", "storage", "sidePanel", "unlimitedStorage", "alarms", "activeTab"]</code></pre>
+      <p>The meaningful delta is <code>tabs</code> versus <code>activeTab</code>. The <code>tabs</code> permission grants read access to the URL and title of <em>every</em> tab, continuously — which is why Chrome shows <strong>"Read your browsing history"</strong> on the install screen. <code>activeTab</code> grants a temporary capability for the single tab you are on, and only after you click the extension's toolbar button.</p>
+      <p>For a cookie editor, neither design is wrong. Cookie-Editor uses <code>tabs</code> to know which site you are looking at. Bokal gets the same information from <code>activeTab</code> at the cost of requiring a click first. If you would rather not grant standing visibility into every tab, that is the reason to choose Bokal, and it is visible before you install either one.</p>
+
+      <h2>Where Cookie-Editor is the better choice</h2>
+      <p>Being straight about this, because a comparison page that concludes "we win everything" is not worth reading:</p>
+      <ul>
+        <li><strong>Browser coverage.</strong> Cookie-Editor ships for Chrome, Edge, Firefox, Opera and Safari. Bokal is Chrome and Chromium only today.</li>
+        <li><strong>Track record.</strong> ~2 million users and 4.4★ from over 400 ratings, over many years. Bokal launched in July 2026 and is tiny by comparison.</li>
+        <li><strong>It is free and open source too.</strong> There is no ethical upgrade being offered here. If the browsing-history warning does not bother you and you do not need partitioned cookies or automation export, Cookie-Editor is a perfectly good answer and we would rather you used a good tool than switched for no reason.</li>
+      </ul>
+
+      <h2>Where Bokal is the better choice</h2>
+      <ul>
+        <li><strong>You work with CHIPS / partitioned cookies.</strong> Bokal has a partition inspector; Cookie-Editor's codebase contains no <code>partitionKey</code> handling, so partitioned cookies are effectively invisible to it.</li>
+        <li><strong>You write Playwright or Puppeteer tests.</strong> Bokal exports a site's cookies directly as Playwright <code>storageState</code>, a Playwright <code>addCookies</code> array, or a Puppeteer <code>setCookie</code> array. See <a href="/export-cookies-playwright.html">the how-to</a>.</li>
+        <li><strong>You do not want the browsing-history permission.</strong> Covered above.</li>
+        <li><strong>You juggle several logged-in accounts on one site.</strong> The optional Pro tier stores named cookie profiles locally and restores a saved set into the live session in one click.</li>
+      </ul>
+
+      <h2>Switching</h2>
+      <p>Bokal reads Cookie-Editor's JSON export directly. Export from Cookie-Editor, open Bokal on the same site, press <strong>Import</strong>, and pick the file. Nothing else is required, and nothing is uploaded anywhere in either direction.</p>
+      <div class="article-cta">
+        <h2>Try Bokal</h2>
+        <p>Free and open source (GPL-3.0). No account, no telemetry, no install-time site access.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/bokal-cookie-editor-manag/oidemgbbhocfepdadkmfdlbjgdcjdldd">Add to Chrome</a>
+          <a class="btn btn-ghost" href="https://github.com/yuvibabbar-dev/bokal">Read the source</a>
+        </div>
+      </div>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© Bokal. A local-first cookie manager.</span>
+      <span><a href="/">Home</a> · <a href="/privacy.html">Privacy policy</a> · <a href="mailto:yuvisbabbar@gmail.com">Contact</a></span>
+    </div>
+  </footer>
+</body>
+</html>

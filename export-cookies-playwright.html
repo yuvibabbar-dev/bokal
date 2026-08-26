@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Export Cookies for Playwright (storageState) from Chrome — Bokal</title>
+  <meta name="description" content="Log in once by hand, export the session as Playwright storageState or a Puppeteer setCookie array, and reuse it in your tests instead of scripting the login flow.">
+  <link rel="canonical" href="https://bokal.dev/export-cookies-playwright.html">
+  <link rel="icon" type="image/png" href="icon-128.png">
+  <link rel="stylesheet" href="styles.css">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Export Cookies for Playwright (storageState) from Chrome — Bokal">
+  <meta property="og:description" content="Log in once by hand, export the session as Playwright storageState or a Puppeteer setCookie array, and reuse it in your tests instead of scripting the login flow.">
+  <meta property="og:url" content="https://bokal.dev/export-cookies-playwright.html">
+  <meta property="og:image" content="https://bokal.dev/icon-128.png">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"Export a site's cookies as Playwright storageState","step":[{"@type":"HowToStep","name":"Log in normally","text":"Sign in to the site in Chrome and complete any MFA."},{"@type":"HowToStep","name":"Open Bokal","text":"Click the Bokal toolbar icon and grant access to that one site."},{"@type":"HowToStep","name":"Export","text":"Use the Export for... dropdown and choose Playwright storageState."},{"@type":"HowToStep","name":"Use it","text":"Pass the file as storageState in browser.newContext or in playwright.config.ts."}]}</script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" style="color:inherit"><svg width="30" height="30" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#24282C"/><circle cx="64" cy="64" r="45" fill="#E9A83E"/><rect x="18" y="99" width="92" height="16" fill="#24282C"/><g fill="#B67A22"><rect x="40" y="40" width="9" height="9" rx="2"/><rect x="70" y="40" width="9" height="9" rx="2"/><rect x="55" y="58" width="9" height="9" rx="2"/><rect x="80" y="62" width="9" height="9" rx="2"/><rect x="46" y="74" width="9" height="9" rx="2"/><rect x="68" y="80" width="9" height="9" rx="2"/></g></svg> Bokal</a>
+    <nav class="nav">
+      <a href="/editthiscookie-alternative.html">EditThisCookie</a>
+      <a href="/cookie-editor-alternative.html">Cookie-Editor</a>
+      <a href="/export-cookies-playwright.html">Playwright</a>
+      <a href="https://github.com/yuvibabbar-dev/bokal">Source</a>
+    </nav>
+  </header>
+  <main>
+    <article class="article">
+      <p class="crumb"><a href="/">Bokal</a> › export cookies playwright</p>
+      <h1>How to export a site's cookies as Playwright <code>storageState</code></h1>
+      <p class="standfirst">Log in once by hand in your browser, export the session, and drop it straight into your Playwright or Puppeteer suite — instead of scripting the login flow.</p>
+      <p class="updated">Last updated 26 August 2026. Competitor details below were verified against published manifests and repositories on that date.</p>
+
+      <div class="callout">
+        <p><strong>The problem this solves.</strong> Scripting a login for tests is often the most brittle code in a suite: SSO redirects, MFA prompts, CAPTCHAs and rate limits all conspire against it. Authenticating once in a real browser and reusing the resulting cookies sidesteps all of that.</p>
+      </div>
+
+      <h2>Steps</h2>
+      <ol class="steps">
+        <li><h3>Log in normally</h3><p>In Chrome, sign in to the site as you usually would. Complete any MFA. You want the browser holding a valid session.</p></li>
+        <li><h3>Open Bokal on that tab</h3><p>Click the Bokal toolbar icon. Grant access to that one site when prompted — Bokal asks only for the origin you are on.</p></li>
+        <li><h3>Export for automation</h3><p>In the toolbar, open the <strong>Export for…</strong> dropdown and choose <strong>Playwright storageState</strong>. Save the file as <code>storageState.json</code> next to your tests. The same dropdown also offers <em>Playwright addCookies</em> and <em>Puppeteer setCookie</em>.</p></li>
+        <li><h3>Point Playwright at it</h3><p>Load it per-context, or globally in your config.</p></li>
+      </ol>
+
+      <h3>Per test context</h3>
+      <pre><code>const context = await browser.newContext({
+  storageState: 'storageState.json',
+});
+const page = await context.newPage();
+await page.goto('https://example.com/dashboard'); // already signed in</code></pre>
+
+      <h3>For the whole project</h3>
+      <pre><code>// playwright.config.ts
+export default defineConfig({
+  use: { storageState: 'storageState.json' },
+});</code></pre>
+
+      <h3>Puppeteer</h3>
+      <p>Choose <strong>Puppeteer setCookie</strong> in the same dropdown, then:</p>
+      <pre><code>const cookies = JSON.parse(fs.readFileSync('cookies.json', 'utf8'));
+await page.setCookie(...cookies);
+await page.goto('https://example.com/dashboard');</code></pre>
+
+      <div class="callout">
+        <p><strong>Two caveats, stated plainly.</strong> Bokal exports <em>cookies only</em> — the <code>origins</code> array in the generated <code>storageState</code> is empty, so <code>localStorage</code> and <code>sessionStorage</code> are not included. If your app keeps its auth token in <code>localStorage</code> rather than a cookie, this will not be enough on its own.</p>
+        <p>And an exported session file is a <strong>live credential</strong>. Anyone holding it can act as you on that site until it expires. Do not commit it to a repository, and prefer a throwaway test account over your own.</p>
+      </div>
+
+      <h2>What the file looks like</h2>
+      <p>Playwright's <code>storageState</code> format is an object with a <code>cookies</code> array and an <code>origins</code> array:</p>
+      <pre><code>{
+  "cookies": [
+    {
+      "name": "session",
+      "value": "…",
+      "domain": ".example.com",
+      "path": "/",
+      "expires": 1788000000,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": []
+}</code></pre>
+      <p>Because Bokal can read and write <code>HttpOnly</code> cookies, session cookies that a <code>document.cookie</code>-based tool cannot see are included.</p>
+
+      <h2>Other formats</h2>
+      <ul>
+        <li><strong>Playwright <code>addCookies</code></strong> — a bare array for <code>context.addCookies(...)</code> when you would rather not use a storage-state file.</li>
+        <li><strong>Cookie header string</strong> — copies a <code>name=value; name=value</code> string to the clipboard, for curl or an HTTP client.</li>
+        <li><strong>Netscape <code>cookies.txt</code></strong> — for curl's <code>--cookie-jar</code>, wget, yt-dlp and similar. Export only; Bokal does not import this format.</li>
+        <li><strong>JSON</strong> — Bokal's own format, and it also reads Cookie-Editor and EditThisCookie exports.</li>
+      </ul>
+
+      <h2>Going the other way</h2>
+      <p>Import works too: feed Bokal a <code>storageState.json</code> or a Playwright/Puppeteer cookie array and it will write those cookies into the live browser session. That is useful for debugging what your test framework actually produced, in a real browser, with real rendering.</p>
+
+      <h2>Frequently asked</h2>
+      <div class="faq">
+        <details><summary>Does this include localStorage?</summary><p>No. Bokal exports cookies only, so the <code>origins</code> array is empty. If your authentication lives in <code>localStorage</code>, you will need Playwright's own <code>context.storageState()</code> after a scripted login instead.</p></details>
+        <details><summary>Will the exported session expire?</summary><p>Yes, on whatever schedule the site sets. Session cookies with no expiry are exported with <code>expires: -1</code>. Re-export when your suite starts failing on authentication.</p></details>
+        <details><summary>Is any of this sent anywhere?</summary><p>No. Bokal has no server and free users make zero network calls. The export is generated locally and saved by your browser's normal download flow.</p></details>
+      </div>
+      <div class="article-cta">
+        <h2>Try Bokal</h2>
+        <p>Free and open source (GPL-3.0). No account, no telemetry, no install-time site access.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/bokal-cookie-editor-manag/oidemgbbhocfepdadkmfdlbjgdcjdldd">Add to Chrome</a>
+          <a class="btn btn-ghost" href="https://github.com/yuvibabbar-dev/bokal">Read the source</a>
+        </div>
+      </div>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© Bokal. A local-first cookie manager.</span>
+      <span><a href="/">Home</a> · <a href="/privacy.html">Privacy policy</a> · <a href="mailto:yuvisbabbar@gmail.com">Contact</a></span>
+    </div>
+  </footer>
+</body>
+</html>

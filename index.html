@@ -3,10 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bokal — a trustworthy cookie manager for Chrome & Edge</title>
+  <title>Bokal — a trustworthy, open-source cookie manager for Chrome</title>
   <meta name="description" content="Bokal is an open-source Manifest V3 cookie manager. View, edit, add, delete, import and export cookies — with nothing leaving your device.">
   <link rel="icon" type="image/png" href="icon-128.png">
+  <link rel="canonical" href="https://bokal.dev/">
   <link rel="stylesheet" href="styles.css">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Bokal — a trustworthy, open-source cookie manager for Chrome">
+  <meta property="og:description" content="View, edit, add, delete, import and export cookies — with nothing leaving your device. Open source, Manifest V3, no install-time site access.">
+  <meta property="og:url" content="https://bokal.dev/">
+  <meta property="og:image" content="https://bokal.dev/icon-128.png">
+  <meta name="twitter:card" content="summary">
 </head>
 <body>
   <header class="site-header">
@@ -16,6 +23,7 @@
     </span>
     <nav class="nav">
       <a href="#features">Features</a>
+      <a href="#guides">Guides</a>
       <a href="#privacy">Privacy</a>
       <a href="privacy.html">Privacy policy</a>
     </nav>
@@ -25,12 +33,12 @@
     <section class="hero">
       <svg class="hero-logo" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#24282C"/><circle cx="64" cy="64" r="45" fill="#E9A83E"/><rect x="18" y="99" width="92" height="16" fill="#24282C"/><g fill="#B67A22"><rect x="40" y="40" width="9" height="9" rx="2"/><rect x="70" y="40" width="9" height="9" rx="2"/><rect x="55" y="58" width="9" height="9" rx="2"/><rect x="80" y="62" width="9" height="9" rx="2"/><rect x="46" y="74" width="9" height="9" rx="2"/><rect x="68" y="80" width="9" height="9" rx="2"/></g></svg>
       <h1>Every cookie, under your control.</h1>
-      <p class="lede">Bokal is an open-source cookie manager for Chrome and Edge. View, edit, add, delete, import and export cookies — with nothing leaving your device.</p>
+      <p class="lede">Bokal is an open-source cookie manager for Chrome. View, edit, add, delete, import and export cookies — with nothing leaving your device.</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/bokal-cookie-editor-manag/oidemgbbhocfepdadkmfdlbjgdcjdldd">Add to Chrome</a>
         <a class="btn btn-ghost" href="https://github.com/yuvibabbar-dev/bokal">View source</a>
       </div>
-      <span class="cta-note">Free and open source (GPL-3.0). Works on Chrome and Edge.</span>
+      <span class="cta-note">Free and open source (GPL-3.0). Chrome and Chromium browsers.</span>
 
       <div class="badges">
         <span class="badge">No <b>tabs</b> permission</span>
@@ -47,7 +55,7 @@
       <p class="sub">Full control, including the cookies UI-only tools can't touch — all free.</p>
       <div class="grid">
         <div class="card"><h3>Full cookie control</h3><p>View, add, edit and delete cookies, including HttpOnly cookies, with search and filter.</p></div>
-        <div class="card"><h3>Import &amp; export</h3><p>JSON, Netscape and cookie-header formats, plus Playwright and Puppeteer for test automation. No downloads permission.</p></div>
+        <div class="card"><h3>Import &amp; export</h3><p>Export to JSON, Netscape, cookie-header, Playwright and Puppeteer. Import from JSON (including Cookie-Editor and EditThisCookie) and header strings. No downloads permission.</p></div>
         <div class="card"><h3>Rules &amp; cleanup</h3><p>Protect, pin and block cookies; keep a site whitelist and clear the rest with one click or a daily sweep.</p></div>
         <div class="card"><h3>Audit hints</h3><p>Inline flags for missing SameSite, unpartitioned cross-site cookies, and oversized cookies.</p></div>
         <div class="card"><h3>CHIPS &amp; DevTools</h3><p>A partition inspector for modern CHIPS cookies, and a DevTools panel for the current tab.</p></div>
@@ -64,7 +72,7 @@
           <span class="tag">The whole cookie manager</span>
           <ul>
             <li>View, add, edit, delete — including HttpOnly</li>
-            <li>Import &amp; export (JSON, Netscape, headers, automation)</li>
+            <li>Export JSON / Netscape / headers / automation; import JSON &amp; headers</li>
             <li>Rules, cleanup, audit hints, CHIPS, DevTools</li>
             <li>No account, no tracking, no network calls</li>
           </ul>
@@ -79,6 +87,16 @@
             <li>Still 100% local — profiles never leave your device</li>
           </ul>
         </div>
+      </div>
+    </section>
+
+    <section id="guides" class="wrap">
+      <h2>Guides &amp; comparisons</h2>
+      <p class="sub">Switching from something else, or wiring cookies into a test suite?</p>
+      <div class="grid">
+        <div class="card"><h3><a href="editthiscookie-alternative.html">EditThisCookie alternative</a></h3><p>What happened when EditThisCookie was delisted, the copycat that took its name, and how to bring your cookies across.</p></div>
+        <div class="card"><h3><a href="cookie-editor-alternative.html">Bokal vs Cookie-Editor</a></h3><p>An honest comparison. Both are GPL-3.0 and MV3 — here is what genuinely differs, and where Cookie-Editor is the better pick.</p></div>
+        <div class="card"><h3><a href="export-cookies-playwright.html">Export cookies for Playwright</a></h3><p>Log in once by hand, export as <code>storageState</code>, and skip scripting the login flow in your tests.</p></div>
       </div>
     </section>
 

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open-Source EditThisCookie Alternative for Chrome (MV3) — Bokal</title>
+  <meta name="description" content="EditThisCookie was delisted in December 2024 and a credential-stealing copycat took its name. Bokal is an open-source Manifest V3 replacement that reads EditThisCookie JSON.">
+  <link rel="canonical" href="https://bokal.dev/editthiscookie-alternative.html">
+  <link rel="icon" type="image/png" href="icon-128.png">
+  <link rel="stylesheet" href="styles.css">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Open-Source EditThisCookie Alternative for Chrome (MV3) — Bokal">
+  <meta property="og:description" content="EditThisCookie was delisted in December 2024 and a credential-stealing copycat took its name. Bokal is an open-source Manifest V3 replacement that reads EditThisCookie JSON.">
+  <meta property="og:url" content="https://bokal.dev/editthiscookie-alternative.html">
+  <meta property="og:image" content="https://bokal.dev/icon-128.png">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is EditThisCookie coming back?","acceptedAnswer":{"@type":"Answer","text":"There is no indication that it is. It was removed from the Chrome Web Store in December 2024 and Google gave no official reason."}},{"@type":"Question","name":"Is Bokal a fork of EditThisCookie?","acceptedAnswer":{"@type":"Answer","text":"No. Bokal is an independent Manifest V3 implementation licensed GPL-3.0. It reads EditThisCookie export JSON so migration is painless, but shares no code."}},{"@type":"Question","name":"Does Bokal cost money?","acceptedAnswer":{"@type":"Answer","text":"The cookie manager is free. One optional paid feature, Bokal Pro, adds named local cookie profiles for $4.99/month, $19.99/year or $29.99 one-time."}}]}</script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" style="color:inherit"><svg width="30" height="30" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#24282C"/><circle cx="64" cy="64" r="45" fill="#E9A83E"/><rect x="18" y="99" width="92" height="16" fill="#24282C"/><g fill="#B67A22"><rect x="40" y="40" width="9" height="9" rx="2"/><rect x="70" y="40" width="9" height="9" rx="2"/><rect x="55" y="58" width="9" height="9" rx="2"/><rect x="80" y="62" width="9" height="9" rx="2"/><rect x="46" y="74" width="9" height="9" rx="2"/><rect x="68" y="80" width="9" height="9" rx="2"/></g></svg> Bokal</a>
+    <nav class="nav">
+      <a href="/editthiscookie-alternative.html">EditThisCookie</a>
+      <a href="/cookie-editor-alternative.html">Cookie-Editor</a>
+      <a href="/export-cookies-playwright.html">Playwright</a>
+      <a href="https://github.com/yuvibabbar-dev/bokal">Source</a>
+    </nav>
+  </header>
+  <main>
+    <article class="article">
+      <p class="crumb"><a href="/">Bokal</a> › editthiscookie alternative</p>
+      <h1>Looking for an EditThisCookie alternative? Bokal is the open-source successor.</h1>
+      <p class="standfirst">EditThisCookie was delisted from the Chrome Web Store in December 2024, and a malicious copycat took its name. Here is what happened, what to check before you install a replacement, and how to move your cookies across.</p>
+      <p class="updated">Last updated 26 August 2026. Competitor details below were verified against published manifests and repositories on that date.</p>
+
+      <h2>What happened to EditThisCookie</h2>
+      <p>EditThisCookie was one of the most widely used cookie editors on Chrome, reportedly with around 3 million users. In December 2024 it disappeared from the Chrome Web Store. Google never published an official reason. The most plausible explanation is mundane: it was a Manifest V2 extension and never migrated to Manifest V3, and Google began removing MV2 extensions around that time.</p>
+      <p>The part that matters more: after the original was gone, a copycat extension took the <em>EditThisCookie</em> name and was caught harvesting login credentials and session tokens and pushing phishing content. It reportedly grew past 50,000 users before it was removed.</p>
+      <div class="callout">
+        <p><strong>Why this matters for whatever you install next.</strong> A cookie editor by definition can read and write your session cookies, including <code>HttpOnly</code> ones. That is session-hijack-grade access to any site you point it at. The lesson from the copycat is not "some developers are bad" — it is that a tool holding this much access should be trustworthy <em>by construction</em>, not by reputation, because reputation is exactly the thing an attacker can steal.</p>
+      </div>
+
+      <h2>What to actually check before installing a cookie editor</h2>
+      <ol>
+        <li><strong>Read the install prompt.</strong> If it says <em>"Read your browsing history"</em>, the extension is requesting the <code>tabs</code> permission — access to the URL and title of every tab you have open, not just the one you are editing.</li>
+        <li><strong>Check for install-time site access.</strong> An extension declaring <code>host_permissions</code> gets access to matching sites the moment you install it. One declaring <code>optional_host_permissions</code> has to ask you first.</li>
+        <li><strong>Look for the source.</strong> Being open source does not make a build trustworthy on its own, but it does let you read the permission and network code, and it means claims can be checked instead of believed.</li>
+        <li><strong>Watch for remote code.</strong> A content security policy of <code>script-src 'self'</code> means everything the extension runs ships inside the package and cannot be swapped out later.</li>
+      </ol>
+
+      <h2>What Bokal does</h2>
+      <p>Bokal is a Manifest V3 cookie manager, GPL-3.0, with no server and no account. This is the entire published manifest permission block:</p>
+      <pre><code>permissions: ['cookies', 'storage', 'sidePanel', 'unlimitedStorage', 'alarms', 'activeTab']
+optional_host_permissions: ['&lt;all_urls&gt;']
+// no host_permissions
+content_security_policy: { extension_pages: "script-src 'self'; object-src 'self'" }</code></pre>
+      <ul>
+        <li><strong>No <code>tabs</code> permission</strong>, so no "read your browsing history" line on the install screen. Bokal uses <code>activeTab</code>, which reads the current tab's URL only after you click the toolbar button.</li>
+        <li><strong>No site access at install.</strong> <code>&lt;all_urls&gt;</code> appears only as an <em>optional</em> grant — the set Bokal is allowed to ask for. By default it requests just the origin of the tab you opened it on.</li>
+        <li><strong>Free users make zero network calls.</strong> There is no telemetry and no analytics. The only external service Bokal ever contacts is ExtensionPay, for the optional Pro licence check, and only once you open the upgrade page. You can verify this in DevTools → Network.</li>
+      </ul>
+      <p>To be blunt about the trade-off: a per-site grant <em>persists</em> until you revoke it in <code>chrome://extensions</code> → Details → Site access, and while granted Bokal can read that origin's cookies. "Minimal" here means <strong>narrow</strong> — one site at a time, nothing at install — not weak. Within a site you have granted, it is fully capable, because that is the job.</p>
+
+      <h2>Moving your cookies across</h2>
+      <p>Bokal reads EditThisCookie's JSON export format directly, so switching costs nothing:</p>
+      <ol class="steps">
+        <li><h3>Find your old export</h3><p>If you still have an EditThisCookie JSON export saved, you can use it as-is. The extension itself is no longer installable from the store.</p></li>
+        <li><h3>Open Bokal on the site</h3><p>Click the Bokal toolbar icon on the site whose cookies you are restoring, and grant access to that one site when prompted.</p></li>
+        <li><h3>Import</h3><p>Press <strong>Import</strong> and select the JSON file. Bokal recognises EditThisCookie and Cookie-Editor arrays, its own format, Playwright <code>storageState</code>, and Playwright/Puppeteer cookie arrays. It will also parse a raw <code>Cookie:</code> header string.</p></li>
+      </ol>
+      <div class="callout">
+        <p><strong>One honest limitation:</strong> Bokal <em>exports</em> Netscape <code>cookies.txt</code> but does not currently import it. JSON and cookie-header strings are the supported import paths.</p>
+      </div>
+
+      <h2>Frequently asked</h2>
+      <div class="faq">
+        <details><summary>Is EditThisCookie coming back?</summary><p>There is no indication that it is. It was removed in December 2024 and Google gave no official reason. Treat any extension currently using that name with caution — a credential-harvesting copycat used it before.</p></details>
+        <details><summary>Is Bokal a fork of EditThisCookie?</summary><p>No. It is an independent Manifest V3 implementation written from scratch, licensed GPL-3.0. It reads EditThisCookie's export format so that migrating is painless, but shares no code with it.</p></details>
+        <details><summary>Does Bokal cost money?</summary><p>The cookie manager is free: full create/read/update/delete including HttpOnly cookies, search, import and export, protect/pin/block rules, whitelist cleanup, a CHIPS partitioned-cookie inspector and a DevTools panel. One optional paid feature, Bokal Pro, adds named local cookie profiles for $4.99/month, $19.99/year or $29.99 one-time.</p></details>
+        <details><summary>What about Cookie-Editor?</summary><p>Cookie-Editor is the other major option and it is a good tool — free, GPL-3.0, around 2 million users. We wrote an honest comparison covering exactly what does and does not differ: <a href="/cookie-editor-alternative.html">Bokal vs Cookie-Editor</a>.</p></details>
+      </div>
+      <div class="article-cta">
+        <h2>Try Bokal</h2>
+        <p>Free and open source (GPL-3.0). No account, no telemetry, no install-time site access.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/bokal-cookie-editor-manag/oidemgbbhocfepdadkmfdlbjgdcjdldd">Add to Chrome</a>
+          <a class="btn btn-ghost" href="https://github.com/yuvibabbar-dev/bokal">Read the source</a>
+        </div>
+      </div>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© Bokal. A local-first cookie manager.</span>
+      <span><a href="/">Home</a> · <a href="/privacy.html">Privacy policy</a> · <a href="mailto:yuvisbabbar@gmail.com">Contact</a></span>
+    </div>
+  </footer>
+</body>
+</html>
