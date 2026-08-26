@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to View and Edit HttpOnly Cookies in Chrome — Bokal</title>
+  <meta name="description" content="HttpOnly cookies are hidden from JavaScript by design. Here is what the flag does, how to edit one in DevTools, and the faster way with Bokal.">
+  <link rel="canonical" href="https://bokal.dev/edit-httponly-cookies-chrome.html">
+  <link rel="icon" type="image/png" href="icon-128.png">
+  <link rel="stylesheet" href="styles.css">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to View and Edit HttpOnly Cookies in Chrome — Bokal">
+  <meta property="og:description" content="HttpOnly cookies are hidden from JavaScript by design. Here is what the flag does, how to edit one in DevTools, and the faster way with Bokal.">
+  <meta property="og:url" content="https://bokal.dev/edit-httponly-cookies-chrome.html">
+  <meta property="og:image" content="https://bokal.dev/og/og-httponly.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"View and edit HttpOnly cookies in Chrome","step":[{"@type":"HowToStep","name":"Open the cookie tool","text":"Open Chrome DevTools Application panel, or click the Bokal toolbar icon on the site."},{"@type":"HowToStep","name":"Find the cookie","text":"Locate the cookie by name; HttpOnly cookies are listed with an HttpOnly column or flag."},{"@type":"HowToStep","name":"Edit and reload","text":"Change the value or flags, then reload the page so the new cookie is sent on the next request."}]}</script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" style="color:inherit"><svg width="30" height="30" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#24282C"/><circle cx="64" cy="64" r="45" fill="#E9A83E"/><rect x="18" y="99" width="92" height="16" fill="#24282C"/><g fill="#B67A22"><rect x="40" y="40" width="9" height="9" rx="2"/><rect x="70" y="40" width="9" height="9" rx="2"/><rect x="55" y="58" width="9" height="9" rx="2"/><rect x="80" y="62" width="9" height="9" rx="2"/><rect x="46" y="74" width="9" height="9" rx="2"/><rect x="68" y="80" width="9" height="9" rx="2"/></g></svg> Bokal</a>
+    <nav class="nav">
+      <a href="/editthiscookie-alternative.html">EditThisCookie</a>
+      <a href="/cookie-editor-alternative.html">Cookie-Editor</a>
+      <a href="/export-cookies-playwright.html">Playwright</a>
+      <a href="/edit-httponly-cookies-chrome.html">HttpOnly</a>
+      <a href="https://github.com/yuvibabbar-dev/bokal">Source</a>
+    </nav>
+  </header>
+  <main>
+    <article class="article">
+      <p class="crumb"><a href="/">Bokal</a> › edit httponly cookies chrome</p>
+      <h1>How to view and edit <code>HttpOnly</code> cookies in Chrome</h1>
+      <p class="standfirst">JavaScript cannot see them by design. DevTools can, but awkwardly. Here is what <code>HttpOnly</code> actually does, and the fastest way to read and change one.</p>
+      <p class="updated">Last updated 26 August 2026.</p>
+
+      <h2>What <code>HttpOnly</code> means</h2>
+      <p>A cookie marked <code>HttpOnly</code> is sent with HTTP requests as normal but is <strong>hidden from JavaScript</strong>. Reading <code>document.cookie</code> in the console will not show it, and no script on the page can read or overwrite it.</p>
+      <p>That is a deliberate defence against cross-site scripting: if an attacker manages to run JavaScript on your page, an <code>HttpOnly</code> session cookie is one thing they still cannot simply read out. It is why almost every framework sets its session cookie that way — <code>connect.sid</code>, <code>PHPSESSID</code>, <code>JSESSIONID</code>, Django's <code>sessionid</code> and Rails' <code>_session_id</code> are all normally <code>HttpOnly</code>.</p>
+      <div class="callout">
+        <p><strong>The practical consequence:</strong> any cookie tool built on <code>document.cookie</code> — which includes a lot of bookmarklets, snippets and simpler extensions — is structurally blind to exactly the cookies you most often need to debug. To touch them, a tool has to go through the browser's own privileged cookie API.</p>
+      </div>
+
+      <h2>Option 1 — Chrome DevTools</h2>
+      <p>DevTools can do this, and it is worth knowing since it needs nothing installed:</p>
+      <ol class="steps">
+        <li><h3>Open DevTools</h3><p>F12, or ⌥⌘I on macOS.</p></li>
+        <li><h3>Application → Storage → Cookies</h3><p>Pick the origin in the left-hand tree. Every cookie appears, including <code>HttpOnly</code> ones, with an <strong>HttpOnly</strong> checkbox column.</p></li>
+        <li><h3>Double-click a cell to edit</h3><p>Value, Domain, Path, Expires and the flags are all editable in place. Refresh the page for the change to take effect on the next request.</p></li>
+      </ol>
+      <p>Where this gets tiring: the table is cramped, there is no search across sites, editing an expiry means typing a date string in the right format, and you cannot save a set of cookies to restore later. For a one-off change it is fine. For repeated session work it is a lot of clicking.</p>
+
+      <h2>Option 2 — Bokal</h2>
+      <p>Bokal goes through Chrome's <code>cookies</code> API, so <code>HttpOnly</code> cookies are first-class:</p>
+      <ol class="steps">
+        <li><h3>Open Bokal on the site</h3><p>Click the toolbar icon and grant access to that one site. Bokal asks only for the origin you are on — it declares no site access at install and no <code>tabs</code> permission.</p></li>
+        <li><h3>Find the cookie</h3><p>Search and filter across the site's cookies, or switch to the all-sites view. Audit badges flag missing <code>SameSite</code>, unpartitioned cross-site cookies and oversized values inline.</p></li>
+        <li><h3>Edit it</h3><p>Name, Value, Domain, Path, Expires, and the <strong>HttpOnly</strong>, <strong>Secure</strong>, <strong>Host-only</strong> and <strong>SameSite</strong> flags — with a session-cookie toggle so you do not have to hand-craft an expiry.</p></li>
+      </ol>
+      <p>There is also a DevTools panel if you would rather stay in that window, and export to JSON, Netscape, cookie-header, Playwright and Puppeteer formats when you need the session somewhere else.</p>
+
+      <h2>Things that bite people</h2>
+      <ul>
+        <li><strong>Changing a value does not change the current page.</strong> The page already rendered with the old cookie. Reload so the new value goes out on the next request.</li>
+        <li><strong>You cannot make a cookie visible to JavaScript by unticking <code>HttpOnly</code> server-side.</strong> You can flip the flag locally in your own browser, but the server sets it on every subsequent <code>Set-Cookie</code>, so it comes straight back.</li>
+        <li><strong><code>Secure</code> cookies need HTTPS.</strong> Creating one on an <code>http://</code> origin will not stick (<code>localhost</code> is treated as a secure context, so it works there).</li>
+        <li><strong>Domain matters more than you think.</strong> <code>.example.com</code> and <code>example.com</code> are different scopes; a host-only cookie will not be sent to subdomains.</li>
+      </ul>
+
+      <div class="callout">
+        <p><strong>Handle session cookies like credentials.</strong> A copied <code>HttpOnly</code> session cookie <em>is</em> the login. Anyone holding it can act as you on that site until it expires. Do not paste one into a ticket, a chat or a repository, and prefer a throwaway test account.</p>
+      </div>
+
+      <h2>Frequently asked</h2>
+      <div class="faq">
+        <details><summary>Why can't I see HttpOnly cookies in <code>document.cookie</code>?</summary><p>That is exactly what the flag does — it hides the cookie from all JavaScript on the page so that an XSS bug cannot read your session token. Use DevTools or an extension that goes through the browser's cookie API.</p></details>
+        <details><summary>Can an extension read HttpOnly cookies?</summary><p>Yes, if it has the <code>cookies</code> permission and host access for that origin. That is a lot of trust to hand over, which is why it is worth checking what a cookie extension requests at install — see our <a href="/editthiscookie-alternative.html">notes on what to check</a>.</p></details>
+        <details><summary>Does editing a cookie log me in as someone else?</summary><p>Only if you already hold a valid session value for that account. Pasting in an arbitrary string will not forge a session — the server validates it.</p></details>
+      </div>
+      <div class="article-cta">
+        <h2>Try Bokal</h2>
+        <p>Free and open source (GPL-3.0). No account, no telemetry, no install-time site access.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/bokal-cookie-editor-manag/oidemgbbhocfepdadkmfdlbjgdcjdldd">Add to Chrome</a>
+          <a class="btn btn-ghost" href="https://github.com/yuvibabbar-dev/bokal">Read the source</a>
+        </div>
+      </div>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© Bokal. A local-first cookie manager.</span>
+      <span><a href="/">Home</a> · <a href="/privacy.html">Privacy policy</a> · <a href="mailto:yuvisbabbar@gmail.com">Contact</a></span>
+    </div>
+  </footer>
+</body>
+</html>

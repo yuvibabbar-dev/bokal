@@ -12,8 +12,10 @@
   <meta property="og:title" content="Export Cookies for Playwright (storageState) from Chrome — Bokal">
   <meta property="og:description" content="Log in once by hand, export the session as Playwright storageState or a Puppeteer setCookie array, and reuse it in your tests instead of scripting the login flow.">
   <meta property="og:url" content="https://bokal.dev/export-cookies-playwright.html">
-  <meta property="og:image" content="https://bokal.dev/icon-128.png">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://bokal.dev/og/og-playwright.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"Export a site's cookies as Playwright storageState","step":[{"@type":"HowToStep","name":"Log in normally","text":"Sign in to the site in Chrome and complete any MFA."},{"@type":"HowToStep","name":"Open Bokal","text":"Click the Bokal toolbar icon and grant access to that one site."},{"@type":"HowToStep","name":"Export","text":"Use the Export for... dropdown and choose Playwright storageState."},{"@type":"HowToStep","name":"Use it","text":"Pass the file as storageState in browser.newContext or in playwright.config.ts."}]}</script>
 </head>
 <body>
@@ -23,6 +25,7 @@
       <a href="/editthiscookie-alternative.html">EditThisCookie</a>
       <a href="/cookie-editor-alternative.html">Cookie-Editor</a>
       <a href="/export-cookies-playwright.html">Playwright</a>
+      <a href="/edit-httponly-cookies-chrome.html">HttpOnly</a>
       <a href="https://github.com/yuvibabbar-dev/bokal">Source</a>
     </nav>
   </header>

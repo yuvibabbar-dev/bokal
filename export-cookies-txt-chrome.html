@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Export cookies.txt from Chrome (Netscape format) for curl, wget and yt-dlp — Bokal</title>
+  <meta name="description" content="Export a logged-in session as a Netscape cookies.txt straight from Chrome — no third-party website, nothing leaves your device.">
+  <link rel="canonical" href="https://bokal.dev/export-cookies-txt-chrome.html">
+  <link rel="icon" type="image/png" href="icon-128.png">
+  <link rel="stylesheet" href="styles.css">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Export cookies.txt from Chrome (Netscape format) for curl, wget and yt-dlp — Bokal">
+  <meta property="og:description" content="Export a logged-in session as a Netscape cookies.txt straight from Chrome — no third-party website, nothing leaves your device.">
+  <meta property="og:url" content="https://bokal.dev/export-cookies-txt-chrome.html">
+  <meta property="og:image" content="https://bokal.dev/og/og-cookies-txt.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"Export cookies.txt from Chrome in Netscape format","step":[{"@type":"HowToStep","name":"Log in","text":"Sign in to the site in Chrome so the browser holds a valid session."},{"@type":"HowToStep","name":"Open Bokal","text":"Click the Bokal toolbar icon and grant access to that one site."},{"@type":"HowToStep","name":"Export Netscape","text":"Press Export Netscape to download a cookies.txt file for use with curl, wget or yt-dlp."}]}</script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" style="color:inherit"><svg width="30" height="30" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#24282C"/><circle cx="64" cy="64" r="45" fill="#E9A83E"/><rect x="18" y="99" width="92" height="16" fill="#24282C"/><g fill="#B67A22"><rect x="40" y="40" width="9" height="9" rx="2"/><rect x="70" y="40" width="9" height="9" rx="2"/><rect x="55" y="58" width="9" height="9" rx="2"/><rect x="80" y="62" width="9" height="9" rx="2"/><rect x="46" y="74" width="9" height="9" rx="2"/><rect x="68" y="80" width="9" height="9" rx="2"/></g></svg> Bokal</a>
+    <nav class="nav">
+      <a href="/editthiscookie-alternative.html">EditThisCookie</a>
+      <a href="/cookie-editor-alternative.html">Cookie-Editor</a>
+      <a href="/export-cookies-playwright.html">Playwright</a>
+      <a href="/edit-httponly-cookies-chrome.html">HttpOnly</a>
+      <a href="https://github.com/yuvibabbar-dev/bokal">Source</a>
+    </nav>
+  </header>
+  <main>
+    <article class="article">
+      <p class="crumb"><a href="/">Bokal</a> › export cookies txt chrome</p>
+      <h1>How to export <code>cookies.txt</code> from Chrome (Netscape format)</h1>
+      <p class="standfirst">The format curl, wget and yt-dlp expect — exported straight from your browser, without pasting your session into a website.</p>
+      <p class="updated">Last updated 26 August 2026.</p>
+
+      <h2>What the Netscape cookie format is</h2>
+      <p>Netscape's <code>cookies.txt</code> is a plain, tab-separated file that predates almost everything else still using it. Each line is one cookie:</p>
+      <pre><code># Netscape HTTP Cookie File
+.example.com	TRUE	/	TRUE	1788000000	session	abc123</code></pre>
+      <p>The columns are domain, include-subdomains flag, path, secure flag, expiry as a Unix timestamp, name, and value. It is the format <code>curl --cookie</code>, <code>wget --load-cookies</code> and <code>yt-dlp --cookies</code> all read.</p>
+
+      <h2>Exporting it</h2>
+      <ol class="steps">
+        <li><h3>Log in to the site in Chrome</h3><p>Sign in as normal, so the browser is holding a valid session.</p></li>
+        <li><h3>Open Bokal on that tab</h3><p>Click the toolbar icon and grant access to that one site when prompted.</p></li>
+        <li><h3>Press "Export Netscape"</h3><p>You get a <code>.txt</code> file in the Netscape format, containing the cookies for that site — including <code>HttpOnly</code> ones, which is usually the point.</p></li>
+      </ol>
+
+      <h3>Using it with curl</h3>
+      <pre><code>curl --cookie example-cookies.txt https://example.com/account</code></pre>
+      <h3>With wget</h3>
+      <pre><code>wget --load-cookies example-cookies.txt https://example.com/file.zip</code></pre>
+      <h3>With yt-dlp</h3>
+      <pre><code>yt-dlp --cookies example-cookies.txt "https://example.com/watch?v=..."</code></pre>
+
+      <div class="callout">
+        <p><strong>Why export rather than use a "cookies to txt" website:</strong> pasting a session cookie into a third-party site hands that site your login. Bokal generates the file locally — there is no Bokal server, and free users make zero network calls, which you can confirm in DevTools → Network.</p>
+      </div>
+
+      <h2>Honest limitations</h2>
+      <ul>
+        <li><strong>Export only.</strong> Bokal writes Netscape <code>cookies.txt</code> but does not currently parse it back in. To import, use JSON (it reads Cookie-Editor and EditThisCookie exports) or a cookie-header string.</li>
+        <li><strong>Session cookies have no real expiry.</strong> They are written with a placeholder; some tools treat those as already expired. If a session-only cookie is not being sent, give it an explicit future expiry before exporting.</li>
+        <li><strong>Cookies are not always the whole session.</strong> If the site keeps its auth token in <code>localStorage</code>, no cookie export of any format will carry it.</li>
+      </ul>
+
+      <div class="callout">
+        <p><strong>Treat the file as a credential.</strong> A <code>cookies.txt</code> holding a live session is functionally your password for that site. Do not commit it, do not share it in a ticket, and delete it when the job is done.</p>
+      </div>
+
+      <h2>Other formats Bokal exports</h2>
+      <ul>
+        <li><strong>JSON</strong> — Bokal's own format; also reads Cookie-Editor and EditThisCookie exports.</li>
+        <li><strong>Cookie-header string</strong> — <code>name=value; name=value</code> copied to the clipboard, for a one-off <code>curl -H</code> or an HTTP client.</li>
+        <li><strong>Playwright <code>storageState</code> / <code>addCookies</code>, Puppeteer <code>setCookie</code></strong> — see <a href="/export-cookies-playwright.html">the Playwright guide</a>.</li>
+      </ul>
+
+      <h2>Frequently asked</h2>
+      <div class="faq">
+        <details><summary>Does this include HttpOnly cookies?</summary><p>Yes. Bokal reads cookies through Chrome's cookies API rather than <code>document.cookie</code>, so <code>HttpOnly</code> session cookies are included — which is normally the whole reason for exporting.</p></details>
+        <details><summary>yt-dlp says my cookies file is invalid</summary><p>Check the first line is the <code># Netscape HTTP Cookie File</code> header (Bokal writes it), and that the file has not been converted to spaces by an editor — the format is tab-separated and strict about it.</p></details>
+        <details><summary>Can I import a cookies.txt back into Chrome?</summary><p>Not with Bokal today; Netscape is export-only. JSON and cookie-header strings are the supported import paths.</p></details>
+      </div>
+      <div class="article-cta">
+        <h2>Try Bokal</h2>
+        <p>Free and open source (GPL-3.0). No account, no telemetry, no install-time site access.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/bokal-cookie-editor-manag/oidemgbbhocfepdadkmfdlbjgdcjdldd">Add to Chrome</a>
+          <a class="btn btn-ghost" href="https://github.com/yuvibabbar-dev/bokal">Read the source</a>
+        </div>
+      </div>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© Bokal. A local-first cookie manager.</span>
+      <span><a href="/">Home</a> · <a href="/privacy.html">Privacy policy</a> · <a href="mailto:yuvisbabbar@gmail.com">Contact</a></span>
+    </div>
+  </footer>
+</body>
+</html>
