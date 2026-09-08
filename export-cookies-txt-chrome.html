@@ -62,7 +62,7 @@
 
       <h2>Honest limitations</h2>
       <ul>
-        <li><strong>Export only.</strong> Bokal writes Netscape <code>cookies.txt</code> but does not currently parse it back in. To import, use JSON (it reads Cookie-Editor and EditThisCookie exports) or a cookie-header string.</li>
+        <li><strong>Import works too.</strong> Bokal reads Netscape <code>cookies.txt</code> back in, including curl's <code>#HttpOnly_</code> marker — as well as JSON (it reads Cookie-Editor and EditThisCookie exports) and cookie-header strings.</li>
         <li><strong>Session cookies have no real expiry.</strong> They are written with a placeholder; some tools treat those as already expired. If a session-only cookie is not being sent, give it an explicit future expiry before exporting.</li>
         <li><strong>Cookies are not always the whole session.</strong> If the site keeps its auth token in <code>localStorage</code>, no cookie export of any format will carry it.</li>
       </ul>
@@ -82,7 +82,7 @@
       <div class="faq">
         <details><summary>Does this include HttpOnly cookies?</summary><p>Yes. Bokal reads cookies through Chrome's cookies API rather than <code>document.cookie</code>, so <code>HttpOnly</code> session cookies are included — which is normally the whole reason for exporting.</p></details>
         <details><summary>yt-dlp says my cookies file is invalid</summary><p>Check the first line is the <code># Netscape HTTP Cookie File</code> header (Bokal writes it), and that the file has not been converted to spaces by an editor — the format is tab-separated and strict about it.</p></details>
-        <details><summary>Can I import a cookies.txt back into Chrome?</summary><p>Not with Bokal today; Netscape is export-only. JSON and cookie-header strings are the supported import paths.</p></details>
+        <details><summary>Can I import a cookies.txt back into Chrome?</summary><p>Yes. Bokal parses Netscape <code>cookies.txt</code> on import, including curl's <code>#HttpOnly_</code> marker. JSON and cookie-header strings are supported too.</p></details>
       </div>
       <div class="article-cta">
         <h2>Try Bokal</h2>

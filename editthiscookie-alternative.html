@@ -72,7 +72,7 @@ content_security_policy: { extension_pages: "script-src 'self'; object-src 'self
         <li><h3>Import</h3><p>Press <strong>Import</strong> and select the JSON file. Bokal recognises EditThisCookie and Cookie-Editor arrays, its own format, Playwright <code>storageState</code>, and Playwright/Puppeteer cookie arrays. It will also parse a raw <code>Cookie:</code> header string.</p></li>
       </ol>
       <div class="callout">
-        <p><strong>One honest limitation:</strong> Bokal <em>exports</em> Netscape <code>cookies.txt</code> but does not currently import it. JSON and cookie-header strings are the supported import paths.</p>
+        <p><strong>Also supported:</strong> Bokal imports and exports Netscape <code>cookies.txt</code> as well (import understands curl's <code>#HttpOnly_</code> marker), alongside JSON and cookie-header strings.</p>
       </div>
 
       <h2>Frequently asked</h2>

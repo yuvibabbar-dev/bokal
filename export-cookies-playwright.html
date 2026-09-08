@@ -95,7 +95,7 @@ await page.goto('https://example.com/dashboard');</code></pre>
       <ul>
         <li><strong>Playwright <code>addCookies</code></strong> — a bare array for <code>context.addCookies(...)</code> when you would rather not use a storage-state file.</li>
         <li><strong>Cookie header string</strong> — copies a <code>name=value; name=value</code> string to the clipboard, for curl or an HTTP client.</li>
-        <li><strong>Netscape <code>cookies.txt</code></strong> — for curl's <code>--cookie-jar</code>, wget, yt-dlp and similar. Export only; Bokal does not import this format.</li>
+        <li><strong>Netscape <code>cookies.txt</code></strong> — for curl's <code>--cookie-jar</code>, wget, yt-dlp and similar. Bokal both exports and imports this format (import understands curl's <code>#HttpOnly_</code> marker).</li>
         <li><strong>JSON</strong> — Bokal's own format, and it also reads Cookie-Editor and EditThisCookie exports.</li>
       </ul>
 
