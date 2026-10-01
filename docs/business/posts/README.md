@@ -9,6 +9,20 @@ Cookie-Editor's published `manifest.chrome.json`, on 2026-08-26.
 3. **Open source / MV3 / optional host permissions are NOT differentiators** — Cookie-Editor has all
    three. The real deltas are `tabs` vs `activeTab`, CHIPS, and Playwright/Puppeteer export.
 
+## What has actually been posted (corrected 2026-10-01)
+
+Earlier notes in this repo said nothing had ever been posted. That was wrong — it was inferred from
+zero GitHub stars and never checked. The record, from HN's Algolia API and a Reddit archive:
+
+| When | Where | What happened |
+|---|---|---|
+| Thu 2026-07-16 13:05 ET | Hacker News — [48937187](https://news.ycombinator.com/item?id=48937187), from an account created that day | Bare link to bokal.dev, no "Show HN:", no comment → **1 point, 0 comments** |
+| Thu 2026-07-16 13:17 ET | r/webdev | **Removed by moderator** (project posts are Saturday-only) |
+| Thu 2026-07-16 13:19 ET | r/webdev, same account | Duplicate two minutes later → **removed by moderator** |
+
+Nothing since. All three failed on mechanics, not on the pitch — none was seen by enough people to
+count as feedback. Files 03 and 04 carry the specific do-it-differently notes.
+
 ## Sequenced launch
 
 | # | File | Venue | When | Gate |

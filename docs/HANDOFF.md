@@ -1,14 +1,114 @@
 # Bokal — Session Handoff / Resume Point
 
-**The single self-contained entry point for the next session.** Last updated: **2026-09-07 — see
-§0 first: v1.1.0 is LIVE on the Chrome Web Store and the post-publish checklist is done; the launch
-has STILL not been fired.** (Body sections below still read as of 2026-07-15 unless
+**The single self-contained entry point for the next session.** Last updated: **2026-10-01 — see
+§0 first: 106 users, $0; v1.1.0 LIVE since 09-07; the "launch never fired" narrative was WRONG (three
+dead posts on 2026-07-16); store-search ranks and market sizes measured.** (Body sections below still read as of 2026-07-15 unless
 §0 supersedes them.) (Note: git history was rewritten on 2026-07-14 — any commit SHA you remember or
 find in older notes from before that date is INVALID. `git log` is authoritative.)
 
 ---
 
-## 0. ⚠ STATE AS OF 2026-09-04 — READ THIS FIRST
+## 0. ⚠ STATE AS OF 2026-10-01 — READ THIS FIRST
+
+### 2026-10-01 — measured state. Supersedes every "never posted" statement further down.
+
+**Live:** v1.1.0 (since 2026-09-07) · **106 users** · 5.0★ / 2 ratings · $0 revenue · GitHub 0 stars,
+1 fork, 0 issues · repo traffic last 14 days: 9 views / 6 uniques, referrers `bokal.dev` (2) and
+DuckDuckGo (1) — **nothing from Reddit or HN.** The `bokal-v1-1-0-approval-watch` scheduled task did
+its job on 09-07 and no longer exists.
+
+**⚠ CORRECTION — the launch WAS fired, once, on 2026-07-16.** Everything below that says "nothing has
+ever been posted" / "launch never fired" / "still nothing posted" was an inference from zero GitHub
+stars that nobody checked. Found 2026-10-01 via `hn.algolia.com` and the pullpush Reddit archive:
+
+| When (ET) | Where | Outcome |
+|---|---|---|
+| Thu 07-16 13:05 | HN item 48937187 (account created that day) | bare link to bokal.dev, **no "Show HN:"**, no comment → 1 point, 0 comments |
+| Thu 07-16 13:17 | r/webdev | **removed by moderator** (Saturday-only sub) |
+| Thu 07-16 13:19 | r/webdev, same account | duplicate → **removed by moderator** |
+
+(Account handles and Reddit post ids are deliberately NOT recorded here — this repo is public. They
+are in the agent's private project memory.) Attribution is inferred (titles are word-for-word from
+the 07-16 kit) — not yet confirmed by the founder. Nothing found after 07-16. All three failed on mechanics, so they
+are not evidence about the pitch. Consequences: Show HN is a legitimate **re**-submission (HN allows
+it for stories with no attention) — use the prefix, link the repo, comment immediately
+(`posts/04`); r/webdev is a second attempt on an account with two removals — Saturday, once
+(`posts/03`). Posts 02/15/16 were rewritten: they had claimed "told nobody".
+
+**Where the installs come from — CWS search rank, measured 2026-10-01** (en-US, first
+server-rendered batch ≈ top 7–10 results; re-measure with the script pattern in this session's
+history: curl `chromewebstore.google.com/search/<q>` and take `/detail/<slug>/<id>` order):
+
+| Bokal ranks | Query |
+|---|---|
+| #2 | playwright cookies |
+| #3 | playwright storagestate · partitioned cookies |
+| #4 | open source cookie editor |
+| #5 | edit httponly cookies |
+| #6 | chips cookies |
+| #7 | puppeteer cookies · cookie editor devtools |
+| #8 | editthiscookie |
+| **absent** | **cookie editor · cookie manager · edit cookies** · cookies.txt · export cookies · import cookies · netscape cookies · httponly cookie · samesite cookie · cookie inspector |
+| **absent** | **cookie profiles · cookie profile switcher · switch accounts · account switcher · session switcher · multi login** |
+
+Reading: Bokal exists only in the developer long tail, and every query it ranks for is a FREE
+feature. The 56 → 106 climb began after 1.1.0 put "Playwright & Puppeteer" in the summary (timing
+fits; causation unproven — the CWS dashboard's analytics would settle it). "editthiscookie" #8 comes
+from the description alone, so description text does rank on low-competition terms.
+
+**Market sizes (same day, by the store's own numbers):**
+
+| Cluster | Who is there |
+|---|---|
+| "cookie editor" page 1 | Cookie-Editor 2,000,000 (410 ratings) · Cookie Editor 200,000 · CookieManager 60,000 · Easy Cookie Editor 10,000 (16 ratings) · two more at 7,000 / 5,000 with **9 and 3 ratings** |
+| cookies.txt | Get cookies.txt LOCALLY 900,000 · Clean 30,000 · Cookie Exporter 10,000 |
+| puppeteer cookies | Copy Cookies 50,000 · Export cookie JSON for Puppeteer 20,000 · StorageAce 20,000 |
+| playwright cookies | cookie-use 129 · **Bokal 106** · Cookie Brother 1,000 · Playwriter 20,000 |
+| profiles / account switching (what Pro sells) | SessionBox One 10,000 · SessionHub 4,000 (paid) · CookieSwapper 2,000 · Cookie Profile Switcher 398 — all but one free |
+
+Three conclusions. (1) **Page one for "cookie editor" is reachable on installs, not ratings** — two
+listings sit there with 3 and 9 ratings; the bar is a few thousand users. (2) **The category is
+free.** Of ~45 listings across these searches, the store's in-app-purchase flag appears on four — Bokal
+itself and three others, the largest at 4,000 users. (3) **The niche Pro sells into is small and served free.** The July notes'
+"CookieJar Pro-gates automation export at 10k users" could NOT be reproduced — the closest match
+today has 89 users. Do not lean on it.
+
+**Money, plainly.** ~50 installs in 24 days ≈ 2/day ≈ 60/month. One lifetime sale nets ≈ $27 after
+ExtPay (5%) and Stripe. At 1% conversion that is ≈ $16/month. P(zero sales | 106 installs) is 59% at
+0.5%, 35% at 1%, 12% at 2%, 1% at 4% — so $0 now rules out the optimistic end and is still what the
+realistic range predicts. **Nothing is malfunctioning; the funnel is ~30× too small and is
+acquiring for the free product.** One-time pricing means revenue tracks NEW installs: even page one
+for "cookie editor" (say 1,000 installs/month) is ≈ $270/month at 1%.
+
+**The paywall as a free user meets it** (read from `components/UpgradeButton.tsx` + `App.tsx`): a
+header chip "★ Unlock Pro" and a bottom button "★ Unlock Pro — cookie profiles". No explanation, no
+preview, no trial, no price. A click goes straight to ExtPay's external page. `ProfilesPanel` never
+loads for a free user, so nobody can try a profile. **ExtPay mints a user key on that first click,
+before payment — so the ExtPay dashboard's user count ≈ "people who tried to buy". That number is the
+missing diagnostic: ~0 means nobody wants/notices Pro (pitch problem), several-with-0-paid means
+price/checkout.** Asked the founder for it 2026-10-01.
+
+**⚠ PARKED, UNCOMMITTED EXTENSION WORK IN THE TREE (since 2026-09-07 21:21–21:32):**
+`lib/io/export.ts` + `netscape.ts` + three test files — `toNetscape` emits `#HttpOnly_`. `lib/io`
+suite passes (49). Deliberately not committed: the note under POST-PUBLISH CHECKLIST below records
+that **wget, aria2 and Python < 3.10 silently DROP a marked cookie**, a regression for the wget
+workflow the site documents. **Do not build a release from this tree without deciding that** —
+`pnpm build && zip` would ship it. Needs a founder decision (ship with copy changes, make it an
+option, or discard).
+
+**Open, in order of expected value (all FOUNDER unless noted):**
+1. ExtPay dashboard → users vs paid (2 min). Decides whether a paywall-pitch change is worth building.
+2. Edge: 11 weeks since "submitted"; still not in the Edge store. Same zip, second store.
+3. Featured-badge nomination — One Stop Support is trialing developer nominations; Bokal meets the
+   listed eligibility (extension, owned, English, public, no violations, core features free).
+4. Re-post properly: r/chrome_extensions (`posts/01`), then the real Show HN (`posts/04`).
+5. (AGENT, needs approval — extension change) v1.2: put a real pitch in the panel — what a profile
+   is, a locked preview or one free profile, and the price — so a traffic spike meets a paywall that
+   can convert. Gate on the ExtPay number.
+
+---
+
+### 2026-09-04 block (history) — v1.1.0 release record
 
 ### v1.1.0 — UPLOADED TO CWS AND SUBMITTED FOR REVIEW (founder, 2026-09-04 ~22:45)
 
@@ -68,7 +168,14 @@ FAQ), `docs/business/posts/01,02,03,04,05,06,07,08,09,10,11,12,13` + `posts/READ
 `docs/store/listing.md`, `docs/store/DESCRIPTION-paste.md` (retire it in favour of the v1.1 file).
 Also update the README's io bullets and redeploy `gh-pages`. **STILL OPEN — follow-up feature (extension change, founder's call):** `toNetscape` still
 does not emit `#HttpOnly_`, so HttpOnly is the one field that does not survive an export→import
-round trip; emitting the marker is the fix (curl/yt-dlp/newer wget all read it).
+round trip; emitting the marker is the fix. **Reader set, verified 2026-09-07 against source and
+by running the tools:** curl (>= 7.24), yt-dlp/youtube-dl, Python `MozillaCookieJar` **>= 3.10
+only**, Go `cookiestxt`. **wget does NOT read it** — its `src/cookies.c` has no occurrence of
+"httponly" and skips every `#` line — and neither do aria2 or Python < 3.10 (macOS system
+`/usr/bin/python3` is 3.9.6). Those readers silently DROP a marked cookie rather than mis-parse it,
+which is a real regression for the wget workflow the site documents at
+`site/export-cookies-txt-chrome.html` (wget is in its title, standfirst and a worked example, and
+on the index.html card). Shipping the marker needs a release-note sentence and a copy revision.
 
 ### Distribution — the actual problem, restated with today's numbers
 
@@ -78,6 +185,7 @@ forever — store search only surfaces you to people already looking for a cooki
 promotion moves the number from here.
 
 **Still 0 GitHub stars → still nothing posted.** (1 fork appeared — someone found the repo.)
+**[CORRECTED 2026-10-01 — wrong. Three posts went out on 2026-07-16; see the top of §0.]**
 Every dated slot on the posting calendar has now passed: r/chrome_extensions (Aug 26), r/SideProject
 (Aug 27), r/webdev Showoff Saturday (Aug 29), r/opensource (Aug 30), r/coolgithubprojects (Aug 31),
 r/software (Sep 2), **Show HN (Sep 3)**. Product Hunt (Sep 8) is the only one still ahead.
@@ -93,6 +201,9 @@ because a calendar nobody executes is not made truer by moving it.
 
 ### (Previous §0, 2026-08-23 — retained for history)
 
+
+**[CORRECTED 2026-10-01 — the next paragraph is wrong: one HN link and two r/webdev posts went out on
+2026-07-16 and died within minutes. See the top of §0.]**
 
 **The launch was never fired.** The kit was written 2026-07-16 and sat untracked on disk for five
 weeks. Verified 2026-08-23: GitHub shows **0 stars / 0 forks / 0 issues**, and there were no commits

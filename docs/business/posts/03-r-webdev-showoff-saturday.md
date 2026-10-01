@@ -3,6 +3,8 @@
 > **Gate / rules:** Use the Showoff Saturday flair. Rule 3: commercial promotion = ban. MENTION NO PRICING AT ALL in this one — the body below has already had it stripped; keep it that way in comments too.
 
 > Paste-ready. Verified against source 2026-08-23. Do NOT claim Edge availability.
+>
+> **History you must respect (found 2026-10-01):** this post was already submitted to r/webdev **twice, two minutes apart, on Thursday 2026-07-16** ("Resource" flair) and **both were removed by a moderator** — wrong day, wrong flair, and a duplicate. So: **Saturday only, Showoff Saturday flair, exactly once.** If it does not appear in /new within a few minutes, do NOT repost — modmail politely and wait. A third removal on the same account is how a ban happens.
 
 ---
 

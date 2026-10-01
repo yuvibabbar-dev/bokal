@@ -63,6 +63,8 @@ Do **not** spend a launch post here. Each has a strong audience — mine it by h
 
 ## 4. Posting Calendar — RELATIVE (rewritten 2026-09-04)
 
+*(Corrected 2026-10-01: three posts DID go out on 2026-07-16 — one HN link and two r/webdev posts on a Thursday, both removed by a moderator. See `posts/README.md`. The r/webdev row below is therefore a second attempt on an account with two removals there: Saturday only, once.)*
+
 *Two dated versions of this calendar (Jul 16, Aug 23/25) lapsed unposted. It is now relative: pick
 **Day 1 = the next weekday morning you actually post**, and everything else follows. The only
 absolute constraints are the two day-gated subs, which are rules, not dates.*

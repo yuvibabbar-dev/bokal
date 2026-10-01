@@ -1,12 +1,20 @@
 # Show HN — highest scrutiny, post LAST of the big three
 
 > **Gate / rules:** Title goes in the HN title field; the body below is the FIRST COMMENT, posted immediately after submitting. Weekday 8-10am ET. Clear 4-6 hours to reply to everything.
+>
+> **This is a RE-submission (found 2026-10-01).** Bokal was already submitted once: [item 48937187](https://news.ycombinator.com/item?id=48937187), Thu 2026-07-16 13:05 ET, from an account created that day, as a bare link to bokal.dev — **no "Show HN:" prefix and no maker comment**. It got 1 point and 0 comments, i.e. it never left /new. That outcome says nothing about the pitch; it is what a prefix-less link from a brand-new account gets. HN's FAQ explicitly allows reposting a story that "has not had significant attention". Do it properly this time:
+> 1. **"Show HN:" prefix** — that is what routes it to the Show section.
+> 2. **Link the GitHub repo, not bokal.dev** — a different URL avoids the duplicate detector pointing you back at the dead July item, and this audience prefers the source.
+> 3. **Paste the first comment within a minute of submitting.**
+> 4. Same account is fine. If a commenter mentions the July post, say so plainly: first attempt, no comment, sank.
 
 > Paste-ready. Verified against source 2026-08-23. Do NOT claim Edge availability.
 
 ---
 
-**Title:** Show HN: Bokal – An open-source cookie editor that asks for no host permissions up front
+**Title:** Show HN: Bokal – Open-source cookie editor without the "tabs" permission
+
+*(Changed 2026-10-01. The old title — "…that asks for no host permissions up front" — is what was submitted in July, and it leads with a claim that is true of Bokal but equally true of the 2M-user incumbent, so the first reply writes itself. `tabs` vs `activeTab` is the one permission-line difference; the title now says that. 72 chars, limit 80.)*
 
 ---
 

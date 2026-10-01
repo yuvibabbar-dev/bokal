@@ -2,13 +2,13 @@
 
 > **Gate / rules:** No karma/age/flair gate. Must show a *working* product (Bokal is live on the CWS ✓). No affiliate links ✓. Commercial products are explicitly fine here **if framed as a story, not a sales pitch** — so this post leads with the build and the failure, not the features.
 
-> Written 2026-08-23, numbers refreshed 2026-08-25 (the launch kit had no r/SideProject body). **Re-check the live user count before posting — it is moving.** Verified against source. Do NOT claim Edge availability.
+> **Rewritten 2026-10-01.** The earlier draft said "I told literally nobody / posted none of it". That was false: on 2026-07-16 there were three launch posts (one HN link, two r/webdev posts) — all dead within minutes. The story below is the true one. **Two things to check before posting:** (1) every number — the user count moves; (2) the sentences about *why* you went quiet are my inference, so replace them with what was actually true for you. Verified against source. Do NOT claim Edge availability.
 
 ---
 
 ### r/SideProject
 
-**Title:** I spent months building a cookie manager "properly," shipped it, then told literally nobody — 51 users, $0
+**Title:** My entire launch was 3 posts in 14 minutes: 2 removed by mods, 1 got a single upvote (mine). Then I hid for 11 weeks. 106 users, $0.
 
 **Body:**
 
@@ -32,13 +32,17 @@ No `tabs` permission. No host permissions at install. `<all_urls>` exists only a
 - **Restoring a cookie set *into a live session in place*** — across HttpOnly and partitioned cookies — rather than the export-a-file-then-reimport-it thing. That's the one paid feature, and it was by far the fiddliest code in the project.
 - **Not lying in the copy.** I have a test that asserts a free user makes zero network calls, and another that asserts cookie values are never logged. Writing marketing that stays literally true against the code turned out to be a real engineering constraint, and a good one. (Case in point: I caught myself claiming "Netscape import" in a draft of this very post back when 1.0.2 was live — Bokal exported Netscape but did not import it. I cut the claim rather than fudge it, and then shipped the feature in 1.1.0.)
 
-**Now the embarrassing part.** It went live on the Chrome Web Store on July 15. I wrote a whole launch kit on July 16 — Show HN draft, subreddit-by-subreddit rules research, Product Hunt copy, the lot.
+**Now the embarrassing part.** It went live on the Chrome Web Store on July 15. On July 16 I "launched" it, and the whole launch took fourteen minutes.
 
-And then I posted **none of it.** For five weeks.
+First, a Hacker News submission — from an account I had created that morning, as a bare link to my landing page, without the "Show HN" prefix and without a single comment saying what it was. Twelve minutes later, the same pitch to r/webdev. Two minutes after that, the same post to r/webdev *again*. On a Thursday. r/webdev only allows project posts on Showoff Saturday, which I would have known if I had read the rules first.
 
-Current numbers, honestly: **51 users, 5.0★ from 2 ratings, $0 revenue.** It roughly doubled over the last few days and every one of those installs came from people typing "cookie editor" into the Chrome Web Store and picking mine. Zero GitHub stars, because zero people have ever been sent there.
+Results: both Reddit posts removed by a moderator, and one point on Hacker News — my own. Three posts, fourteen minutes, zero humans reached.
 
-**What I think I got wrong:** I treated "ship it" as the finish line, when shipping is maybe 60% of it. I also think I used polishing as a way to avoid the genuinely uncomfortable part, which is walking into a room and saying "I made this, please look at it." Writing a launch kit *felt* like launching. It isn't. This post is me finally doing the actual thing.
+And then I didn't post again for eleven weeks. I wrote a launch kit instead. I researched every subreddit's rules, which is how I found out exactly what I'd done wrong. I built comparison pages. I shipped a 1.1.0. All of it was real work, and none of it was the thing.
+
+Current numbers, honestly: **106 users, 5.0★ from 2 ratings, $0 revenue.** Every one of those installs came from Chrome Web Store search — and not from "cookie editor", where I'm nowhere near the first page. They come from long-tail queries like "playwright cookies", where I rank second. Zero GitHub stars, because no post of mine has ever stayed up long enough to send anyone there.
+
+**What I think I got wrong:** I took three dead-on-arrival posts as the market's verdict on the product, when all they measured was that I hadn't read the rules. Then I used polishing as a way to avoid the genuinely uncomfortable part, which is walking back into the room and saying "I made this, please look at it" — properly this time. Writing a launch kit *felt* like launching. It isn't. This post is me doing the actual thing.
 
 **What I'd like from you:** if you've been through the same "built it, couldn't promote it" wall — what actually broke the logjam? And if you install it, I want the permission model torn apart specifically. If you can make it see more than it should, that's the bug report I most want.
 

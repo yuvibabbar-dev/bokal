@@ -2,6 +2,11 @@ I have everything I need, verified against the actual source (`wxt.config.ts`, `
 
 ---
 
+> **CORRECTION 2026-10-01:** the next paragraph's "nothing had been posted / never fired" is WRONG.
+> Three posts went out on 2026-07-16 (one HN link, two r/webdev posts) and all died within minutes —
+> see `posts/README.md` → "What has actually been posted". The claim was inferred from zero GitHub
+> stars and never checked against HN or Reddit.
+>
 > **REVISED 2026-08-23.** Nothing here had been posted as of this date — the kit was written
 > 2026-07-16 and never fired (GitHub still shows 0 stars / 0 forks / 0 issues). This revision:
 > (a) removed every "Edge is in review" claim — five weeks stale and Bokal does not appear in the
@@ -30,7 +35,9 @@ I have everything I need, verified against the actual source (`wxt.config.ts`, `
 
 ### Final title (recommended)
 
-**Show HN: Bokal – An open-source cookie editor that asks for no host permissions up front**
+**Show HN: Bokal – Open-source cookie editor without the "tabs" permission**
+
+*(Changed 2026-10-01 — the previous title, "…that asks for no host permissions up front", was what got submitted on 2026-07-16 and leads with a claim Cookie-Editor matches. See `posts/04-show-hn.md`.)*
 
 ### First comment (post immediately after submitting)
 
