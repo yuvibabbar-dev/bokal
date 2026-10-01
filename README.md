@@ -20,8 +20,9 @@
 ---
 
 > **Status:** **LIVE on the [Chrome Web Store](https://chromewebstore.google.com/detail/bokal-cookie-editor-manag/oidemgbbhocfepdadkmfdlbjgdcjdldd)** (published 2026-07-15).
-> **Chrome and Chromium browsers only.** An Edge Add-ons submission is outstanding and unconfirmed —
-> do not treat Bokal as available on Edge. See [`docs/HANDOFF.md`](docs/HANDOFF.md) for current state.
+> Also listed on [**Microsoft Edge Add-ons**](https://microsoftedge.microsoft.com/addons/detail/bokal-cookie-editor-m/hoopoalcgejkjdpmgjlblilojhdfchhj) — that build is currently
+> **v1.0.2**, one release behind the Chrome Web Store (no Netscape import yet). See
+> [`docs/HANDOFF.md`](docs/HANDOFF.md) for current state.
 >
 > **License:** [**GPL-3.0-or-later**](LICENSE). Bokal bundles ExtPay, which is copyleft
 > (AGPL-3.0-or-later), so the combined work is conveyed under GPL-compatible terms — a permissive

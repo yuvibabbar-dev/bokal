@@ -17,6 +17,22 @@ find in older notes from before that date is INVALID. `git log` is authoritative
 DuckDuckGo (1) — **nothing from Reddit or HN.** The `bokal-v1-1-0-approval-watch` scheduled task did
 its job on 09-07 and no longer exists.
 
+**⚠ CORRECTION — Bokal IS LIVE on Microsoft Edge Add-ons.** https://microsoftedge.microsoft.com/addons/detail/bokal-cookie-editor-m/hoopoalcgejkjdpmgjlblilojhdfchhj
+(id `hoopoalcgejkjdpmgjlblilojhdfchhj`). Every "not in the Edge store / status unknown" line below is
+wrong, and was never properly verified: that store is JavaScript-rendered, and the 08-23 and 09-04
+"checks" were a search-index query. Verified 2026-10-01 in a real browser and via
+`microsoftedge.microsoft.com/addons/getproductdetailsbycrxid/<id>`. State: **v1.0.2** (package dated
+2026-07-15; approval date unknown), **2 active installs**, 0 ratings. It is STALE and needs the
+founder in Partner Center (same 1.1.0 zip — no rebuild):
+- still the original July description, including **"alarms … nothing is transmitted"** — the sentence
+  the post-submission review found false (the Pro licence re-check contacts ExtPay) and fixed on
+  Chrome; and "(launch price)" on the $29.99 line;
+- old summary; no Netscape import (correct for 1.0.2, wrong once 1.1.0 lands);
+- its privacy panel says "doesn't collect personal data", whereas the Chrome listing discloses the
+  Pro buyer's email (ExtPay) — reconcile the Edge declaration with `docs/store/data-use-answers.md`.
+Unlike the Chrome dashboard, Partner Center is an ordinary site, so the agent CAN drive it through
+the founder's Chrome session if asked (upload + paste), with explicit permission.
+
 **⚠ CORRECTION — the launch WAS fired, once, on 2026-07-16.** Everything below that says "nothing has
 ever been posted" / "launch never fired" / "still nothing posted" was an inference from zero GitHub
 stars that nobody checked. Found 2026-10-01 via `hn.algolia.com` and the pullpush Reddit archive:
@@ -98,7 +114,9 @@ option, or discard).
 
 **Open, in order of expected value (all FOUNDER unless noted):**
 1. ExtPay dashboard → users vs paid (2 min). Decides whether a paywall-pitch change is worth building.
-2. Edge: 11 weeks since "submitted"; still not in the Edge store. Same zip, second store.
+2. Edge: upload the 1.1.0 zip + paste `DESCRIPTION-paste-v1.1.md` in Partner Center (listing is live
+   but on 1.0.2 with a false privacy sentence — see the correction above). Then add an "Add to Edge"
+   link to the site and README, and lift the Edge caveat in `posts/README.md`.
 3. Featured-badge nomination — One Stop Support is trialing developer nominations; Bokal meets the
    listed eligibility (extension, owned, English, public, no violations, core features free).
 4. Re-post properly: r/chrome_extensions (`posts/01`), then the real Show HN (`posts/04`).
@@ -196,6 +214,7 @@ because a calendar nobody executes is not made truer by moving it.
 56 installs and $0 there is no data behind a raise. Nine days out — do nothing.
 
 **Edge:** submitted 2026-07-15, still not in the Edge store as of 2026-09-04, still unverified.
+**[CORRECTED 2026-10-01 — wrong; it is live at v1.0.2. See the top of §0.]**
 
 ---
 
