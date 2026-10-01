@@ -104,6 +104,28 @@ before payment — so the ExtPay dashboard's user count ≈ "people who tried to
 missing diagnostic: ~0 means nobody wants/notices Pro (pitch problem), several-with-0-paid means
 price/checkout.** Asked the founder for it 2026-10-01.
 
+**Demand evidence for the paid feature (added later on 2026-10-01, after the founder confirmed zero
+paid customers).** (a) The checkout is alive: `extensionpay.com/extension/bokal-test/api/v2/current-plans`
+returns $4.99/month, $19.99/year, $29.99 once — so the payment path is not the reason. (b) In
+Cookie-Editor's public tracker — 184 issues over eight years, 2M users — **not one issue asks for
+saved cookie profiles or account switching.** The largest theme by far is import/export (≈45 issues;
+the most-upvoted open one is "Import all cookies of all sites at once"), which Bokal already gives
+away. (c) Cookie-Editor itself earns from **in-extension ads** (`interface/lib/ads/`), not sales.
+Read together with the store data above: there is no public evidence that people pay for cookie
+profiles, and reasonable evidence that they do not look for them.
+
+**Proposed to the founder (awaiting a yes — extension change):** stop guessing and run one experiment
+that settles it. (1) v1.2 makes the paywall legible: a Profiles card every user sees, worded for the
+audience that actually installs (test accounts / Playwright), the price shown before any click, one
+profile free, the second + encryption Pro; optionally "export a saved profile as storageState" to tie
+Pro to the reason people install. Costs one promise: the Pro chunk would load for a free user who
+opens Profiles (still zero network calls), so "never loaded for free users" must be reworded in
+README/site/posts and `check:bundle` kept as a split guard. (2) One post that stays up. (3) Decision
+rule agreed in advance: **if the next 300 installs after 1.2 produce no sale, profiles are not worth
+charging for** (0 of 300 rejects a 1% conversion at 95%) — then make Bokal fully free, drop ExtPay
+(which also removes the PII disclosure and makes "zero network calls" unconditional), and stop
+spending time on monetization.
+
 **⚠ PARKED, UNCOMMITTED EXTENSION WORK IN THE TREE (since 2026-09-07 21:21–21:32):**
 `lib/io/export.ts` + `netscape.ts` + three test files — `toNetscape` emits `#HttpOnly_`. `lib/io`
 suite passes (49). Deliberately not committed: the note under POST-PUBLISH CHECKLIST below records
