@@ -1,9 +1,10 @@
 import type { CookieAttrs } from '../cookie-types';
 import type { ParseResult } from './import';
 
-// curl (and yt-dlp, wget) mark HttpOnly cookies by prefixing the domain field with "#HttpOnly_",
-// which a strict reader would otherwise drop as a comment.
-const HTTPONLY_PREFIX = '#HttpOnly_';
+// curl and Python's MozillaCookieJar mark HttpOnly cookies by prefixing the domain field with
+// "#HttpOnly_", which a strict reader would otherwise drop as a comment; yt-dlp, youtube-dl and
+// Go's cookiestxt read it too. Case-sensitive everywhere. ./export emits it, so keep it exported.
+export const HTTPONLY_PREFIX = '#HttpOnly_';
 
 // Parse a Netscape cookies.txt file — the mirror of toNetscape in ./export.
 //

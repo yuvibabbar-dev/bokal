@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { parseCookiesJson, parseImport } from './import';
-import { toJson } from './export';
+import { toJson, toNetscape } from './export';
 import type { CookieAttrs } from '../cookie-types';
 
 function base(o: Partial<CookieAttrs> = {}): CookieAttrs {
@@ -52,6 +52,13 @@ describe('parseImport (format detection chain)', () => {
     const r = parseImport('# Netscape HTTP Cookie File\n.example.com\tTRUE\t/\tTRUE\t0\tsid\tabc\n', 'ignored.com');
     expect(r.format).toBe('netscape');
     expect(r.cookies[0]).toMatchObject({ name: 'sid', value: 'abc', domain: '.example.com' });
+  });
+
+  it('still detects Netscape when every record line carries the "#HttpOnly_" marker', () => {
+    const text = toNetscape([base({ httpOnly: true }), base({ name: 'other', httpOnly: true, hostOnly: true })]);
+    const r = parseImport(text, 'ignored.com');
+    expect(r.format).toBe('netscape');
+    expect(r.cookies.map((c) => c.httpOnly)).toEqual([true, true]);
   });
 
   it('routes a raw header string to the header parser, scoped to the given domain', () => {

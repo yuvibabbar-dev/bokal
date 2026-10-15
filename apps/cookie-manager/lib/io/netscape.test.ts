@@ -80,17 +80,38 @@ describe('parseNetscape', () => {
   });
 
   it('round-trips through toNetscape for everything the export format carries', () => {
-    // toNetscape does not emit the #HttpOnly_ marker, so httpOnly is the one field that cannot
-    // survive a round trip; keep it false here and cover the marker separately above.
+    // All four hostOnly x httpOnly combinations, because the marker sits on the same field as the
+    // leading dot and a wrong ordering would still parse — just silently without the flag.
     const input: CookieAttrs[] = [
-      { name: 'a', value: '1', domain: '.example.com', path: '/', secure: true, httpOnly: false, sameSite: 'lax', hostOnly: false, expirationDate: 1893456000 },
+      { name: 'a', value: '1', domain: '.example.com', path: '/', secure: true, httpOnly: true, sameSite: 'lax', hostOnly: false, expirationDate: 1893456000 },
       { name: 'b', value: 'two words', domain: 'example.com', path: '/app', secure: false, httpOnly: false, sameSite: 'unspecified', hostOnly: true },
+      { name: 'c', value: '3', domain: 'example.com', path: '/', secure: true, httpOnly: true, sameSite: 'lax', hostOnly: true },
+      { name: 'd', value: '4', domain: '.example.com', path: '/', secure: false, httpOnly: false, sameSite: 'lax', hostOnly: false },
     ];
     const { cookies, errors } = parseNetscape(toNetscape(input));
     expect(errors).toEqual([]);
-    expect(cookies.map(({ name, value, domain, path, secure, hostOnly, expirationDate }) => ({ name, value, domain, path, secure, hostOnly, expirationDate }))).toEqual([
-      { name: 'a', value: '1', domain: '.example.com', path: '/', secure: true, hostOnly: false, expirationDate: 1893456000 },
-      { name: 'b', value: 'two words', domain: 'example.com', path: '/app', secure: false, hostOnly: true, expirationDate: undefined },
+    expect(cookies.map(({ name, value, domain, path, secure, httpOnly, hostOnly, expirationDate }) => ({ name, value, domain, path, secure, httpOnly, hostOnly, expirationDate }))).toEqual([
+      { name: 'a', value: '1', domain: '.example.com', path: '/', secure: true, httpOnly: true, hostOnly: false, expirationDate: 1893456000 },
+      { name: 'b', value: 'two words', domain: 'example.com', path: '/app', secure: false, httpOnly: false, hostOnly: true, expirationDate: undefined },
+      { name: 'c', value: '3', domain: 'example.com', path: '/', secure: true, httpOnly: true, hostOnly: true, expirationDate: undefined },
+      { name: 'd', value: '4', domain: '.example.com', path: '/', secure: false, httpOnly: false, hostOnly: false, expirationDate: undefined },
     ]);
+  });
+
+  it('round-trips an HttpOnly cookie with an empty value through the six-field fallback', () => {
+    const input: CookieAttrs[] = [
+      { name: 'flag', value: '', domain: 'example.com', path: '/', secure: false, httpOnly: true, sameSite: 'unspecified', hostOnly: true },
+    ];
+    const { cookies, errors } = parseNetscape(toNetscape(input));
+    expect(errors).toEqual([]);
+    expect(cookies[0]).toMatchObject({ name: 'flag', value: '', domain: 'example.com', httpOnly: true, hostOnly: true });
+  });
+
+  it('re-exports a parsed HttpOnly cookie to the identical line, so a second round trip is stable', () => {
+    const first = toNetscape([
+      { name: 'sid', value: 'xyz', domain: '.example.com', path: '/', secure: true, httpOnly: true, sameSite: 'lax', hostOnly: false, expirationDate: 1893456000 },
+    ]);
+    const { cookies } = parseNetscape(first);
+    expect(toNetscape(cookies)).toBe(first);
   });
 });
