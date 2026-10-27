@@ -10,6 +10,18 @@ find in older notes from before that date is INVALID. `git log` is authoritative
 
 ## 0. ⚠ STATE AS OF 2026-10-14 — READ THIS FIRST
 
+### 📈 2026-10-27: 1,003 Chrome users (founder's dashboard) — up from 113 on 2026-10-15
+
+~890 new users in 12 days (~74/day vs ~0.5/day before). Source unknown from outside: GitHub traffic
+flat after a one-day Reddit spike on 10-15; HN dead; no external links found (HN, Reddit archive, web
+search); first-page search ranks unchanged (playwright cookies #2, puppeteer cookies #4, partitioned
+#4, httponly #5, editthiscookie #8; absent for "cookie editor" and profile queries); no Featured badge.
+The dashboard's Analytics tab is the only place that can say where installs came from.
+**The 300-install sample for the decision rule is reached.** The verdict now depends on ExtPay: paid
+count (and user count = people who clicked Unlock Pro). Expected at 1%: ~9 sales. Zero sales from ~890
+exposed users would be strong evidence (P≈0.01% at 1%) — rule says go free. Founder decides.
+Description resubmission was "Pending review" on 10-27. Edge still 1.0.2.
+
 ### ✅ v1.2.0 APPROVED and LIVE on the Chrome Web Store — 2026-10-15
 
 - **300-install clock starts here: 113 users on 2026-10-15.** The CWS figure is *active users*, not
