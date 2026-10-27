@@ -10,6 +10,13 @@ find in older notes from before that date is INVALID. `git log` is authoritative
 
 ## 0. ⚠ STATE AS OF 2026-10-14 — READ THIS FIRST
 
+### ⚖️ 2026-10-27: DECISION RULE FIRED — founder confirms ZERO paid at 1,003 users
+~890 users arrived after the priced paywall shipped; none paid. Chance of that at a 0.5% buy rate is
+~1%, so the real rate is very likely below 0.5%. Per the rule agreed 2026-10-14: make Bokal fully free
+and remove ExtPay — but that is an extension change, so it waits for the founder's explicit yes.
+Still unknown: ExtPay's user count (= people who clicked Unlock Pro) and a manual check that the live
+checkout page shows the plans. Asked the founder for both.
+
 ### 📈 2026-10-27: 1,003 Chrome users (founder's dashboard) — up from 113 on 2026-10-15
 
 ~890 new users in 12 days (~74/day vs ~0.5/day before). Source unknown from outside: GitHub traffic
