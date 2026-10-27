@@ -10,6 +10,16 @@ find in older notes from before that date is INVALID. `git log` is authoritative
 
 ## 0. ⚠ STATE AS OF 2026-10-14 — READ THIS FIRST
 
+### ⚠ The 1,003 is mostly ONE DAY: +951 users on Sat 2026-10-24 (founder's dashboard)
+Not organic growth. Same day: 0 GitHub views, no posts, no external links found, Edge flat, ratings
+still 2. Candidate explanations: (1) an organisation force-installing Bokal via Chrome enterprise
+policy — benign; (2) fake/bot installs — Google can act against inflated installs whoever caused them;
+(3) a stats glitch. The dashboard Analytics breakdown (installs vs uninstalls by day, region, OS) and
+whether the users are still there a week later distinguish them. Advised the founder to harden the
+Google account that owns the dashboard (security key / passkey; never act on emailed "policy
+violation" links — the Dec 2024 Cyberhaven compromise started that way) and to refuse buy-out or
+"add our SDK" offers.
+
 ### 🟡 2026-10-27: FOUNDER DECISION — KEEP THE PAYMENT (overrides the 300-install rule, "for now")
 Do not remove ExtPay or the paywall, and do not re-propose going free unprompted. Paywall stays as 1.2
 shipped it (1 free profile, Pro unlimited). Still useful and still unanswered: ExtPay user count
