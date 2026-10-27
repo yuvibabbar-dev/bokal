@@ -10,6 +10,11 @@ find in older notes from before that date is INVALID. `git log` is authoritative
 
 ## 0. ⚠ STATE AS OF 2026-10-14 — READ THIS FIRST
 
+### 🟡 2026-10-27: FOUNDER DECISION — KEEP THE PAYMENT (overrides the 300-install rule, "for now")
+Do not remove ExtPay or the paywall, and do not re-propose going free unprompted. Paywall stays as 1.2
+shipped it (1 free profile, Pro unlimited). Still useful and still unanswered: ExtPay user count
+(clicks on Unlock Pro) and a manual check that the live checkout shows the plans.
+
 ### ⚖️ 2026-10-27: DECISION RULE FIRED — founder confirms ZERO paid at 1,003 users
 ~890 users arrived after the priced paywall shipped; none paid. Chance of that at a 0.5% buy rate is
 ~1%, so the real rate is very likely below 0.5%. Per the rule agreed 2026-10-14: make Bokal fully free
