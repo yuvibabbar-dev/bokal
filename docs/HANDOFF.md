@@ -10,6 +10,16 @@ find in older notes from before that date is INVALID. `git log` is authoritative
 
 ## 0. ⚠ STATE AS OF 2026-10-14 — READ THIS FIRST
 
+### 2026-11-01: back to 91 users (founder) — the Oct 24 spike was not real, lasting users
+The +951 vanished within a week, so it was not an enterprise rollout (those stay); most likely a
+stats glitch or a one-off batch that left. 91 is also BELOW the 113 of 2026-10-15.
+**Retraction:** the 10-27 statement "~890 users saw the priced paywall and none bought (≈1% chance at
+a 0.5% buy rate)" rested on that spike and does not hold. Real installs since 1.2 went live are far
+fewer than 300, so the decision-rule sample has NOT been reached and $0 still says little either
+way. Founder is keeping the payment regardless. Open question worth the dashboard: installs vs
+uninstalls per day since 10-15 — the count is drifting down. (Do not add an uninstall-survey URL:
+it would break the zero-network promise.)
+
 ### ⚠ The 1,003 is mostly ONE DAY: +951 users on Sat 2026-10-24 (founder's dashboard)
 Not organic growth. Same day: 0 GitHub views, no posts, no external links found, Edge flat, ratings
 still 2. Candidate explanations: (1) an organisation force-installing Bokal via Chrome enterprise
